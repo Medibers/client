@@ -135,15 +135,9 @@ class Component extends React.Component<Props> {
     const { distance = null } = this.state
 
     const title = <p className="ion-text-wrap">{
-      pharmacyItems.map((o, i) => <span key={i} className="flex-inline ion-align-items-center">
-        {i > 0 ? <span>,&nbsp;&nbsp;</span> : null}
+      pharmacyItems.map((o, i, a) => <span key={i} className="no-wrap">
         {o.item['common-name'] || o.item['scientific-name']}
-        {false ? <>
-          <span>&nbsp;</span>
-          <IonIcon icon={close} />
-          <span>&nbsp;</span>
-          {o.quantity}
-        </> : null}
+        {i < a.length - 1 ? <>,&nbsp;&nbsp;</> : null}
       </span>)
     }</p>
 
