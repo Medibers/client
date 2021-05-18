@@ -1,13 +1,20 @@
 import React from 'react'
 import { History } from 'history'
 
-import { IonContent, IonPage, IonButton, IonSearchbar, IonList, IonItem } from '@ionic/react'
+import {
+  IonButton,
+  IonContent,
+  IonItem,
+  IonList,
+  IonPage,
+  IonSearchbar,
+} from '@ionic/react'
 
 import { Header } from 'components'
 import { MapContainer } from 'containers'
 
 import { setDeliveryLocation } from 'session'
-import { queryPlace, queryAddress } from 'location'
+import { queryAddress, queryPlace } from 'location'
 
 import { closeSharp, search } from 'ionicons/icons'
 
@@ -18,7 +25,7 @@ const primaryAction = 'Select location'
 
 const actionButtonStyle = {
   position: 'absolute',
-  bottom: 0
+  bottom: 0,
 }
 
 const searchResultsDivStyle: Object = {
@@ -28,24 +35,23 @@ const searchResultsDivStyle: Object = {
   position: 'absolute',
   top: 10,
   right: 10,
-  boxShadow: '0 0 5px 0 rgba(0, 0, 0, .8)'
+  boxShadow: '0 0 5px 0 rgba(0, 0, 0, .8)',
 }
 
 const searchPlaceholder = 'Search by address'
 
 class Component extends React.Component<{ history: History }> {
-
   state: {
-    searchText: string,
-    location: LocationInterface | null,
-    searchShown: Boolean,
+    searchText: string
+    location: LocationInterface | null
+    searchShown: Boolean
     results: Array<any>
   } = {
-      searchText: '',
-      location: null,
-      searchShown: false,
-      results: []
-    }
+    searchText: '',
+    location: null,
+    searchShown: false,
+    results: [],
+  }
 
   onPrimaryAction = async () => {
     const { location } = this.state
@@ -76,25 +82,33 @@ class Component extends React.Component<{ history: History }> {
     this.setState({ results: [] })
   }
 
-  onIonCancel = () => this.setState({ searchShown: false, searchText: '', results: [] })
+  onIonCancel = () =>
+    this.setState({ searchShown: false, searchText: '', results: [] })
 
-  toolbarActions = (searchShown: Boolean) => searchShown ? [{
-    component: this.searchComponent,
-    handler: () => { }
-  }] : [{
-    icon: search,
-    handler: () => this.setSearchShown(true)
-  }]
+  toolbarActions = (searchShown: Boolean) =>
+    searchShown
+      ? [
+          {
+            component: this.searchComponent,
+            handler: () => {},
+          },
+        ]
+      : [
+          {
+            icon: search,
+            handler: () => this.setSearchShown(true),
+          },
+        ]
 
   searchRef: any = null
 
   searchComponent = () => (
     <IonSearchbar
-      ref={node => this.searchRef = node}
+      ref={node => (this.searchRef = node)}
       style={{
         '--cancel-button-color': 'var(--ion-color-primary)',
         '--icon-color': 'var(--ion-color-primary)',
-        '--color': 'var(--ion-color-primary)'
+        '--color': 'var(--ion-color-primary)',
       }}
       value={this.state.searchText}
       placeholder={searchPlaceholder}
@@ -103,46 +117,54 @@ class Component extends React.Component<{ history: History }> {
       showCancelButton="always"
       cancelButtonIcon={closeSharp}
       onIonChange={this.onSearch}
-      onIonCancel={this.onIonCancel} />
+      onIonCancel={this.onIonCancel}
+    />
   )
 
   render() {
-
     const { results, searchShown } = this.state
 
     return (
       <IonPage>
         <Header title={title} actions={this.toolbarActions(searchShown)} />
         <IonContent>
-          <MapContainer setLocation={this.setLocation} onMapApiLoaded={this.onMapApiLoaded} />
+          <MapContainer
+            setLocation={this.setLocation}
+            onMapApiLoaded={this.onMapApiLoaded}
+          />
           <IonButton
             onClick={this.onPrimaryAction}
             className="ion-margin ion-action-primary"
             style={actionButtonStyle}
-          >{primaryAction}</IonButton>
-          <div style={{
-            ...searchResultsDivStyle,
-            visibility: results.length ? 'visible' : 'hidden'
-          }}>
-            <IonList lines="none" className="ion-no-padding">{
-              results.map((result, i) => <IonItem key={i} onClick={
-                () => this.onPlacesResultClick(result)
-              } button>
-                {result.name}
-              </IonItem>)
-            }</IonList>
+          >
+            {primaryAction}
+          </IonButton>
+          <div
+            style={{
+              ...searchResultsDivStyle,
+              visibility: results.length ? 'visible' : 'hidden',
+            }}
+          >
+            <IonList lines="none" className="ion-no-padding">
+              {results.map((result, i) => (
+                <IonItem
+                  key={i}
+                  onClick={() => this.onPlacesResultClick(result)}
+                  button
+                >
+                  {result.name}
+                </IonItem>
+              ))}
+            </IonList>
           </div>
         </IonContent>
       </IonPage>
     )
-
   }
 
   componentDidUpdate() {
-    if (this.searchRef)
-      this.searchRef.setFocus()
+    if (this.searchRef) this.searchRef.setFocus()
   }
-
 }
 
 export default Component

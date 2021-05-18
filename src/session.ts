@@ -23,10 +23,7 @@ export const setSessionPhone = (phone: string) => {
 }
 
 export const setSessionLocation = (location: Object) => {
-  localStorage.setItem(
-    locationKey,
-    JSON.stringify(location)
-  )
+  localStorage.setItem(locationKey, JSON.stringify(location))
 }
 
 export const getSessionLocation = () => {
@@ -38,10 +35,7 @@ export const getSessionLocation = () => {
 }
 
 export const setDeliveryLocation = (location: Object) => {
-  localStorage.setItem(
-    deliveryLocationKey,
-    JSON.stringify(location)
-  )
+  localStorage.setItem(deliveryLocationKey, JSON.stringify(location))
 }
 
 export const getLastAttemptedDeliveryLocation = () => {
@@ -50,10 +44,7 @@ export const getLastAttemptedDeliveryLocation = () => {
 }
 
 export const setActiveRequestsPresence = (o: boolean) => {
-  localStorage.setItem(
-    activeRequestsPresenceKey,
-    JSON.stringify(o)
-  )
+  localStorage.setItem(activeRequestsPresenceKey, JSON.stringify(o))
 }
 
 export const getActiveRequestsPresence = () => {

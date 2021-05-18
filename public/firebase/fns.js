@@ -12,10 +12,8 @@ async function readJSONFile(filePath) {
 }
 
 async function initializeFCM() {
-  const {
-    'fb-configuration': configuration,
-    'fcm-vapid-key': vapidKey
-  } = await readJSONFile('/firebase/vars.json')
+  const { 'fb-configuration': configuration, 'fcm-vapid-key': vapidKey } =
+    await readJSONFile('/firebase/vars.json')
 
   firebase.initializeApp(configuration)
 
@@ -40,12 +38,13 @@ async function sendFCMTokenToServer(token) {
     'local-server-url': localUrl,
     'remote-server-url': remoteUrl,
     'server-auth-token-key': key,
-    'push-notification-token-send-state-key': pushNotificationTokenSendStateKey
+    'push-notification-token-send-state-key': pushNotificationTokenSendStateKey,
   } = await readJSONFile('/firebase/vars.json')
 
   const url = platformIsLocal() ? localUrl : remoteUrl
   const sessionAvailable = localStorage.getItem(key) != undefined
-  const pushNotificationTokenNotSent = localStorage.getItem(pushNotificationTokenSendStateKey) == undefined ||
+  const pushNotificationTokenNotSent =
+    localStorage.getItem(pushNotificationTokenSendStateKey) == undefined ||
     localStorage.getItem(pushNotificationTokenSendStateKey) == '0'
 
   let result = null
@@ -54,10 +53,10 @@ async function sendFCMTokenToServer(token) {
       url: url + '/push-notification-token',
       method: 'PUT',
       headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem(key),
-        'Content-Type': 'application/json'
+        Authorization: 'Bearer ' + localStorage.getItem(key),
+        'Content-Type': 'application/json',
       },
-      data: JSON.stringify({ platform: 'web', token })
+      data: JSON.stringify({ platform: 'web', token }),
     })
     result = data.result
     localStorage.setItem(pushNotificationTokenSendStateKey, '1')

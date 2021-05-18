@@ -5,19 +5,18 @@ import { IonSelect, IonSelectOption } from '@ionic/react'
 import { MenuAction } from 'types'
 
 type Props = {
-  actions: Array<MenuAction>,
-  setRef: (node: any) => void,
+  actions: Array<MenuAction>
+  setRef: (node: any) => void
   id?: string
 }
 
 const Component: React.FC<Props> = ({
   id,
   actions,
-  setRef: setRefAtParent
+  setRef: setRefAtParent,
 }) => {
-
   let menuRef: any
-  
+
   const onChange = ({ detail: { value } }: any) => {
     if (value === null) return
     if (menuRef) menuRef.value = null
@@ -38,16 +37,17 @@ const Component: React.FC<Props> = ({
       onIonChange={onChange}
       className="select-menu"
     >
-      {
-        actions.map(({ text }, i, a) => (
-          <IonSelectOption key={i} className={
-            i < a.length - 1 ? '' : 'last'
-          } value={text}>{text}</IonSelectOption>
-        ))
-      }
+      {actions.map(({ text }, i, a) => (
+        <IonSelectOption
+          key={i}
+          className={i < a.length - 1 ? '' : 'last'}
+          value={text}
+        >
+          {text}
+        </IonSelectOption>
+      ))}
     </IonSelect>
   )
-
 }
 
 export default Component

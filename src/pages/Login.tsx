@@ -8,24 +8,30 @@ import { bindActionCreators } from 'redux'
 import * as constants from 'reducers/constants'
 
 import {
-  IonContent, IonPage, IonList, IonItem, IonLabel,
-  IonInput, IonButton, IonItemDivider
+  IonButton,
+  IonContent,
+  IonInput,
+  IonItem,
+  IonItemDivider,
+  IonLabel,
+  IonList,
+  IonPage,
 } from '@ionic/react'
 
 import { ellipsisVertical as more } from 'ionicons/icons'
 
-import { Header, PhoneInput, Menu } from 'components'
+import { Header, Menu, PhoneInput } from 'components'
 
 import Requests, { endPoints } from 'requests'
-import { setSessionToken, setSessionPhone } from 'session'
+import { setSessionPhone, setSessionToken } from 'session'
 
 import { CCs } from 'utils/msisdn'
 
 export type Props = {
-  history: History,
-  showLoading: Function,
-  hideLoading: Function,
-  showToast: Function,
+  history: History
+  showLoading: Function
+  hideLoading: Function
+  showToast: Function
   hideToast: Function
 }
 
@@ -33,7 +39,6 @@ const header = 'Welcome!'
 const subHeader = 'Provide your phone and password to sign in'
 
 class Component extends React.Component<Props> {
-
   state = { phone: null, inputFocussed: null, password: null }
 
   // state = { phone: '773828773', inputFocussed: null, password: '773828773' } // client user
@@ -53,14 +58,17 @@ class Component extends React.Component<Props> {
       hideToast()
       showLoading()
       const phone = `${CCs.ug.value}${(partPhone || '').trim()}`
-      Requests.post(endPoints.login, { phone, secret: password }).then(({ token }: any) => {
-        setSessionToken(token)
-        setSessionPhone(phone)
-        window.location.replace(getDefaultRoute(token))
-      }).catch(err => {
-        console.error(err)
-        showToast(err.error || err.toString())
-      }).finally(() => hideLoading())
+      Requests.post(endPoints.login, { phone, secret: password })
+        .then(({ token }: any) => {
+          setSessionToken(token)
+          setSessionPhone(phone)
+          window.location.replace(getDefaultRoute(token))
+        })
+        .catch(err => {
+          console.error(err)
+          showToast(err.error || err.toString())
+        })
+        .finally(() => hideLoading())
     }
   }
 
@@ -69,8 +77,7 @@ class Component extends React.Component<Props> {
   }
 
   onInputFocus = (e: any) => {
-    if (e)
-      this.setState({ inputFocussed: e.target.name })
+    if (e) this.setState({ inputFocussed: e.target.name })
   }
 
   onInputBlur = () => this.setState({ inputFocussed: null })
@@ -85,28 +92,33 @@ class Component extends React.Component<Props> {
   }
 
   getIonItemDividerStyle = (name: string) => {
-    const o = { minHeight: .1 }
+    const o = { minHeight: 0.1 }
     return this.state.inputFocussed === name
       ? { ...o, '--background': 'var(--ion-color-primary)' }
       : o
   }
 
-  toolbarActions = () => [{
-    icon: more,
-    handler: (event: any) => this.menuRef.open({ target: event.target })
-  }]
+  toolbarActions = () => [
+    {
+      icon: more,
+      handler: (event: any) => this.menuRef.open({ target: event.target }),
+    },
+  ]
 
   menuRef: any
 
   menuActions = () => [
     {
       text: 'About Us',
-      handler: () => this.props.history.push(Routes.about.path)
+      handler: () => this.props.history.push(Routes.about.path),
     },
     /* How it works, FAQs, Contacts */
     { text: 'Key Partners', handler: () => null },
     /* List partners with some description */
-    { text: 'Terms & Conditions', handler: () => this.props.history.push(Routes.tcs.path) }
+    {
+      text: 'Terms & Conditions',
+      handler: () => this.props.history.push(Routes.tcs.path),
+    },
     /* Terms of operation, Privacy policy */
   ]
 
@@ -116,7 +128,7 @@ class Component extends React.Component<Props> {
       <IonPage>
         <Header omitsBack actions={this.toolbarActions()} />
         <Menu
-          setRef={(node: any) => this.menuRef = node}
+          setRef={(node: any) => (this.menuRef = node)}
           actions={this.menuActions()}
         />
         <IonContent>
@@ -124,7 +136,10 @@ class Component extends React.Component<Props> {
           <form onSubmit={this.onSubmit}>
             <IonList className="ion-no-margin ion-no-padding">
               <IonItem lines="none">
-                <IonLabel style={this.getIonLabelStyle('phone')} position="stacked">
+                <IonLabel
+                  style={this.getIonLabelStyle('phone')}
+                  position="stacked"
+                >
                   Phone <span className="ion-label-secondary">*</span>
                 </IonLabel>
                 <PhoneInput
@@ -133,18 +148,26 @@ class Component extends React.Component<Props> {
                   onChange={this.onChange}
                   onFocus={this.onInputFocus}
                   onBlur={this.onInputBlur}
-                  onKeyUp={this.onKeyUp} />
+                  onKeyUp={this.onKeyUp}
+                />
               </IonItem>
               <IonItemDivider style={this.getIonItemDividerStyle('phone')} />
               <IonItem lines="none">
-                <IonLabel style={this.getIonLabelStyle('password')} position="stacked">
+                <IonLabel
+                  style={this.getIonLabelStyle('password')}
+                  position="stacked"
+                >
                   Password <span className="ion-label-secondary">*</span>
                 </IonLabel>
                 <IonInput
                   onIonChange={this.onChange}
                   onIonFocus={this.onInputFocus}
                   onIonBlur={this.onInputBlur}
-                  onKeyUp={this.onKeyUp} value={password} type="password" name="password" />
+                  onKeyUp={this.onKeyUp}
+                  value={password}
+                  type="password"
+                  name="password"
+                />
               </IonItem>
               <IonItemDivider style={this.getIonItemDividerStyle('password')} />
             </IonList>
@@ -152,7 +175,10 @@ class Component extends React.Component<Props> {
               <IonButton
                 expand="block"
                 type="submit"
-                className="ion-no-margin ion-action-primary">Submit</IonButton>
+                className="ion-no-margin ion-action-primary"
+              >
+                Submit
+              </IonButton>
             </div>
             <div className="ion-padding">
               <IonButton
@@ -161,49 +187,54 @@ class Component extends React.Component<Props> {
                 type="button"
                 color="secondary"
                 className="ion-no-margin"
-                fill="clear">Create account</IonButton>
+                fill="clear"
+              >
+                Create account
+              </IonButton>
             </div>
           </form>
         </IonContent>
       </IonPage>
     )
   }
-
 }
 
-const mapDispatchToProps = (dispatch: any) => bindActionCreators({
-  showLoading: () => ({
-    type: constants.SHOW_LOADING
-  }),
-  hideLoading: () => ({
-    type: constants.HIDE_LOADING
-  }),
-  showToast: (payload: string) => ({
-    type: constants.SHOW_TOAST,
-    payload
-  }),
-  hideToast: () => ({
-    type: constants.HIDE_TOAST
-  })
-}, dispatch)
+const mapDispatchToProps = (dispatch: any) =>
+  bindActionCreators(
+    {
+      showLoading: () => ({
+        type: constants.SHOW_LOADING,
+      }),
+      hideLoading: () => ({
+        type: constants.HIDE_LOADING,
+      }),
+      showToast: (payload: string) => ({
+        type: constants.SHOW_TOAST,
+        payload,
+      }),
+      hideToast: () => ({
+        type: constants.HIDE_TOAST,
+      }),
+    },
+    dispatch
+  )
 
 export default connect(null, mapDispatchToProps)(Component)
 
 export const HeadComponent: React.FC<{
-  header: string,
+  header: string
   subHeader: string
-}> = ({
-  header,
-  subHeader
-}) => (<>
-  <IonItem lines="none" className="ion-margin-bottom">
-    <IonLabel className="ion-text-wrap ion-head">
-      {/* <h1>{header}</h1> */}
-      <p>{subHeader}</p>
-    </IonLabel>
-  </IonItem>
-  {/* <IonItemDivider className="ion-margin-vertical" style={{
+}> = ({ header, subHeader }) => (
+  <>
+    <IonItem lines="none" className="ion-margin-bottom">
+      <IonLabel className="ion-text-wrap ion-head">
+        {/* <h1>{header}</h1> */}
+        <p>{subHeader}</p>
+      </IonLabel>
+    </IonItem>
+    {/* <IonItemDivider className="ion-margin-vertical" style={{
     minHeight: .4,
     '--background': 'var(--ion-color-label-secondary)'
   }} /> */}
-</>)
+  </>
+)

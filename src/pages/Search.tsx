@@ -10,38 +10,56 @@ import * as constants from 'reducers/constants'
 import { State as ReducerState } from 'reducers'
 
 import {
-  IonPage, IonContent, IonSearchbar, IonList, IonItem, IonLabel, IonSelect, IonSelectOption,
-  IonFabButton, IonFab, IonIcon, IonButton
+  IonButton,
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonSearchbar,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/react'
-import { send, closeOutline as close } from 'ionicons/icons'
+import { closeOutline as close, send } from 'ionicons/icons'
 
-import { Header, ItemSearchResult, Popover, Item as ItemDetail } from 'components'
+import {
+  Header,
+  Item as ItemDetail,
+  ItemSearchResult,
+  Popover,
+} from 'components'
 
 import Requests, { endPoints } from 'requests'
 import { getDeliveryLocationForNextOrder } from 'location'
 
-import { ItemSearchResult as ItemSearchResultInterface, ToolbarAction } from 'types'
+import {
+  ItemSearchResult as ItemSearchResultInterface,
+  ToolbarAction,
+} from 'types'
 
 import { platformIsWebBrowser } from 'utils'
 import ItemCategoryMap from 'utils/item-category-map'
 
 export type Props = {
-  history: History,
+  history: History
   location: {
-    state: { selectedItems: Array<ItemSearchResultInterface>, category: string }
-  },
-  selectedItems?: Array<ItemSearchResultInterface>,
-  items: Array<ItemSearchResultInterface> | undefined,
-  setItems: (e: Array<ItemSearchResultInterface> | null) => {},
-  showLoading: () => {},
-  hideLoading: () => {},
+    state: { selectedItems: Array<ItemSearchResultInterface>; category: string }
+  }
+  selectedItems?: Array<ItemSearchResultInterface>
+  items: Array<ItemSearchResultInterface> | undefined
+  setItems: (e: Array<ItemSearchResultInterface> | null) => {}
+  showLoading: () => {}
+  hideLoading: () => {}
   showToast: (e: string) => {}
 }
 
 type State = {
-  selectedItems: Array<ItemSearchResultInterface>,
-  selectedCategory: string,
-  search: string | undefined,
+  selectedItems: Array<ItemSearchResultInterface>
+  selectedCategory: string
+  search: string | undefined
   popoverResult: ItemSearchResultInterface | null
 }
 
@@ -50,7 +68,7 @@ const noItemsPlaceholder = 'No items found, please try a different search'
 
 const itemCategories = Object.keys(ItemCategoryMap).map((key: string) => ({
   label: ItemCategoryMap[key].label,
-  value: key
+  value: key,
 }))
 
 class Component extends React.Component<Props> {
@@ -65,7 +83,7 @@ class Component extends React.Component<Props> {
     selectedItems: this.selectedItems,
     selectedCategory: this.selectedCategory || itemCategories[0].value,
     search: undefined,
-    popoverResult: null
+    popoverResult: null,
   }
 
   componentDidMount() {
@@ -82,15 +100,15 @@ class Component extends React.Component<Props> {
     const { setItems, showLoading, hideLoading, showToast } = this.props
 
     showLoading()
-    Requests.get(
-      endPoints['item-search'],
-      { params: { search, lat, lon } }
-    ).then((response: any) => {
-      setItems(response)
-    }).catch((err) => {
-      showToast(err.error || err.toString())
-      console.error(err)
-    }).finally(hideLoading)
+    Requests.get(endPoints['item-search'], { params: { search, lat, lon } })
+      .then((response: any) => {
+        setItems(response)
+      })
+      .catch(err => {
+        showToast(err.error || err.toString())
+        console.error(err)
+      })
+      .finally(hideLoading)
   }
 
   onSearch = ({ detail: { value } }: CustomEvent) => {
@@ -109,12 +127,11 @@ class Component extends React.Component<Props> {
   }
 
   onMore = (result: ItemSearchResultInterface) => {
-    this.props.history.push(Routes.item.path, result )
+    this.props.history.push(Routes.item.path, result)
   }
 
-  isSelected = (result: ItemSearchResultInterface) => (
+  isSelected = (result: ItemSearchResultInterface) =>
     this.state.selectedItems.findIndex(item => item._id === result._id) > -1
-  )
 
   onSubmit = () => {
     const { selectedItems } = this.state
@@ -127,58 +144,68 @@ class Component extends React.Component<Props> {
 
   toolbarActions = () => {
     const { selectedCategory } = this.state
-    const toolbarActions: Array<ToolbarAction> = [{
-      component: () => (
-        <IonButton style={{ textTransform: 'unset' }}>
-          <IonSelect
-            interfaceOptions={{
-              showBackdrop: false,
-              cssClass: 'search-category-select-popover'
-            }}
-            interface="popover"
-            onIonChange={({ detail: { value } }: any) => this.onCategorySelected(value)}
-            value={selectedCategory}
-          >
-            {
-              itemCategories.map(({ label, value }, i, a) => (
-                <IonSelectOption key={i} className={
-                  i < a.length - 1 ? '' : 'last'
-                } value={value}>{label}</IonSelectOption>
-              ))
-            }
-          </IonSelect>
-        </IonButton>
-      ),
-      handler: () => { }
-    }]
+    const toolbarActions: Array<ToolbarAction> = [
+      {
+        component: () => (
+          <IonButton style={{ textTransform: 'unset' }}>
+            <IonSelect
+              interfaceOptions={{
+                showBackdrop: false,
+                cssClass: 'search-category-select-popover',
+              }}
+              interface="popover"
+              onIonChange={({ detail: { value } }: any) =>
+                this.onCategorySelected(value)
+              }
+              value={selectedCategory}
+            >
+              {itemCategories.map(({ label, value }, i, a) => (
+                <IonSelectOption
+                  key={i}
+                  className={i < a.length - 1 ? '' : 'last'}
+                  value={value}
+                >
+                  {label}
+                </IonSelectOption>
+              ))}
+            </IonSelect>
+          </IonButton>
+        ),
+        handler: () => {},
+      },
+    ]
     return toolbarActions
   }
 
+  // eslint-disable-next-line no-undef
   searchbar: HTMLIonSearchbarElement | null = null
 
   title = () => (
     <IonSearchbar
-      ref={e => this.searchbar = e}
+      ref={e => (this.searchbar = e)}
       style={{
         paddingInlineStart: platformIsWebBrowser ? 'var(--ion-padding)' : 0,
         '--icon-color': 'var(--ion-color-primary)',
-        '--color': 'var(--ion-color-primary)'
+        '--color': 'var(--ion-color-primary)',
       }}
       placeholder={searchPlaceholder}
       className="searchbar ion-no-padding"
       clearIcon={close}
-      onIonChange={this.onSearch} />
+      onIonChange={this.onSearch}
+    />
   )
 
   computeItemsShown = () => {
     const { items = [] } = this.props
     const { selectedCategory, search = '' } = this.state
     return selectedCategory !== itemCategories[0].value
-      ? items.filter(({ item: { name, category } }) => (
-        category === selectedCategory &&
-        name.toLowerCase().includes(search)
-      ))
-      : items.filter(({ item: { name } }) => name.toLowerCase().includes(search))
+      ? items.filter(
+          ({ item: { name, category } }) =>
+            category === selectedCategory && name.toLowerCase().includes(search)
+        )
+      : items.filter(({ item: { name } }) =>
+          name.toLowerCase().includes(search)
+        )
   }
 
   onImageClick = (result: ItemSearchResultInterface) => {
@@ -197,27 +224,38 @@ class Component extends React.Component<Props> {
       <IonPage className="search">
         <Header title={this.title()} actions={this.toolbarActions()} />
         <IonContent class="popover-search-results">
-          <IonList className="ion-no-margin ion-no-padding">{
-            items.length ? items.map((result, i, a) => (
-              <ItemSearchResult
-                key={i}
-                result={result}
-                lines={i !== a.length - 1}
-                selected={this.isSelected(result)}
-                onSelect={this.onSelect}
-                onImageClick={() => this.onImageClick(result)}
-                onMore={this.onMore} />
-            )) : (
-                itemsReturned && items.length === 0
-                  ? <IonItem lines="none">
-                    <IonLabel><p>{noItemsPlaceholder}</p></IonLabel>
-                  </IonItem>
-                  : null
-              )
-          }</IonList>
+          <IonList className="ion-no-margin ion-no-padding">
+            {items.length ? (
+              items.map((result, i, a) => (
+                <ItemSearchResult
+                  key={i}
+                  result={result}
+                  lines={i !== a.length - 1}
+                  selected={this.isSelected(result)}
+                  onSelect={this.onSelect}
+                  onImageClick={() => this.onImageClick(result)}
+                  onMore={this.onMore}
+                />
+              ))
+            ) : itemsReturned && items.length === 0 ? (
+              <IonItem lines="none">
+                <IonLabel>
+                  <p>{noItemsPlaceholder}</p>
+                </IonLabel>
+              </IonItem>
+            ) : null}
+          </IonList>
           {this.state.selectedItems.length ? (
-            <IonFab className="ion-margin" vertical="bottom" horizontal="end" slot="fixed">
-              <IonFabButton className="ion-action-primary" onClick={this.onSubmit}>
+            <IonFab
+              className="ion-margin"
+              vertical="bottom"
+              horizontal="end"
+              slot="fixed"
+            >
+              <IonFabButton
+                className="ion-action-primary"
+                onClick={this.onSubmit}
+              >
                 <IonIcon icon={send} />
               </IonFabButton>
             </IonFab>
@@ -236,24 +274,28 @@ class Component extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: ReducerState) => ({
-  items: state.App.items || undefined
+  items: state.App.items || undefined,
 })
 
-const mapDispatchToProps = (dispatch: any) => bindActionCreators({
-  setItems: payload => ({
-    type: constants.SET_ITEMS,
-    payload
-  }),
-  showLoading: () => ({
-    type: constants.SHOW_LOADING
-  }),
-  hideLoading: () => ({
-    type: constants.HIDE_LOADING
-  }),
-  showToast: (payload: string) => ({
-    type: constants.SHOW_TOAST,
-    payload
-  })
-}, dispatch)
+const mapDispatchToProps = (dispatch: any) =>
+  bindActionCreators(
+    {
+      setItems: payload => ({
+        type: constants.SET_ITEMS,
+        payload,
+      }),
+      showLoading: () => ({
+        type: constants.SHOW_LOADING,
+      }),
+      hideLoading: () => ({
+        type: constants.HIDE_LOADING,
+      }),
+      showToast: (payload: string) => ({
+        type: constants.SHOW_TOAST,
+        payload,
+      }),
+    },
+    dispatch
+  )
 
 export default connect(mapStateToProps, mapDispatchToProps)(Component)

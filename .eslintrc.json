@@ -6,8 +6,8 @@
   },
   "extends": [
     "react-app",
-    "eslint:recommended",
     "plugin:react/recommended",
+    "eslint:recommended",
     "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -42,5 +42,27 @@
     "react/prop-types": "off",
     "arrow-body-style": "off",
     "prefer-arrow-callback": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "public/*.js",
+        "public/firebase/*.js"
+      ],
+      "rules": {
+        "no-undef": "off",
+        "no-restricted-globals": "off",
+        "no-extra-semi": "off",
+        "no-unused-vars": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "build",
+    "android"
+  ],
+  "globals": {
+    "JSX": "readonly",
+    "google": "readonly"
   }
 }
