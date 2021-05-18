@@ -8,8 +8,8 @@ import * as constants from 'reducers/constants'
 import { State as ReducerState } from 'reducers'
 
 export type Props = {
-  open: boolean,
-  message?: string,
+  open: boolean
+  message?: string
   hideLoading: Function
 }
 
@@ -24,13 +24,17 @@ const Component: React.FC<Props> = ({ open, message, hideLoading }) => (
 Component.defaultProps = { message: 'Please wait' }
 
 const mapStateToProps = (state: ReducerState) => ({
-  open: state.App.loading
+  open: state.App.loading,
 })
 
-const mapDispatchToProps = (dispatch: any) => bindActionCreators({
-  hideLoading: () => ({
-    type: constants.HIDE_LOADING
-  })
-}, dispatch)
+const mapDispatchToProps = (dispatch: any) =>
+  bindActionCreators(
+    {
+      hideLoading: () => ({
+        type: constants.HIDE_LOADING,
+      }),
+    },
+    dispatch
+  )
 
 export default connect(mapStateToProps, mapDispatchToProps)(Component)

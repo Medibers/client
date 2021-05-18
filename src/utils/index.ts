@@ -6,24 +6,20 @@ export const platformIsMobile = isPlatform('mobile')
 export const platformIsiOS = isPlatform('ios')
 export const platformIsAndroid = isPlatform('android')
 
-export const platformIsWebBrowser =
-  window.location.host !== 'localhost' // window.location.host == localhost on mobile apps only
+export const platformIsWebBrowser = window.location.host !== 'localhost' // window.location.host == localhost on mobile apps only
 
 export const archivedRequestStates: Array<String> = ['cancelled', 'received']
 
-export const getActiveRequests = (requests: Array<ItemRequestInterface>) => (
+export const getActiveRequests = (requests: Array<ItemRequestInterface>) =>
   requests.filter(({ state }) => archivedRequestStates.indexOf(state) < 0)
-)
 
-export const getArchivedRequests = (requests: Array<ItemRequestInterface>) => (
+export const getArchivedRequests = (requests: Array<ItemRequestInterface>) =>
   requests.filter(({ state }) => archivedRequestStates.indexOf(state) > -1)
-)
 
-export const imageServerUrl = (
-  window.location.host === 'localhost' // deployment on mobile
+export const imageServerUrl =
+  (window.location.host === 'localhost' // deployment on mobile
     ? process.env.REACT_APP_FILE_SERVER_URL_REMOTE
-    : process.env.REACT_APP_FILE_SERVER_URL
-) + '/images'
+    : process.env.REACT_APP_FILE_SERVER_URL) + '/images'
 
 export const requestStatesMappedToBadgeBackground: {
   [key: string]: string
@@ -31,12 +27,13 @@ export const requestStatesMappedToBadgeBackground: {
   'awaiting transit': 'var(--ion-color-secondary)',
   'out of stock': 'var(--ion-color-out-of-stock)',
   'in transit': 'var(--ion-color-transit)',
-  'cancelled': 'var(--ion-color-cancelled)',
-  'delivered': 'var(--ion-color-primary)',
-  'received': 'var(--ion-color-primary)'
+  cancelled: 'var(--ion-color-cancelled)',
+  delivered: 'var(--ion-color-primary)',
+  received: 'var(--ion-color-primary)',
 }
 
-export const itemState = (available: boolean) => available ? 'Available' : 'Out of stock'
+export const itemState = (available: boolean) =>
+  available ? 'Available' : 'Out of stock'
 
 export const TEST_ENV = 'test'
 

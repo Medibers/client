@@ -1,9 +1,10 @@
-import {
-  Plugins,
-  PushNotificationToken
-} from '@capacitor/core'
+import { Plugins, PushNotificationToken } from '@capacitor/core'
 
-import { platformIsMobile, platformIsAndroid, platformIsWebBrowser } from 'utils'
+import {
+  platformIsAndroid,
+  platformIsMobile,
+  platformIsWebBrowser,
+} from 'utils'
 
 import Routes from 'routes'
 import Requests, { endPoints } from 'requests'
@@ -12,18 +13,19 @@ import eventsInstance, { syncData } from '../events'
 
 const { App, Network, PushNotifications } = Plugins
 
-platformIsMobile && (function () {
-  setPushNotificationListener()
-  setNetworkListener()
-  setBackButtonListener()
-})()
+platformIsMobile &&
+  (function () {
+    setPushNotificationListener()
+    setNetworkListener()
+    setBackButtonListener()
+  })()
 
 platformIsWebBrowser && forbidBackNavsFromRequests()
 
 async function sendPushNotificationTokenToServer(token: string) {
   return await Requests.put(endPoints['push-notification-token'], {
     platform: platformIsAndroid ? 'android' : 'ios',
-    token
+    token,
   })
 }
 
@@ -31,42 +33,47 @@ function setPushNotificationListener() {
   // Request permission to use push notifications
   // iOS prompts user and return if they granted permission or not
   // Android grants without prompting
-  PushNotifications.requestPermissions && PushNotifications.requestPermissions().then(() => {
+  PushNotifications.requestPermissions &&
+    PushNotifications.requestPermissions()
+      .then(() => {
+        PushNotifications.addListener(
+          'registration',
+          (token: PushNotificationToken) => {
+            sendPushNotificationTokenToServer(token.value)
+          }
+        )
 
-    PushNotifications.addListener('registration', (token: PushNotificationToken) => {
-      sendPushNotificationTokenToServer(token.value)
-    })
+        PushNotifications.addListener('registrationError', (error: any) => {
+          console.error('Error on registration', JSON.stringify(error))
+        })
 
-    PushNotifications.addListener('registrationError', (error: any) => {
-      console.error('Error on registration', JSON.stringify(error))
-    })
-
-    // Register with Apple / Google to receive push via APNS/FCM
-    PushNotifications.register()
-
-  }).catch(console.error)
+        // Register with Apple / Google to receive push via APNS/FCM
+        PushNotifications.register()
+      })
+      .catch(console.error)
 }
 
 function setNetworkListener() {
   Network.removeAllListeners()
   // Attempt to run callback once when the network listener fires multiple times
-  let i = 0, previousConnectionType: any = null
-  Network.addListener('networkStatusChange', ({ connected, connectionType }) => {
-    if (previousConnectionType !== connectionType) i = 0
-    if (connected) {
-      i === 0 && eventsInstance.emit(syncData) // Trigger active page to sync data
-      previousConnectionType = connectionType
-      i++
-    } else {
-      i = 0
+  let i = 0,
+    previousConnectionType: any = null
+  Network.addListener(
+    'networkStatusChange',
+    ({ connected, connectionType }) => {
+      if (previousConnectionType !== connectionType) i = 0
+      if (connected) {
+        i === 0 && eventsInstance.emit(syncData) // Trigger active page to sync data
+        previousConnectionType = connectionType
+        i++
+      } else {
+        i = 0
+      }
     }
-  })
+  )
 }
 
-const deadPaths = [
-  Routes.login.path,
-  Routes.home.path
-]
+const deadPaths = [Routes.login.path, Routes.home.path]
 
 function setBackButtonListener() {
   document.addEventListener('ionBackButton', (ev: any) => {
@@ -79,8 +86,7 @@ function setBackButtonListener() {
         } else {
           window.location.href = Routes.home.path
         }
-      } else if (deadPaths.includes(path))
-        App.exitApp()
+      } else if (deadPaths.includes(path)) App.exitApp()
     })
   })
 }
@@ -89,10 +95,9 @@ function forbidBackNavsFromRequests() {
   const key = 'path',
     path = window.location.pathname
 
-  const navForbidden = (
+  const navForbidden =
     window.localStorage.getItem(key) === Routes.requests.path &&
     window.location.pathname === Routes.order.path
-  )
 
   window.localStorage.setItem(key, path)
 
@@ -102,9 +107,6 @@ function forbidBackNavsFromRequests() {
   }
 
   window.onpopstate = (e: any) => {
-    window.localStorage.setItem(
-      key,
-      e.target.location.pathname
-    )
+    window.localStorage.setItem(key, e.target.location.pathname)
   }
 }
