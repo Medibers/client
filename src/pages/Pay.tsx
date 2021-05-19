@@ -53,18 +53,9 @@ class Component extends React.Component<Props> {
     msisdnPopoverShown: false
   }
 
-  componentDidMount() {
-    const { location } = this.props
-    if (location.state && location.state.selectedItems) return
-    window.location.replace(Routes.home.path)
-  }
-
   onPaymentChannelSelect = () => {
-    const { location } = this.props
-    const { header, message, buttonText } = AlertText['confirmation'](
-      location.state && location.state.selectedItems.length === 1
-    )
-    this.showAlert({ header, message, buttonText, confirmsPayment: true })
+    const { header, message } = AlertText['confirmation']()
+    this.showAlert({ header, message, confirmsPayment: true })
   }
 
   onConfirmPaymentChannel = () => {
@@ -196,7 +187,6 @@ class Component extends React.Component<Props> {
             open={alert.shown}
             header={alert.header}
             message={alert.message}
-            buttonText={alert.buttonText}
             onConfirm={this.onAlertConfirm}
             onDismiss={this.hideAlert}
           />
@@ -223,8 +213,7 @@ type AlertState = {
 const AlertText: ({
   [key: string]: ((e?: any) => ({
     header: string,
-    message: string,
-    buttonText?: string
+    message: string
   }))
 }) = {
   'payment-succeeded': (credits: number) => ({
@@ -237,15 +226,15 @@ const AlertText: ({
     header: 'Payment failed',
     message: `<ion-label>
       <p>Please try again</p>
-      <p>Ensure your account is eligible to be deducted the desired amount</p>
+      <p>Ensure your account is eligible to deduct the desired amount</p>
     </ion-label>`
   }),
-  'confirmation': (single: boolean) => ({
-    header: 'Confirm your request',
-    message: `<ion-label>
-      <p>We will contact you shortly after to deliver your ${single ? 'item' : 'items'}</p>
-    </ion-label>`,
-    buttonText: 'Confirm'
+  'confirmation': () => ({
+    header: 'Lorem ipsum confirm action',
+    message: `
+      <p>Lorem ipsum payment lorem ipsum payment</p>
+      <p>Lorem ipsum payment</p>
+    `
   })
 }
 

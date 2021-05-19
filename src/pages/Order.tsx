@@ -56,7 +56,7 @@ const costTextStyle = {
   'marginInlineEnd': '10px'
 }
 
-const primaryAction = 'Pay'
+const primaryAction = 'Action'
 
 class Component extends React.Component<Props> {
 
