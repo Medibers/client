@@ -60,7 +60,6 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "1.4.0",
-    "@types/googlemaps": "^3.43.0"
+    "@capacitor/cli": "1.4.0"
   }
 }
