@@ -132,11 +132,11 @@ class Component extends React.Component<Props> {
               </IonItem>
               <IonItemDivider style={this.getIonItemDividerStyle('name')} />
 
-              <IonItem lines="full" className="ion-margin-top">
-                <IonLabel className="wrap"><p className="ion-label-primary">
+              <IonItem className="ion-margin-top">
+                <IonLabel><h3 className="ion-label-primary">
                   By completing signup and using {APP_NAME}, you are bound by the terms, conditions and privacy policy stated&nbsp;
                   <Link to={Routes.tcs.path}>here</Link>
-                </p></IonLabel>
+                </h3></IonLabel>
               </IonItem>
 
             </IonList>
