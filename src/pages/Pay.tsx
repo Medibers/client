@@ -222,7 +222,7 @@ type AlertState = {
   confirmsPayment?: boolean
 }
 
-export const AlertText: ({
+const AlertText: ({
   [key: string]: ((e?: any) => ({
     header: string,
     message: string,
@@ -243,8 +243,7 @@ export const AlertText: ({
     </ion-label>`
   }),
   'confirmation': (single: boolean) => ({
-    // header: 'Confirm your request',
-    header: 'Confirm your order',
+    header: 'Confirm your request',
     message: `<ion-label>
       <p>We will contact you shortly after to deliver your ${single ? 'item' : 'items'}</p>
     </ion-label>`,

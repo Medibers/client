@@ -15,17 +15,12 @@ import {
 
 import { addCircleOutline, removeCircleOutline, pencilOutline, close, send } from 'ionicons/icons';
 
-import { Header, Popover, Alert as OrderConfirmationAlert } from 'components'
-import { setActiveRequestsPresence } from 'session'
+import { Header, Popover } from 'components'
 import { getDeliveryLocationForNextOrder, getDeliveryAddressForNextOrder } from 'location'
 
 import { ItemSearchResult as ItemSearchResultInterface } from 'types'
 import { deliveryCost, computeOrderCostAndDistance } from 'utils/charges'
 import { formatMoney } from 'utils/currency'
-
-import Requests, { endPoints } from 'requests'
-
-import { AlertText } from 'pages/Pay'
 
 type Props = {
   history: History | any,
@@ -40,7 +35,6 @@ type Props = {
 
 type State = {
   quantityModifyItem: string | null,
-  orderConfirmationShown: boolean,
   selectedItems: Array<ItemSearchResultInterface>,
   cost: number,
   distance: number
@@ -62,10 +56,7 @@ const costTextStyle = {
   'marginInlineEnd': '10px'
 }
 
-const title = 'Your order' // 'Order'
-const primaryAction = 'Order now' // 'Pay'
-
-const alertText = AlertText.confirmation()
+const primaryAction = 'Pay'
 
 class Component extends React.Component<Props> {
 
@@ -83,7 +74,6 @@ class Component extends React.Component<Props> {
 
   state: State = {
     quantityModifyItem: null,
-    orderConfirmationShown: false,
     selectedItems: this.selectedItems,
     ...computeOrderCostAndDistance(this.selectedItems)
   }
@@ -130,41 +120,9 @@ class Component extends React.Component<Props> {
   }
 
   onPrimaryAction = () => {
-    // const { selectedItems } = this.state
-    // this.props.history.push(Routes.pay.path, { selectedItems })
-    this.setOrderConfirmationVisibility(true)
+    const { selectedItems } = this.state
+    this.props.history.push(Routes.pay.path, { selectedItems })
   }
-
-  onConfirmOrder = () => {
-    const { showLoading, hideLoading, showToast, location } = this.props
-    const { lat, lon, address } = getDeliveryLocationForNextOrder()
-
-    const payload = {
-      'pharmacy-items': location.state.selectedItems.map(o => ({
-        item: o._id, quantity: o.quantity
-      })),
-      'notes': '',
-      lat,
-      lon,
-      address
-    }
-    showLoading()
-    Requests.post(endPoints['item-requests'], payload).then((response: any) => {
-      if (response.error) {
-        console.error('Payment errored', response.error) // Show alert
-        showToast(response.error)
-      } else {
-        setActiveRequestsPresence(true)
-        window.location.replace(Routes.home.path)
-      }
-    }).catch(err => {
-      console.error(err)
-      showToast(err.error || err.toString())
-    }).finally(hideLoading)
-  }
-
-  setOrderConfirmationVisibility =
-    (v: boolean) => this.setState({ orderConfirmationShown: v })
 
   onQtyPopoverPresented = () => {
     const e: HTMLIonInputElement | null = document.querySelector('ion-popover ion-input')
@@ -195,20 +153,19 @@ class Component extends React.Component<Props> {
   render() {
     const {
       cost,
-      orderConfirmationShown,
       quantityModifyItem,
       selectedItems
     } = this.state
 
     const locationNotAvailable = this.locationNotAvailable()
 
-    const { item: { name: item } } =
+    const { item: { name: item }, quantity = null } =
       selectedItems.find(({ _id }) => _id === quantityModifyItem) ||
       { item: { name: null } }
 
     return (
       <IonPage className="order">
-        <Header title={title} />
+        <Header title="Order" />
         <IonContent>
           <IonList lines="full">
             <IonItem>
@@ -281,14 +238,6 @@ class Component extends React.Component<Props> {
             onSubmit={this.onQtyChangeSubmitted}
           />
         </Popover>
-        <OrderConfirmationAlert
-          open={orderConfirmationShown}
-          header={alertText.header}
-          message={alertText.message}
-          buttonText={alertText.buttonText}
-          onConfirm={this.onConfirmOrder}
-          onDismiss={() => this.setOrderConfirmationVisibility(false)}
-        />
       </IonPage>
     )
   }

@@ -50,9 +50,8 @@ export type Props = {
   hideToast: () => {},
 }
 
-const title = 'Orders'
-const primaryAction = 'Make an Order'
-const placeholderText = 'Your orders will show here'
+const primaryAction = 'Make Request'
+const placeholderText = 'Your requests will show here'
 
 class Component extends React.Component<Props> {
 
@@ -354,7 +353,7 @@ class Component extends React.Component<Props> {
 
     return renderContent ? (
       <IonPage>
-        <Header omitsBack title={title} actions={this.toolbarActions()} />
+        <Header omitsBack title="Requests" actions={this.toolbarActions()} />
         <IonContent>
           <IonRefresher slot="fixed" onIonRefresh={this.syncRequestData}>
             <IonRefresherContent></IonRefresherContent>
