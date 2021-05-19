@@ -4,7 +4,7 @@ import about from './about'
 
 export type Type = {
   [key: string]: {
-    en: string
+    en: string,
     local?: string
   }
 }
@@ -14,7 +14,7 @@ const text: {
 } = {
   app,
   home,
-  about,
+  about
 }
 
 export default text

@@ -1,14 +1,6 @@
 import React from 'react'
 
-import {
-  IonContent,
-  IonIcon,
-  IonItem,
-  IonItemDivider,
-  IonLabel,
-  IonList,
-  IonPopover,
-} from '@ionic/react'
+import { IonPopover, IonContent, IonLabel, IonItem, IonIcon, IonItemDivider, IonList } from '@ionic/react'
 import { send } from 'ionicons/icons'
 
 import { CCs, getMSISDNFromCCAndSN, parseMTNUGSN } from 'utils/msisdn'
@@ -16,17 +8,15 @@ import { CCs, getMSISDNFromCCAndSN, parseMTNUGSN } from 'utils/msisdn'
 import { PhoneInput } from 'components'
 
 type Props = {
-  open: boolean
-  onDismiss: () => void
+  open: boolean,
+  onDismiss: () => void,
   onSubmit: (a: string) => void
 }
 
 class Component extends React.Component<Props> {
+
   state: {
-    sn: string
-    cc: string
-    focussed: boolean
-    errored: boolean
+    sn: string, cc: string, focussed: boolean, errored: boolean
   } = { sn: '', cc: CCs.ug.value, focussed: false, errored: false }
 
   onSelectChange = (e: any) => {
@@ -45,7 +35,8 @@ class Component extends React.Component<Props> {
   }
 
   onInputKeyUp = (e: { keyCode: number }) => {
-    if (e.keyCode === 13) this.onSubmit()
+    if (e.keyCode === 13)
+      this.onSubmit()
   }
 
   focusOnInput() {
@@ -55,7 +46,10 @@ class Component extends React.Component<Props> {
 
   onInputChange = (e: any) => {
     const value = e.target.value
-    if (/^[0-9]{1,9}$/.test(value)) this.setState({ sn: value, errored: false })
+    if (
+      /^[0-9]{1,9}$/.test(value)
+    )
+      this.setState({ sn: value, errored: false })
   }
 
   onInputFocus = () => {
@@ -68,7 +62,9 @@ class Component extends React.Component<Props> {
 
   getItemDividerColor = () => {
     const { focussed, errored } = this.state
-    return errored ? 'danger' : focussed ? 'primary' : 'light'
+    return errored ? 'danger' : (
+      focussed ? 'primary' : 'light'
+    )
   }
 
   render() {
@@ -82,19 +78,13 @@ class Component extends React.Component<Props> {
         cssClass="popover-wide"
       >
         <IonContent className="ion-padding">
-          <h2
-            style={{
-              color: 'var(--ion-color-primary)',
-              margin: '0 0 20px 0',
-              fontSize: '20px',
-            }}
-          >
-            Type new phone number
-          </h2>
+          <h2 style={{
+            color: 'var(--ion-color-primary)',
+            margin: '0 0 20px 0',
+            fontSize: '20px'
+          }}>Type new phone number</h2>
           <IonLabel>
-            <p style={{ margin: 0 }}>
-              We will use the new phone number for following charges
-            </p>
+            <p style={{ margin: 0 }}>We will use the new phone number for following charges</p>
           </IonLabel>
         </IonContent>
         <IonContent>
@@ -105,13 +95,9 @@ class Component extends React.Component<Props> {
                 onKeyUp={this.onInputKeyUp}
                 onChange={this.onInputChange}
                 onFocus={this.onInputFocus}
-                onBlur={this.onInputBlur}
-              />
+                onBlur={this.onInputBlur} />
             </IonItem>
-            <IonItemDivider
-              color={this.getItemDividerColor()}
-              style={{ minHeight: 0 }}
-            />
+            <IonItemDivider color={this.getItemDividerColor()} style={{ minHeight: 0 }} />
             <IonItem button onClick={this.onSubmit} className="ion-text-center">
               <IonIcon className="ion-icon-primary" icon={send}></IonIcon>
             </IonItem>
@@ -124,6 +110,7 @@ class Component extends React.Component<Props> {
   componentDidUpdate() {
     this.focusOnInput()
   }
+
 }
 
 export default Component

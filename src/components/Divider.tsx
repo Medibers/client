@@ -1,8 +1,8 @@
 import React from 'react'
-import { IonItemDivider } from '@ionic/react'
+import { IonItemDivider } from "@ionic/react"
 
 type DividerProps = {
-  cssClass?: string
+  cssClass?: string,
   text?: string
 }
 
@@ -11,7 +11,7 @@ const Divider: React.FC<DividerProps> = ({ text, cssClass }) => (
 )
 
 Divider.defaultProps = {
-  cssClass: 'mini-divider',
+  cssClass: 'mini-divider'
 }
 
 export default Divider

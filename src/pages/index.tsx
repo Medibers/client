@@ -16,20 +16,8 @@ import TCs from './TCs'
 import WebSplashScreen from './WebSplashScreen'
 
 export {
-  Signup1,
-  Signup2,
-  Login,
-  Home,
-  Account,
-  Search,
-  Item,
-  Order,
-  Pay,
-  Location,
-  Requests,
-  Request,
-  Credit,
-  About,
-  TCs,
-  WebSplashScreen,
+  Signup1, Signup2, Login, Home, Account,
+  Search, Item, Order, Pay, Location, Requests, Request, Credit,
+  About, TCs,
+  WebSplashScreen
 }

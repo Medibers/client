@@ -5,7 +5,7 @@ const currency = 'UGX'
  * Though those are unnecessary for our cases
  * */
 function numberWithCommas(number: number) {
-  return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+  return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
 }
 
 export const formatMoney = (amount: number) => {

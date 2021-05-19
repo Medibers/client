@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { IonItem, IonList } from '@ionic/react'
+import { IonList, IonItem } from '@ionic/react'
 import { ImageSlider } from 'components'
 
 import { ItemSearchResult } from 'types'
@@ -13,15 +13,14 @@ const wrapperStyle = {
   '--padding-start': 0,
   '--padding-end': 0,
   '--inner-padding-start': 0,
-  '--inner-padding-end': 0,
+  '--inner-padding-end': 0
 }
 
 const Component: React.FC<Props> = ({ result }) => {
+
   if (result === null) return null
 
-  const {
-    item: { 'icon-urls': urls, name },
-  } = result
+  const { item: { 'icon-urls': urls, name } } = result
 
   return (
     <IonList lines="full" className="ion-no-padding">
@@ -31,6 +30,7 @@ const Component: React.FC<Props> = ({ result }) => {
       </IonItem>
     </IonList>
   )
+
 }
 
 export default Component

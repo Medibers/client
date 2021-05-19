@@ -97,7 +97,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "lint": "eslint .",
-    "lint-fix": "eslint . --fix"
+    "lint-fix": "eslint --fix ."
   },
   "browserslist": {
     "production": [

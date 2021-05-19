@@ -25,5 +25,5 @@ export {
   Divider,
   Menu,
   Item,
-  ImageSlider,
+  ImageSlider
 }

@@ -1,109 +1,98 @@
 import decrypt from 'utils/jwt'
-import { clearSession, getSessionToken } from 'session'
+import { getSessionToken, clearSession } from 'session'
 
 import {
-  About,
-  Account,
-  Credit,
-  Home,
-  Item,
-  Location,
-  Login,
-  Order,
-  Pay,
-  Request,
-  Requests,
-  Search,
-  Signup1,
-  Signup2,
-  TCs,
+  Signup1, Signup2, Login, Home,
+  Search, Item, Order, Pay, Location,
+  Requests, Request, Credit, Account,
+  About, TCs
 } from 'pages'
 
-interface IRoutes {
+interface Routes {
   [key: string]: {
-    path: string
-    component: Function
-    isPublic?: boolean
+    path: string,
+    component: Function,
+    isPublic?: boolean,
     preventRedirect?: true
   }
 }
 
-const Routes: IRoutes = {
+const Routes: Routes = {
   courier: {
     path: '/courier',
-    component: Home,
+    component: Home
   },
   admin: {
     path: '/admin',
-    component: Requests,
+    component: Requests
   },
   home: {
     path: '/',
-    component: Home,
+    component: Home
   },
   about: {
     path: '/about',
     component: About,
     isPublic: true,
-    preventRedirect: true,
+    preventRedirect: true
   },
   tcs: {
     path: '/terms-conditions',
     component: TCs,
     isPublic: true,
-    preventRedirect: true,
+    preventRedirect: true
   },
   account: {
     path: '/account',
-    component: Account,
+    component: Account
   },
   search: {
     path: '/search',
-    component: Search,
+    component: Search
   },
   item: {
     path: '/item',
-    component: Item,
+    component: Item
   },
   order: {
     path: '/order',
-    component: Order,
+    component: Order
   },
   pay: {
     path: '/pay',
-    component: Pay,
+    component: Pay
   },
   location: {
     path: '/location',
-    component: Location,
+    component: Location
   },
   requests: {
     path: '/requests',
-    component: Requests,
+    component: Requests
   },
   request: {
     path: '/request',
-    component: Request,
+    component: Request
   },
   credit: {
     path: '/credit',
-    component: Credit,
+    component: Credit
   },
   signup1: {
     path: '/signup1',
     component: Signup1,
-    isPublic: true,
+    isPublic: true
   },
   signup2: {
     path: '/signup2',
     component: Signup2,
-    isPublic: true,
+    isPublic: true
   },
   login: {
     path: '/login',
     component: Login,
-    isPublic: true,
-  },
+    isPublic: true
+  }
 }
 
 export default Routes
@@ -112,13 +101,12 @@ const RoutesIndexedOnRoles = [
   Routes.home.path,
   Routes.courier.path,
   Routes.admin.path,
-  Routes.admin.path,
+  Routes.admin.path
 ]
 
 export const getDefaultRoute = (token = getSessionToken()) => {
   const role = decrypt(token).role
-  if (role === undefined) {
-    // Force logout for old client
+  if (role === undefined) { // Force logout for old client
     clearSession()
     window.location.reload()
   }

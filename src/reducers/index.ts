@@ -7,7 +7,6 @@ export interface State {
   App: AppState
 }
 
-export default (state: State | undefined, action: Action) =>
-  combineReducers({
-    App,
-  })(state, action)
+export default (state: State | undefined, action: Action) => combineReducers({
+  App
+})(state, action)

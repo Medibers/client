@@ -1,15 +1,14 @@
-importScripts(
-  'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js'
-)
+importScripts('https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js')
 
 let event = null
 
-const url =
-  location.host == 'localhost'
-    ? 'https://medibers-server.herokuapp.com'
-    : location.port == '3000'
-    ? 'http://localhost:3015'
-    : 'https://medibers-server.herokuapp.com'
+const url = location.host == 'localhost'
+  ? 'https://medibers-server.herokuapp.com'
+  : (
+    location.port == '3000'
+      ? 'http://localhost:3015'
+      : 'https://medibers-server.herokuapp.com'
+  )
 
 const onSocketEvent = message => {
   console.info('Message received from server', message)
@@ -17,8 +16,11 @@ const onSocketEvent = message => {
 }
 
 onmessage = function ({ data }) {
+
   console.info(
-    (data.token ? 'Session token' : 'Message') + ' received from main script',
+    (
+      data.token ? 'Session token' : 'Message'
+    ) + ' received from main script',
     data.token ? '.. setting up socket io' : ''
   )
 
@@ -32,4 +34,5 @@ onmessage = function ({ data }) {
   if (event == null) return
 
   // Do other stuff here
+
 }

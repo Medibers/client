@@ -1,20 +1,12 @@
 import React from 'react'
 import Moment from 'moment'
-import { IonButton, IonIcon, IonLabel } from '@ionic/react'
+import { IonLabel, IonIcon, IonButton } from '@ionic/react'
 
-import {
-  checkbox as active,
-  ellipsisHorizontal as more,
-  squareOutline as numb,
-} from 'ionicons/icons'
+import { squareOutline as numb, checkbox as active, ellipsisHorizontal as more } from 'ionicons/icons'
 
 import { ItemRequest, MenuAction } from 'types'
 import { requestStatesMappedToBadgeBackground } from 'utils'
-import {
-  userIsAdmin,
-  userIsNotClientUser,
-  userIsPharmacyOperator,
-} from 'utils/role'
+import { userIsAdmin, userIsPharmacyOperator, userIsNotClientUser } from 'utils/role'
 import { Menu as ActionMenu } from 'components'
 
 Moment.updateLocale('en', {
@@ -31,120 +23,99 @@ Moment.updateLocale('en', {
     M: '1m',
     MM: '%dm',
     y: '1y',
-    yy: '%dy',
-  },
+    yy: '%dy'
+  }
 })
 
 type Props = {
-  item: ItemRequest
-  detailed: boolean
-  selected: boolean
-  selectModeOn: boolean
-  onTap: Function
+  item: ItemRequest,
+  detailed: boolean,
+  selected: boolean,
+  selectModeOn: boolean,
+  onTap: Function,
   actions: Array<MenuAction>
 }
 
 const Component: React.FC<Props> = ({
-  item: {
-    _id,
-    pharmacyItems,
-    state,
-    createdAt,
-    courier,
-    lat,
-    lon,
-    address,
-    user,
-  },
+  item: { _id, pharmacyItems, state, createdAt, courier, lat, lon, address, user },
   detailed,
   selected,
   selectModeOn,
   onTap,
-  actions,
+  actions
 }) => {
+
   let menuRef: any = null
 
   const onClick = (position: Number, item: String, event: any) => {
     event.stopPropagation()
     if (position < 0) {
       menuRef.open({ target: event.target })
-    } else onTap(position, item)
+    } else
+      onTap(position, item)
   }
 
   const userCanViewRequestClient = userIsPharmacyOperator() || userIsAdmin()
 
   return (
     <>
-      {selectModeOn ? (
-        <IonIcon
-          icon={selected ? active : numb}
-          slot="start"
-          onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
-          className="ion-no-margin ion-icon-primary"
-        />
-      ) : (
-        <div
-          onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
-          className="fill-height"
-          style={{ width: 'var(--ion-padding)' }}
-        />
-      )}
+      {
+        selectModeOn
+          ? <IonIcon
+            icon={selected ? active : numb}
+            slot="start"
+            onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
+            className="ion-no-margin ion-icon-primary" />
+          : <div
+            onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
+            className="fill-height"
+            style={{ width: 'var(--ion-padding)' }} />
+      }
       <IonLabel
         className="ion-padding-vertical ion-no-margin spaced"
         onClick={e => onClick(1, _id, e)}
       >
-        <h2
-          className={
-            'ion-label-primary ' + (detailed ? 'ion-text-wrap' : 'ellipses')
-          }
-        >
-          {pharmacyItems.map(
-            (o, i) =>
-              (i > 0 ? ', ' : '') +
-              (o.item['common-name'] || o.item['scientific-name'])
-          )}
-        </h2>
+        <h2 className={
+          'ion-label-primary ' + (detailed ? 'ion-text-wrap' : 'ellipses')
+        }>{
+            pharmacyItems.map((o, i) => (i > 0 ? ', ' : '') + (
+              o.item['common-name'] || o.item['scientific-name']
+            ))
+          }</h2>
         <h4 className="flex ion-align-items-center">
-          <span
-            style={{
-              backgroundColor: requestStatesMappedToBadgeBackground[state],
-            }}
-            className="request-badge"
-          />
-          &nbsp;&nbsp;
+          <span style={{
+            backgroundColor: requestStatesMappedToBadgeBackground[state]
+          }} className="request-badge" />&nbsp;&nbsp;
           {state}
         </h4>
-        {lat !== undefined && lon !== undefined ? (
-          <p>Delivery at {address}</p>
-        ) : null}
-        {detailed ? (
-          <>
-            {userCanViewRequestClient ? (
-              <p>Client - {user.name || user.phone}</p>
-            ) : null}
-            {courier ? <p>Courier - {`${courier.name}`}</p> : null}
-          </>
-        ) : null}
+        {(
+          lat !== undefined &&
+          lon !== undefined
+        ) ? <p>Delivery at {address}</p> : null}
+        {detailed ? <>
+          {userCanViewRequestClient
+            ? <p>Client - {user.name || user.phone}</p>
+            : null}
+          {courier ? <p>Courier - {`${courier.name}`}</p> : null}
+        </> : null}
       </IonLabel>
       <IonLabel
         className="one-line"
         style={{
           minWidth: 'fit-content',
-          maxWidth: 'fit-content',
+          maxWidth: 'fit-content'
         }}
         slot="end"
         onClick={e => onClick(2, _id, e)}
       >
         <p className="ion-text-end">{formatDate(createdAt)}</p>
       </IonLabel>
-      {selectModeOn ? null : (
-        <IonButton onClick={e => onClick(-1, _id, e)} slot="end" fill="clear">
-          <IonIcon className="ion-icon-primary" icon={more} />
-        </IonButton>
-      )}
+      {selectModeOn ? null : <IonButton onClick={e => onClick(-1, _id, e)} slot="end" fill="clear">
+        <IonIcon className="ion-icon-primary" icon={more} />
+      </IonButton>}
       <ActionMenu
         id={_id}
-        setRef={(node: any) => (menuRef = node)}
+        setRef={(node: any) => menuRef = node}
         actions={actions}
       />
     </>
