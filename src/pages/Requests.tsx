@@ -31,7 +31,7 @@ import eventsInstance, {
   requestCreate as requestCreateAction,
   requestUpdate as requestUpdateAction,
   syncData as syncDataAction
-} from '../../events'
+} from '../events'
 
 import { userIsAdmin, userIsClientUser, userIsNotClientUser } from 'utils/role'
 import { getActiveRequests, getArchivedRequests } from 'utils'
