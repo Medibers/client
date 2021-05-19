@@ -3,7 +3,7 @@ import { IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonButton, 
 
 import { ToolbarAction } from 'types'
 
-import { APP_NAME } from 'utils'
+const appName = 'MediStore'
 
 export type Props = {
   omitsBack?: boolean
@@ -46,6 +46,6 @@ const Component: React.FC<Props> = ({ omitsBack, title, size, actions = [] }) =>
   )
 }
 
-Component.defaultProps = { title: APP_NAME, size: 'large' }
+Component.defaultProps = { title: appName, size: 'large' }
 
 export default Component

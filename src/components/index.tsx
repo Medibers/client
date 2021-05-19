@@ -8,7 +8,6 @@ import LazyLoad from './LazyLoad'
 import Popover from './Popover'
 import Alert from './Alert'
 import Divider from './Divider'
-import Menu from './Menu'
 
 export {
   Header,
@@ -20,6 +19,5 @@ export {
   LazyLoad,
   Popover,
   Alert,
-  Divider,
-  Menu
+  Divider
 }

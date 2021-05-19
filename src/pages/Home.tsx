@@ -14,11 +14,10 @@ import {
 import {
   person,
   bicycle as requestsIcon,
-  locationSharp as locationIcon,
-  ellipsisVertical as more
+  locationSharp as locationIcon
 } from 'ionicons/icons'
 
-import { Header, Divider, Menu } from 'components'
+import { Header, Divider } from 'components'
 
 import { userIsClientUser, userIsNotClientUser } from 'utils/role'
 
@@ -72,9 +71,6 @@ class Component extends React.Component<Props> {
   }, {
     icon: person,
     handler: () => this.props.history.push(Routes.account.path)
-  }, {
-    icon: more,
-    handler: (event: any) => this.menuRef.open({ target: event.target })
   }]
 
   onSelectCategory = (category: string) => {
@@ -85,29 +81,11 @@ class Component extends React.Component<Props> {
     this.props.history.push(Routes.location.path)
   }
 
-  menuRef: any
-
-  menuActions = () => [
-    {
-      text: 'About Us',
-      handler: () => this.props.history.push(Routes.about.path)
-    },
-    /* How it works, FAQs, Contacts */
-    { text: 'Key Partners', handler: () => null },
-    /* List partners with some description */
-    { text: 'Terms & Conditions', handler: () => this.props.history.push(Routes.tcs.path) }
-    /* Terms of operation, Privacy policy */
-  ]
-
   render() {
     const { lat, lon } = getDeliveryLocationForNextOrder()
     return (
       this.state.renderContent ? <IonPage>
         <Header omitsBack actions={this.toolbarActions()} />
-        <Menu
-          setRef={(node: any) => this.menuRef = node}
-          actions={this.menuActions()}
-        />
         <IonContent>
           <IonList className="ion-no-padding">
             <IonItem className="ion-margin-bottom" lines="none" onClick={this.onChangeDeliveryLocation} button>
@@ -123,11 +101,11 @@ class Component extends React.Component<Props> {
             <IonGrid>
               <IonRow>
                 {
-                  itemCategories.map(({ icon, label, description, value }) => (
-                    <IonCol key={value} className="ion-no-padding" size="6">
+                  itemCategories.map(({ icon, label, description, value }, i, a) => (
+                    <IonCol className="ion-no-padding" size="6">
                       <div className="fill-height ion-padding">
                         <CategoryComponent
-                          key={value}
+                          key={i}
                           label={label}
                           description={description}
                           icon={icon}

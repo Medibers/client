@@ -1,12 +1,11 @@
 import React from 'react'
 import Moment from 'moment'
-import { IonLabel, IonIcon, IonButton } from '@ionic/react'
+import { IonLabel, IonIcon, IonButton, IonSelect, IonSelectOption } from '@ionic/react'
 
 import { squareOutline as numb, checkbox as active, ellipsisHorizontal as more } from 'ionicons/icons'
 
 import { ItemRequest, MenuAction } from 'types'
 import { userIsAdmin, userIsPharmacyOperator, userIsNotClientUser } from 'utils/role'
-import { Menu as ActionMenu } from 'components'
 
 Moment.updateLocale('en', {
   relativeTime: {
@@ -44,14 +43,21 @@ const Component: React.FC<Props> = ({
   actions
 }) => {
 
-  let menuRef: any = null
+  let selectRef: any = null
 
   const onClick = (position: Number, item: String, event: any) => {
     event.stopPropagation()
     if (position < 0) {
-      menuRef.open({ target: event.target })
+      selectRef.open({ target: event.target })
     } else
       onTap(position, item)
+  }
+
+  const onIonChange = ({ detail: { value } }: any) => {
+    if (value === null) return
+    if (selectRef) selectRef.value = null
+    const { handler } = actions.find(({ text }) => value === text) || {}
+    handler && handler(_id)
   }
 
   const userCanViewRequestClient = userIsPharmacyOperator() || userIsAdmin()
@@ -106,11 +112,21 @@ const Component: React.FC<Props> = ({
       {selectModeOn ? null : <IonButton onClick={e => onClick(-1, _id, e)} slot="end" fill="clear">
         <IonIcon className="ion-icon-primary" icon={more} />
       </IonButton>}
-      <ActionMenu
-        id={_id}
-        setRef={(node: any) => menuRef = node}
-        actions={actions}
-      />
+      <IonSelect
+        ref={node => selectRef = node}
+        interfaceOptions={{ showBackdrop: false }}
+        interface="popover"
+        onIonChange={onIonChange}
+        className="select-menu"
+      >
+        {
+          actions.map(({ text }, i, a) => (
+            <IonSelectOption key={i} className={
+              i < a.length - 1 ? '' : 'last'
+            } value={text}>{text}</IonSelectOption>
+          ))
+        }
+      </IonSelect>
     </>
   )
 }

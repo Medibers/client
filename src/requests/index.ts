@@ -38,6 +38,5 @@ export const endPoints = {
   'credit-offers': '/credits/offers',
   'mtn-msisdn': '/user/mtn-msisdn',
   'couriers': '/courier',
-  'push-notification-token': '/push-notification-token',
-  'tcs': '/tcs'
+  'push-notification-token': '/push-notification-token'
 }

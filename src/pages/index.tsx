@@ -10,11 +10,5 @@ import Location from './Location'
 import Requests from './Requests'
 import Request from './Request'
 import Credit from './Credit'
-import About from './About'
-import TCs from './TCs'
 
-export {
-  Signup1, Signup2, Login, Home, Account,
-  Search, Order, Pay, Location, Requests, Request, Credit,
-  About, TCs
-}
+export { Signup1, Signup2, Login, Home, Account, Search, Order, Pay, Location, Requests, Request, Credit }

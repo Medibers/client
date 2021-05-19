@@ -7,10 +7,10 @@ export interface ToolbarAction {
   text?: string,
   icon?: string,
   component?: () => JSX.Element,
-  handler: (e: any) => void
+  handler: () => any
 }
 
-export interface MenuAction { text: string, handler: (a1: any) => void }
+export interface MenuAction { text: string, handler: (a1: string) => void }
 
 export interface Item {
   _id: string,
