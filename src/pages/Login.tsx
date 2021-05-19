@@ -34,11 +34,10 @@ const subHeader = 'Provide your phone and password to sign in'
 
 class Component extends React.Component<Props> {
 
-  state = { phone: null, inputFocussed: null, password: null }
-
-  // state = { phone: '773828773', inputFocussed: null, password: '773828773' } // client user
-  // state = { phone: '773828774', inputFocussed: null, password: '773828773' } // courier
-  // state = { phone: '773828775', inputFocussed: null, password: '773828773' } // admin
+  // state = { phone: null, phoneInputFocussed: false, password: null }
+  state = { phone: '773828773', inputFocussed: null, password: '773828773' } // client user
+  // state = { phone: '773828774', phoneInputFocussed: false, password: '773828773' } // courier
+  // state = { phone: '773828775', phoneInputFocussed: false, password: '773828773' } // admin
 
   onChange = (e: any) => {
     const { name, value } = e.target
@@ -135,7 +134,7 @@ class Component extends React.Component<Props> {
                 <IonInput
                   onIonChange={this.onChange}
                   onIonFocus={this.onInputFocus}
-                  onIonBlur={this.onInputBlur} value={password} type="password" name="password" />
+                  onIonBlur={this.onInputBlur} value={password} type="password" name="password" autocomplete="off" />
               </IonItem>
               <IonItemDivider style={this.getIonItemDividerStyle('password')} />
             </IonList>
