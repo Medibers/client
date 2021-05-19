@@ -5,7 +5,6 @@ import { IonLabel, IonIcon, IonButton } from '@ionic/react'
 import { squareOutline as numb, checkbox as active, ellipsisHorizontal as more } from 'ionicons/icons'
 
 import { ItemRequest, MenuAction } from 'types'
-import { requestStatesMappedToBadgeBackground } from 'utils'
 import { userIsAdmin, userIsPharmacyOperator, userIsNotClientUser } from 'utils/role'
 import { Menu as ActionMenu } from 'components'
 
@@ -76,18 +75,15 @@ const Component: React.FC<Props> = ({
         onClick={e => onClick(1, _id, e)}
       >
         <h2 className={
-          'ion-label-primary ' + (detailed ? 'ion-text-wrap' : 'ellipses')
-        }>{
+          detailed ? 'ion-text-wrap' : 'ellipses'
+        }>
+          {
             pharmacyItems.map((o, i) => (i > 0 ? ', ' : '') + (
               o.item['common-name'] || o.item['scientific-name']
             ))
-          }</h2>
-        <h4 className="flex ion-align-items-center">
-          <span style={{
-            backgroundColor: requestStatesMappedToBadgeBackground[state]
-          }} className="request-badge" />&nbsp;&nbsp;
-          {state}
-        </h4>
+          }
+        </h2>
+        <p>{state}</p>
         {(
           lat !== undefined &&
           lon !== undefined
