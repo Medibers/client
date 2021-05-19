@@ -41,7 +41,6 @@ const Component: React.FC<Props> = ({ item, src, onClick }) => {
     = useState()
   const [observerSet, setObserverSet] = useState(false)
   const [errored, setImageErrored] = useState(false)
-  const [loaded, setImageLoaded] = useState(false)
 
   const setRef = (node: any) => {
     setImageRef(node)
@@ -51,8 +50,6 @@ const Component: React.FC<Props> = ({ item, src, onClick }) => {
     setObserverSet(true)
     setImageErrored(true)
   }
-
-  const onLoad = () => setImageLoaded(true)
 
   useEffect(() => {
     let observer: IntersectionObserver
@@ -103,19 +100,7 @@ const Component: React.FC<Props> = ({ item, src, onClick }) => {
           : (
             errored
               ? <IonIcon style={iconStyle} ref={setRef} className="ion-icon-primary" icon={placeholder} />
-              : <img
-                  onClick={onClickLocal}
-                  ref={setRef}
-                  src={imageSrc}
-                  onLoad={onLoad}
-                  onError={onError}
-                  alt=""
-                  style={{
-                    ...imageStyle,
-                    opacity: loaded ? 1 : 0,
-                    transition: 'opacity 1s'
-                  }}
-                />
+              : <img onClick={onClickLocal} style={imageStyle} ref={setRef} src={imageSrc} onError={onError} alt="" />
           )
       )
       : <div style={iconStyle} ref={setRef} />
