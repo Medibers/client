@@ -52,9 +52,7 @@ export type Props = {
 
 const title = 'Orders'
 const primaryAction = 'Make an Order'
-const placeholderText = userIsClientUser()
-  ? 'Your orders will show here'
-  : 'Orders will appear here'
+const placeholderText = 'Your orders will show here'
 
 class Component extends React.Component<Props> {
 
@@ -63,7 +61,6 @@ class Component extends React.Component<Props> {
     courierPopoverShown: false,
     requestDetailed: null,
     requestsSelected: [] as Array<String>,
-    requestSelectedFromActionMenu: null as String | null,
     archivedRequestsShown: false,
     couriers: undefined
   }
@@ -194,7 +191,7 @@ class Component extends React.Component<Props> {
     }
     hideToast()
     setItemRequests(requests)
-    this.setState({ requestsSelected: [], requestSelectedFromActionMenu: null }, () => {
+    this.setState({ requestsSelected: [] }, () => {
       const archivedRequests = getArchivedRequests(response)
       if (archivedRequests.length) setTimeout(() => {
         showToast(`${archivedRequests.length} ${archivedRequests.length > 1 ? 'requests' : 'request'
@@ -229,15 +226,8 @@ class Component extends React.Component<Props> {
     }
   }
 
-  onAssignCourier = (requestSelected?: string) => {
-    const o: any = {}
-    console.info('requestSelected', typeof(requestSelected))
-    if (typeof(requestSelected) === 'string') {
-      o.requestSelectedFromActionMenu = requestSelected
-    }
-    this.setState({
-      courierPopoverShown: true, ...o
-    })
+  onAssignCourier = () => {
+    this.setState({ courierPopoverShown: true })
   }
 
   onCourierSelected = (courier: string) => {
@@ -245,9 +235,7 @@ class Component extends React.Component<Props> {
       const { showLoading, hideLoading, showToast } = this.props
       showLoading()
       Requests.put(endPoints['item-requests'], {
-        ...this.defaultUpdateRequestBody([
-          this.state.requestSelectedFromActionMenu || ''
-        ]),
+        ...this.defaultUpdateRequestBody(),
         update: { courier, state: 2 }
       }).then(this.updateRequests).catch(err => {
         console.error(err)
@@ -257,10 +245,8 @@ class Component extends React.Component<Props> {
   }
 
   onCourierPopoverDismiss = () => {
-    this.setState({
-      courierPopoverShown: false,
-      requestSelectedFromActionMenu: null
-    })
+    if (this.state.courierPopoverShown)
+      this.setState({ courierPopoverShown: false })
   }
 
   onArchives = () => {

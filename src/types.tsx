@@ -17,10 +17,7 @@ export interface Item {
   name: string,
   category: string,
   description: Array<string>,
-  specifications?: Array<string>,
-  more?: Array<string>,
-  'icon-urls': Array<string>,
-  'country-origin': string
+  'icon-url': string
 }
 
 export interface ItemSearchResult {
@@ -30,8 +27,7 @@ export interface ItemSearchResult {
     _id: string, name: string
   },
   price: number,
-  quantity?: number, // Quantity ordered
-  available: boolean,
+  quantity?: number,
   distance?: string,
   distanceRaw?: number,
   unit: object

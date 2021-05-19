@@ -4,7 +4,6 @@ import Login from './Login'
 import Home from './Home'
 import Account from './Account'
 import Search from './Search'
-import Item from './Item'
 import Order from './Order'
 import Pay from './Pay'
 import Location from './Location'
@@ -17,7 +16,7 @@ import WebSplashScreen from './WebSplashScreen'
 
 export {
   Signup1, Signup2, Login, Home, Account,
-  Search, Item, Order, Pay, Location, Requests, Request, Credit,
+  Search, Order, Pay, Location, Requests, Request, Credit,
   About, TCs,
   WebSplashScreen
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { IonList, IonItem } from '@ionic/react'
-import { ImageSlider } from 'components'
-
 import { ItemSearchResult } from 'types'
+import { IonList, IonItem } from '@ionic/react'
+
+import { imageServerUrl } from 'utils'
 
 type Props = {
   result: ItemSearchResult | null
@@ -20,13 +20,13 @@ const Component: React.FC<Props> = ({ result }) => {
 
   if (result === null) return null
 
-  const { item: { 'icon-urls': urls, name } } = result
+  const { item: { 'icon-url': url, name } } = result
 
   return (
     <IonList lines="full" className="ion-no-padding">
       <IonItem>{name}</IonItem>
       <IonItem style={wrapperStyle} lines="none">
-        <ImageSlider urls={urls} imageStyle={{ height: '100%' }} />
+        <img src={imageServerUrl + url} alt="" />
       </IonItem>
     </IonList>
   )
