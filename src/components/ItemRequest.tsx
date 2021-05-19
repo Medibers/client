@@ -58,18 +58,15 @@ const Component: React.FC<Props> = ({
 
   return (
     <>
-      {
-        selectModeOn
-          ? <IonIcon
-            icon={selected ? active : numb}
-            slot="start"
-            onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
-            className="ion-no-margin ion-icon-primary" />
-          : <div
-            onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
-            className="fill-height"
-            style={{ width: 'var(--ion-padding)' }} />
-      }
+      <IonIcon
+        icon={
+          selectModeOn ? (
+            selected ? active : numb
+          ) : 'no-icon'
+        }
+        slot="start"
+        onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
+        className="ion-no-margin ion-icon-primary" />
       <IonLabel
         className="ion-padding-vertical ion-no-margin spaced"
         onClick={e => onClick(1, _id, e)}
