@@ -164,17 +164,16 @@ class Component extends React.Component<Props> {
   }
 
   getChannels = () => {
-    // const {
-    //   [mtnMSISDNKey]: msisdn
-    // } = decrypt(getSessionToken())
+    const {
+      [mtnMSISDNKey]: msisdn
+    } = decrypt(getSessionToken())
     return [{
       _id: 'mtn',
       name: 'MTN Mobile Money',
-      // description: <span className="ion-label-primary">{
-      //   formatUGMSISDN(msisdn || getSessionPhone())
-      // }</span>,
-      // requiresNumber: true,
-      unavailable: true
+      description: <span className="ion-label-primary">{
+        formatUGMSISDN(msisdn || getSessionPhone())
+      }</span>,
+      requiresNumber: true
     }] as Array<Channel>
   }
 
@@ -222,19 +221,13 @@ class Component extends React.Component<Props> {
             this.getChannels().map((channel, i, a) => (
               <IonItem
                 key={channel._id}
-                onClick={
-                  channel.unavailable ? undefined : () => this.onPaymentChannelSelect(channel)
-                }
+                onClick={() => this.onPaymentChannelSelect(channel)}
                 button
                 lines={i === a.length - 1 ? 'none' : undefined}
               >
                 <IonLabel>
                   <h3>{channel.name}</h3>
-                  <p className="ion-label-primary">{
-                    channel.description || (
-                      channel.unavailable ? 'Coming soon' : null
-                    )
-                  }</p>
+                  <p className="ion-label-primary">{channel.description}</p>
                 </IonLabel>
                 {channel.requiresNumber ? <IonButton onClick={e => {
                   e.stopPropagation()
