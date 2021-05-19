@@ -5,7 +5,7 @@ const text: Type = {
     "en": "Delivery to"
   },
   "category-header": {
-    "en": "What do you need?"
+    "en": "Order"
   },
   "category-all": {
     "en": "All items"
