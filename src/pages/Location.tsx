@@ -9,7 +9,7 @@ import { MapContainer } from 'containers'
 import { setDeliveryLocation } from 'session'
 import { findPlace } from 'location'
 
-import { closeSharp, search } from 'ionicons/icons'
+import { search, closeCircleSharp } from 'ionicons/icons'
 
 import { Location as LocationInterface } from 'types'
 
@@ -81,10 +81,9 @@ class Component extends React.Component<{ history: History }> {
       }}
       value={this.state.searchText}
       placeholder=""
-      className="searchbar searchbar-location ion-no-padding"
-      clearIcon="no-icon"
+      className="searchbar ion-no-padding"
       showCancelButton="always"
-      cancelButtonIcon={closeSharp}
+      cancelButtonIcon={closeCircleSharp}
       onIonChange={this.onSearch}
       onIonCancel={this.onIonCancel}
       onIonBlur={this.onIonBlur} />
