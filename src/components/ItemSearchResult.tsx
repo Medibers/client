@@ -9,8 +9,7 @@ import { imageServerUrl } from 'utils'
 
 export type Props = {
   selected: boolean,
-  onSelect: (a1: any) => void,
-  onImageClick: () => void,
+  onSelect: Function,
   lines: boolean,
   result: ItemSearchResult
 }
@@ -19,8 +18,7 @@ const Component: React.FC<Props> = ({
   result,
   lines,
   selected,
-  onSelect,
-  onImageClick
+  onSelect
 }) => {
   const { item, price } = result
   return (
@@ -30,11 +28,11 @@ const Component: React.FC<Props> = ({
       onClick={() => onSelect(result)}
       className="search-result ion-no-padding"
     >
-      <LazyLoad onClick={onImageClick} item={item.name} src={`${imageServerUrl}${item['icon-url']}`} />
+      <LazyLoad item={item.name} src={`${imageServerUrl}${item['icon-url']}`} />
       <IonGrid>
         <IonRow>
           <IonCol className="ion-no-padding">
-            <IonLabel><h2 className="ion-label-primary">{item.name}</h2></IonLabel>
+            <IonLabel><h2>{item.name}</h2></IonLabel>
           </IonCol>
         </IonRow>
         <IonRow>
@@ -47,7 +45,7 @@ const Component: React.FC<Props> = ({
         </IonRow>
         <IonRow>
           <IonCol className="ion-no-padding">
-            <IonLabel><h4>{`UGX ${price}`}</h4></IonLabel>
+            <IonLabel><p>{`UGX ${price}`}</p></IonLabel>
           </IonCol>
           {/* <IonCol className="ion-no-padding">
             <IonLabel className="ion-text-right"><p>{distance}</p></IonLabel>

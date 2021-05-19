@@ -4,7 +4,6 @@
 // } from 'ionicons/icons'
 
 import getPageText from 'text'
-import { imageServerUrl } from 'utils'
 
 const Text = getPageText('home')
 
@@ -17,27 +16,27 @@ const map: {
     description: ''
   },
   'pharmacy': {
-    icon: imageServerUrl + '/pharmacy.jpeg', // /assets/icons/pharmacy.svg
+    icon: '/assets/icons/pharmacy.svg',
     label: Text['category-pharmacy'],
     description: Text['category-pharmacy-description']
   },
   'medical-devices': {
-    icon: imageServerUrl + '/medical-devices.jpeg',
+    icon: '/assets/icons/medical-devices.svg',
     label: Text['category-medical-devices'],
     description: Text['category-medical-devices-description']
   },
   'lab-equipment': {
-    icon: imageServerUrl + '/lab-equipment.jpeg',
+    icon: '/assets/icons/lab-equipment.svg',
     label: Text['category-lab-equipment'],
     description: Text['category-lab-equipment-description']
   },
   'medical-supplies': {
-    icon: imageServerUrl + '/medical-supplies.jpeg',
+    icon: '/assets/icons/medical-supplies.svg',
     label: Text['category-medical-supplies'],
     description: Text['category-medical-supplies-description']
   },
   'health-services': {
-    icon: imageServerUrl + '/health-services.jpeg',
+    icon: '/assets/icons/health-services.svg',
     label: Text['category-health-services'],
     description: Text['category-health-services-description']
   }
