@@ -26,7 +26,7 @@ export interface ItemSearchResult {
   pharmacy: {
     _id: string, name: string
   },
-  price: number,
+  price: string,
   quantity?: number,
   distance?: string,
   distanceRaw?: number,
