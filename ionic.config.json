@@ -1,6 +1,6 @@
 {
-  "id": "io.medimall",
-  "name": "MediMall",
+  "id": "io.medistore",
+  "name": "MediStore",
   "integrations": {
     "capacitor": {}
   },
