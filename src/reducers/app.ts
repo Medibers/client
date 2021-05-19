@@ -43,15 +43,6 @@ export default (state = initialState, action: Action) => produce(state, (draft: 
       draft.items = action.payload
       break
     }
-    case constants.SET_ITEM_REQUEST: {
-      if (draft.requests === null) break
-      draft.requests[
-        draft.requests.findIndex(
-          ({ _id }) => _id === action.payload._id
-        )
-      ] = action.payload
-      break
-    }
     default: break
   }
 })

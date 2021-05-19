@@ -13,8 +13,7 @@ const mapKey = getMapKey()
 
 type Props = {
   setLocation?: (location: LocationInterface) => void,
-  mapCenter?: { lat: number, lon: number },
-  onMapApiLoaded?: (a1: { map: any, maps: any }) => void
+  mapCenter?: { lat: number, lon: number }
 }
 
 const markerStyle = {
@@ -52,7 +51,7 @@ class Component extends React.Component<Props> {
   }
 
   render() {
-    const { mapCenter, onMapApiLoaded } = this.props
+    const { mapCenter } = this.props
     return (<>
       <div style={{ height: '100%', width: '100%' }}>
         <Map
@@ -64,7 +63,6 @@ class Component extends React.Component<Props> {
             zoomControl: false,
             fullscreenControl: false
           }}
-          onGoogleApiLoaded={onMapApiLoaded}
         >
           {
             mapCenter ? <Marker lat={mapCenter.lat} lng={mapCenter.lon} /> : null
