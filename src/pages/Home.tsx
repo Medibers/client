@@ -13,7 +13,6 @@ import {
 } from '@ionic/react'
 import {
   person,
-  searchSharp as search,
   bicycle as requestsIcon,
   locationSharp as locationIcon,
   ellipsisVertical as more
@@ -68,9 +67,6 @@ class Component extends React.Component<Props> {
   toolbarActions = () => [{
     icon: requestsIcon,
     handler: () => this.props.history.push(Routes.requests.path)
-  }, {
-    icon: search,
-    handler: () => this.props.history.push(Routes.search.path)
   }, {
     icon: person,
     handler: () => this.props.history.push(Routes.account.path)
