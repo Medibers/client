@@ -1,7 +1,7 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { IonIcon } from '@ionic/react'
 
-type Props = { src: string, alt?: string, item: string, onClick: () => void }
+type Props = { src: string; alt?: string; item: string; onClick: () => void }
 
 const placeholder = '/assets/icons/no-icon.svg'
 
@@ -11,19 +11,18 @@ const wrapperStyle = {
   height: 150,
   width: 150,
   padding: 10,
-  margin: '0 calc(var(--ion-margin) - 10px)'
+  margin: '0 calc(var(--ion-margin) - 10px)',
 }
 
-export const wrapperWidthSpan = (
+export const wrapperWidthSpan =
   2 * wrapperStyle.padding +
   2 * 6 + // 6 is calc(var(--ion-margin) - 10px)
   wrapperStyle.width
-)
 
 const iconStyle = {
   height: '100%',
   width: '100%',
-  margin: '-5px 25px'
+  margin: '-5px 25px',
 }
 
 const imageStyle: Object = {
@@ -33,18 +32,19 @@ const imageStyle: Object = {
   borderStyle: 'solid',
   borderColor: 'rgba(var(--ion-color-primary-rgb), .1)',
   borderRadius: '50%',
-  objectFit: 'contain'
+  objectFit: 'contain',
 }
 
 const Component: React.FC<Props> = ({ item, src, onClick }) => {
   const selected = false
   const [imageSrc, setImageSrc]: [
-    string | undefined, Dispatch<SetStateAction<string | undefined>>
+    string | undefined,
+    Dispatch<SetStateAction<string | undefined>>
   ] = useState()
   const [imageRef, setImageRef]: [
-    Element | undefined, Dispatch<SetStateAction<Element | undefined>>
-  ]
-    = useState()
+    Element | undefined,
+    Dispatch<SetStateAction<Element | undefined>>
+  ] = useState()
   const [observerSet, setObserverSet] = useState(false)
   const [errored, setImageErrored] = useState(false)
   const [loaded, setImageLoaded] = useState(false)
@@ -101,32 +101,43 @@ const Component: React.FC<Props> = ({ item, src, onClick }) => {
     onClick()
   }
 
-  return <div style={wrapperStyle}>{
-    imageSrc
-      ? (
-        selected
-          ? <IonIcon style={iconStyle} ref={setRef} className="ion-icon-primary" icon="/assets/icons/checked.svg" />
-          : (
-            errored
-              ? <IonIcon style={iconStyle} ref={setRef} className="ion-icon-primary" icon={placeholder} />
-              : <img
-                  onClick={onClickLocal}
-                  ref={setRef}
-                  src={imageSrc}
-                  onLoad={onLoad}
-                  onError={onError}
-                  alt=""
-                  style={{
-                    ...imageStyle,
-                    opacity: loaded ? 1 : 0,
-                    transition: 'opacity 1s'
-                  }}
-                />
-          )
-      )
-      : <div style={iconStyle} ref={setRef} />
-  }</div>
-
+  return (
+    <div style={wrapperStyle}>
+      {imageSrc ? (
+        selected ? (
+          <IonIcon
+            style={iconStyle}
+            ref={setRef}
+            className="ion-icon-primary"
+            icon="/assets/icons/checked.svg"
+          />
+        ) : errored ? (
+          <IonIcon
+            style={iconStyle}
+            ref={setRef}
+            className="ion-icon-primary"
+            icon={placeholder}
+          />
+        ) : (
+          <img
+            onClick={onClickLocal}
+            ref={setRef}
+            src={imageSrc}
+            onLoad={onLoad}
+            onError={onError}
+            alt=""
+            style={{
+              ...imageStyle,
+              opacity: loaded ? 1 : 0,
+              transition: 'opacity 1s',
+            }}
+          />
+        )
+      ) : (
+        <div style={iconStyle} ref={setRef} />
+      )}
+    </div>
+  )
 }
 
 export default Component

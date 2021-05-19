@@ -1,5 +1,13 @@
 import React from 'react'
-import { IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonButton, IonIcon } from '@ionic/react'
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonHeader,
+  IonIcon,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/react'
 
 import { ToolbarAction } from 'types'
 
@@ -13,35 +21,39 @@ export type Props = {
 }
 
 const buttonStyle = {
-  textTransform: 'unset'
+  textTransform: 'unset',
 }
 
-const Component: React.FC<Props> = ({ omitsBack: ob, title, size, actions = [] }) => {
+const Component: React.FC<Props> = ({
+  omitsBack: ob,
+  title,
+  size,
+  actions = [],
+}) => {
   const omitsBack = ob || platformIsWebBrowser
   return (
     <IonHeader>
-      <IonToolbar /* color="primary" */>
-        {omitsBack ? null : <IonButtons slot="start">
-          <IonBackButton color="primary" defaultHref="/" />
-        </IonButtons>}
-        <IonTitle size={size} color="primary">{title}</IonTitle>
-        <IonButtons slot="secondary">{
-          actions.map((
-            { icon, text, component: Component, handler },
-            i
-          ) => Component ? <Component key={i} /> : <IonButton
-            key={i}
-            onClick={handler}
-            style={buttonStyle}
-          >
-              {
-                icon ? <IonIcon color="primary" icon={icon} /> : null
-              }{
-                text ? text : null
-              }
-            </IonButton>
-          )
-        }</IonButtons>
+      <IonToolbar>
+        {omitsBack ? null : (
+          <IonButtons slot="start">
+            <IonBackButton color="primary" defaultHref="/" />
+          </IonButtons>
+        )}
+        <IonTitle size={size} color="primary">
+          {title}
+        </IonTitle>
+        <IonButtons slot="secondary">
+          {actions.map(({ icon, text, component: Component, handler }, i) =>
+            Component ? (
+              <Component key={i} />
+            ) : (
+              <IonButton key={i} onClick={handler} style={buttonStyle}>
+                {icon ? <IonIcon color="primary" icon={icon} /> : null}
+                {text ? text : null}
+              </IonButton>
+            )
+          )}
+        </IonButtons>
       </IonToolbar>
     </IonHeader>
   )

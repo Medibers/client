@@ -7,11 +7,8 @@ async function readJSONFile(filePath) {
 }
 
 async function initializeFCM() {
-
-  const {
-    'fb-configuration': configuration,
-    'fcm-vapid-key': vapidKey
-  } = await readJSONFile('/firebase/vars.json')
+  const { 'fb-configuration': configuration, 'fcm-vapid-key': vapidKey } =
+    await readJSONFile('/firebase/vars.json')
 
   firebase.initializeApp(configuration)
 
@@ -19,7 +16,8 @@ async function initializeFCM() {
   messaging.usePublicVapidKey(vapidKey)
 
   return messaging
-
 }
 
-(async function () { await initializeFCM() })()
+;(async function () {
+  await initializeFCM()
+})()

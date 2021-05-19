@@ -4,7 +4,7 @@ import { getSessionToken } from 'session'
 export function getUserRole() {
   try {
     return decrypt(getSessionToken()).role
-  } catch (error) { }
+  } catch (error) {}
 }
 
 export function userIsClientUser() {

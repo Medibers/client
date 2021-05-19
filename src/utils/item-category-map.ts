@@ -9,38 +9,38 @@ import { imageServerUrl } from 'utils'
 const Text = getPageText('home')
 
 const map: {
-  [key: string]: { icon: string, label: string, description: string }
+  [key: string]: { icon: string; label: string; description: string }
 } = {
-  'all': {
+  all: {
     icon: '',
     label: Text['category-all'],
-    description: ''
+    description: '',
   },
-  'pharmacy': {
+  pharmacy: {
     icon: imageServerUrl + '/pharmacy.jpeg', // /assets/icons/pharmacy.svg
     label: Text['category-pharmacy'],
-    description: Text['category-pharmacy-description']
+    description: Text['category-pharmacy-description'],
   },
   'medical-devices': {
     icon: imageServerUrl + '/medical-devices.jpeg',
     label: Text['category-medical-devices'],
-    description: Text['category-medical-devices-description']
+    description: Text['category-medical-devices-description'],
   },
   'lab-equipment': {
     icon: imageServerUrl + '/lab-equipment.jpeg',
     label: Text['category-maintenance-tools'],
-    description: Text['category-maintenance-tools-description']
+    description: Text['category-maintenance-tools-description'],
   },
   'medical-supplies': {
     icon: imageServerUrl + '/medical-supplies.jpeg',
     label: Text['category-medical-supplies'],
-    description: Text['category-medical-supplies-description']
+    description: Text['category-medical-supplies-description'],
   },
   'health-services': {
     icon: imageServerUrl + '/health-services.jpeg',
     label: Text['category-health-services'],
-    description: Text['category-health-services-description']
-  }
+    description: Text['category-health-services-description'],
+  },
 }
 
 export default map
