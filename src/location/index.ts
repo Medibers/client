@@ -1,5 +1,6 @@
-import { Geolocation } from '@ionic-native/geolocation'
+// import Axios from 'axios'
 
+import { Geolocation } from '@ionic-native/geolocation'
 import { setSessionLocation, getLastAttemptedDeliveryLocation, getSessionLocation } from 'session'
 import { platformIsWeb } from 'utils'
 
@@ -66,25 +67,24 @@ export const queryAddress = async (lat: number, lng: number) => {
 
 }
 
-export const queryPlace = async (map: google.maps.Map | undefined, query: string) => {
+export const findPlace = async (search: string) => {
 
-  if (query === null) return []
-  if (query === '') return []
-  if (map === undefined) return []
+  if (search === null) return []
+  if (search === '') return []
 
-  return new Promise(resolve => {
-    var request = {
-      query, fields: ['name', 'geometry']
-    }
+  return []
 
-    var service = new google.maps.places.PlacesService(map)
+  // const url =
+  //   `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${
+  //   getMapKey()
+  //   }&input=${search}&inputtype=textquery`
 
-    service.findPlaceFromQuery(request, function (results, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        resolve(results)
-      } else
-        resolve([])
-    })
-  })
+  // const headers = {
+  //   'Content-Type': 'application/json'
+  // }
+
+  // return await Axios.get(url, {
+  //   headers
+  // })
 
 }
