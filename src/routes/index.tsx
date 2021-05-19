@@ -31,13 +31,11 @@ const Routes: Routes = {
   },
   about: {
     path: '/about',
-    component: About,
-    isPublic: true
+    component: About
   },
   tcs: {
     path: '/terms-conditions',
-    component: TCs,
-    isPublic: true
+    component: TCs
   },
   account: {
     path: '/account',
