@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 
-import { FileServer, endPoints } from 'requests'
+import Requests, { endPoints } from 'requests'
 
 import { IonContent, IonPage } from '@ionic/react'
 
@@ -26,14 +26,15 @@ class Component extends React.Component<Props> {
   state = { text: undefined }
 
   componentDidMount() {
-    this.fetchTCs()
-  }
-
-  fetchTCs = async () => {
-    const { showLoading, hideLoading } = this.props
+    const { showLoading, hideLoading, showToast } = this.props
     showLoading()
-    const text = await FileServer.get(endPoints.tcs)
-    this.setState({ text }, hideLoading)
+    Requests.get(endPoints['tcs']).then((response: any) => {
+      this.setState({ text: response })
+    }).catch(err => {
+      this.setState({ text: null })
+      console.error(err)
+      showToast(err.error || err.toString())
+    }).finally(hideLoading)
   }
 
   render() {
