@@ -4,11 +4,7 @@ import { IonPage } from '@ionic/react'
 
 const { REACT_APP_SPLASH_URL } = process.env
 
-type Props = {
-  rendered: Boolean
-}
-
-const Component: React.FC<Props> = ({ rendered }) => {
+const Component: React.FC = () => {
 
   const imageSrc = REACT_APP_SPLASH_URL
 
@@ -18,9 +14,7 @@ const Component: React.FC<Props> = ({ rendered }) => {
     backgroundImage: `url(${imageSrc})`,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-    backgroundSize: 'contain',
-    opacity: rendered ? 1 : 0,
-    transition: 'opacity 1s'
+    backgroundSize: 'contain'
   }} />
 
 }
