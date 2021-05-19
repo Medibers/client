@@ -59,7 +59,7 @@ class Component extends React.Component<Props> {
     )
 
     if (activeRequestsPresent)
-      window.location.replace(Routes.requests.path)
+      this.props.history.push(Routes.requests.path)
     else if (userIsNotClientUser())
       window.location.replace(Routes.requests.path)
     else
