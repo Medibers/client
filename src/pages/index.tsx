@@ -12,11 +12,9 @@ import Request from './Request'
 import Credit from './Credit'
 import About from './About'
 import TCs from './TCs'
-import WebSplashScreen from './WebSplashScreen'
 
 export {
   Signup1, Signup2, Login, Home, Account,
   Search, Order, Pay, Location, Requests, Request, Credit,
-  About, TCs,
-  WebSplashScreen
+  About, TCs
 }
