@@ -75,9 +75,6 @@ class Component extends React.Component<Props> {
 
   onInputBlur = () => this.setState({ inputFocussed: null })
 
-  onKeyUp = (e: any) =>
-    e.keyCode === 13 && this.onSubmit({ preventDefault: () => null })
-
   getIonLabelStyle = (name: string) => {
     return this.state.inputFocussed === name
       ? { color: 'var(--ion-color-action-primary)' }
@@ -130,8 +127,7 @@ class Component extends React.Component<Props> {
                   value={phone || ''}
                   onChange={this.onChange}
                   onFocus={this.onInputFocus}
-                  onBlur={this.onInputBlur}
-                  onKeyUp={this.onKeyUp} />
+                  onBlur={this.onInputBlur} />
               </IonItem>
               <IonItemDivider style={this.getIonItemDividerStyle('phone')} />
               <IonItem lines="none">
@@ -139,8 +135,7 @@ class Component extends React.Component<Props> {
                 <IonInput
                   onIonChange={this.onChange}
                   onIonFocus={this.onInputFocus}
-                  onIonBlur={this.onInputBlur}
-                  onKeyUp={this.onKeyUp} value={password} type="password" name="password" />
+                  onIonBlur={this.onInputBlur} value={password} type="password" name="password" />
               </IonItem>
               <IonItemDivider style={this.getIonItemDividerStyle('password')} />
             </IonList>
