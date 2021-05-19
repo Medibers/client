@@ -31,8 +31,6 @@ const searchResultsDivStyle: Object = {
   boxShadow: '0 0 5px 0 rgba(0, 0, 0, .8)'
 }
 
-const searchPlaceholder = 'Search by address'
-
 class Component extends React.Component<{ history: History }> {
 
   state: {
@@ -62,7 +60,8 @@ class Component extends React.Component<{ history: History }> {
 
   map: google.maps.Map | undefined
 
-  onMapApiLoaded = (map: any) => {
+  onMapApiLoaded = ({ map }: any) => {
+    console.info(map)
     this.map = map
   }
 
@@ -97,7 +96,7 @@ class Component extends React.Component<{ history: History }> {
         '--color': 'var(--ion-color-primary)'
       }}
       value={this.state.searchText}
-      placeholder={searchPlaceholder}
+      placeholder=""
       className="searchbar searchbar-location ion-no-padding"
       clearIcon="no-icon"
       showCancelButton="always"

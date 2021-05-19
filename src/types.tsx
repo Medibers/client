@@ -51,7 +51,6 @@ export interface ItemRequest {
   lat: number,
   lon: number,
   aDistance?: number, // Directions Service computed value
-  address: string, // Places Service value
   user: {
     _id: string, name: string, phone: string
   }

@@ -37,7 +37,7 @@ type Props = {
 }
 
 const Component: React.FC<Props> = ({
-  item: { _id, pharmacyItems, state, createdAt, courier, lat, lon, address, user },
+  item: { _id, pharmacyItems, state, createdAt, courier, lat, lon, user },
   detailed,
   selected,
   selectModeOn,
@@ -91,7 +91,7 @@ const Component: React.FC<Props> = ({
         {(
           lat !== undefined &&
           lon !== undefined
-        ) ? <p>Delivery at {address}</p> : null}
+        ) ? <p>Delivery at {`${lat}, ${lon}`}</p> : null}
         {detailed ? <>
           {userCanViewRequestClient
             ? <p>Client - {user.name || user.phone}</p>
