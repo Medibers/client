@@ -55,5 +55,5 @@ export const endPoints = {
   'couriers': '/courier',
   'push-notification-token': '/push-notification-token',
   'faqs': '/docs/faqs.json',
-  'tcs': '/docs/tcs.md'
+  'tcs': '/docs/tcs.txt'
 }

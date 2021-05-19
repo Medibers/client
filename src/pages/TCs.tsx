@@ -1,5 +1,4 @@
 import React from 'react'
-import Markdown from 'react-markdown'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -17,34 +16,8 @@ type Props = {
   showToast: (e: string) => {},
 }
 
-const styles = `
-  <style>
-    h5, h6, a {
-      color: var(--ion-color-primary);
-    }
-    h5 {
-      margin: 2rem 0 0.5rem 0;
-      text-decoration: underline;
-    }
-    h6 {
-      margin: 1.5rem 0 0.3rem 0;
-      font-weight: bold;
-    }
-    p {
-      margin: 0.5rem 0;
-    }
-    ul {
-      padding: 0 0 0 16px;
-      margin: 0.5rem 0;
-    }
-    ul li {
-      margin: 0.2rem 0;
-    }
-  </style>
-`
-
 /* 
- * Terms of operation, Privacy policy
+ *Terms of operation, Privacy policy
  * 
  */
 
@@ -64,12 +37,10 @@ class Component extends React.Component<Props> {
   }
 
   render() {
-    const { text = '' } = this.state
+    const { text } = this.state
     return (
       <IonPage>
-        <IonContent className="ion-padding">
-          <Markdown allowDangerousHtml>{styles.concat(text)}</Markdown>
-        </IonContent>
+        <IonContent className="ion-padding">{text}</IonContent>
       </IonPage>
     )
   }
