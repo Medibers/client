@@ -1,6 +1,5 @@
 import React from 'react'
-
-import { IonItem, IonLabel, IonGrid, IonRow, IonCol, IonIcon } from '@ionic/react'
+import { IonItem, IonLabel, IonGrid, IonRow, IonCol } from '@ionic/react'
 
 import { LazyLoad } from 'components'
 
@@ -20,7 +19,7 @@ const Component: React.FC<Props> = ({
   selected,
   onSelect
 }) => {
-  const { item, price } = result
+  const { item, price, distance } = result
   return (
     <IonItem
       button
@@ -28,7 +27,7 @@ const Component: React.FC<Props> = ({
       onClick={() => onSelect(result)}
       className="search-result ion-no-padding"
     >
-      <LazyLoad item={item.name} src={`${imageServerUrl}${item['icon-url']}`} />
+      <LazyLoad item={item.name} selected={selected} src={`${imageServerUrl}${item['icon-url']}`} />
       <IonGrid>
         <IonRow>
           <IonCol className="ion-no-padding">
@@ -47,14 +46,11 @@ const Component: React.FC<Props> = ({
           <IonCol className="ion-no-padding">
             <IonLabel><p>{`UGX ${price}`}</p></IonLabel>
           </IonCol>
-          {/* <IonCol className="ion-no-padding">
+          <IonCol className="ion-no-padding">
             <IonLabel className="ion-text-right"><p>{distance}</p></IonLabel>
-          </IonCol> */}
+          </IonCol>
         </IonRow>
       </IonGrid>
-      <IonIcon className="ion-icon-primary" icon={
-        selected ? '/assets/icons/checked.svg' : 'no-icon'
-      } />
     </IonItem >
   )
 }
