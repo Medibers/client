@@ -11,6 +11,8 @@ import { sessionAvailable } from './session'
 
 import { watchPosition as watchUserLocation } from 'location'
 
+import { platformIsWeb } from 'utils'
+
 import 'worker'
 import 'tasks/index'
 
@@ -29,11 +31,9 @@ const fn2 = (Component: Function, props: any) => sessionAvailable()
 
 const routeValues = Object.values(Routes)
 
-const appIsWebDeployed = window.location.hostname !== 'localhost'
+const appIsWebDeployed = platformIsWeb && window.location.hostname !== 'localhost'
 
-const splashTimeout = Number(
-  process.env.REACT_APP_SPLASH_TIMEOUT || 2500
-)
+const splashTimeout = 800
 
 export default class App extends React.Component {
 
