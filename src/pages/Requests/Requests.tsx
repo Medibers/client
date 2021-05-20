@@ -502,4 +502,7 @@ const mapDispatchToProps = (dispatch: any) =>
     dispatch
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(Component)
+export const RequestsPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component)
