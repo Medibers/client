@@ -39,6 +39,7 @@
     "no-empty": "warn",
     "no-extra-semi": "warn",
     "no-irregular-whitespace": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
     "react/prop-types": "off",
     "arrow-body-style": "off",
     "prefer-arrow-callback": "off"
