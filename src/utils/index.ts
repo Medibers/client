@@ -1,5 +1,5 @@
 import { isPlatform } from '@ionic/react'
-import { ItemRequest as ItemRequestInterface } from 'types'
+import { ItemRequest as ItemRequestInterface, TItemRequestState } from 'types'
 
 export const platformIsWeb = isPlatform('desktop')
 export const platformIsMobile = isPlatform('mobile')
@@ -22,7 +22,8 @@ export const imageServerUrl =
     : process.env.REACT_APP_FILE_SERVER_URL) + '/images'
 
 export const requestStatesMappedToBadgeBackground: {
-  [key: string]: string
+  // eslint-disable-next-line no-unused-vars
+  [key in TItemRequestState]: string
 } = {
   'awaiting transit': 'var(--ion-color-secondary)',
   'out of stock': 'var(--ion-color-out-of-stock)',

@@ -16,6 +16,7 @@ import {
   userIsPharmacyOperator,
 } from 'utils/role'
 import { Menu as ActionMenu } from 'components'
+import { TItemRequestClickAction } from 'pages/Requests/types'
 
 Moment.updateLocale('en', {
   relativeTime: {
@@ -40,7 +41,7 @@ type Props = {
   detailed: boolean
   selected: boolean
   selectModeOn: boolean
-  onTap: Function
+  onTap: (action: TItemRequestClickAction, request: string) => void
   actions: Array<MenuAction>
 }
 
@@ -69,14 +70,14 @@ class Component extends React.Component<Props> {
     } = this.props
 
     const onClick = (
-      position: Number,
-      item: String,
+      action: TItemRequestClickAction,
+      item: string,
       event: React.MouseEvent
     ) => {
       event.stopPropagation()
-      if (position < 0) {
+      if (action === 'show-menu') {
         this.menuRef && this.menuRef.open(event.nativeEvent)
-      } else onTap(position, item)
+      } else onTap(action, item)
     }
 
     // eslint-disable-next-line no-undef
@@ -86,25 +87,40 @@ class Component extends React.Component<Props> {
 
     const userCanViewRequestClient = userIsPharmacyOperator() || userIsAdmin()
 
+    const menuButtonIsVisible =
+      !selectModeOn && ['awaiting transit', 'in transit'].includes(state)
+
     return (
       <>
         {selectModeOn ? (
           <IonIcon
             icon={selected ? active : numb}
             slot="start"
-            onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
+            onClick={e =>
+              onClick(
+                userIsNotClientUser() ? 'select-item' : 'show-detail',
+                _id,
+                e
+              )
+            }
             className="ion-no-margin ion-icon-primary"
           />
         ) : (
           <div
-            onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
+            onClick={e =>
+              onClick(
+                userIsNotClientUser() ? 'select-item' : 'show-detail',
+                _id,
+                e
+              )
+            }
             className="fill-height"
             style={{ width: 'var(--ion-padding)' }}
           />
         )}
         <IonLabel
           className="ion-padding-vertical ion-no-margin spaced"
-          onClick={e => onClick(1, _id, e)}
+          onClick={e => onClick('show-detail', _id, e)}
         >
           <h2
             className={
@@ -146,12 +162,15 @@ class Component extends React.Component<Props> {
             maxWidth: 'fit-content',
           }}
           slot="end"
-          onClick={e => onClick(2, _id, e)}
         >
           <p className="ion-text-end">{formatDate(createdAt)}</p>
         </IonLabel>
-        {selectModeOn ? null : (
-          <IonButton onClick={e => onClick(-1, _id, e)} slot="end" fill="clear">
+        {menuButtonIsVisible && (
+          <IonButton
+            onClick={e => onClick('show-menu', _id, e)}
+            slot="end"
+            fill="clear"
+          >
             <IonIcon className="ion-icon-primary" icon={more} />
           </IonButton>
         )}

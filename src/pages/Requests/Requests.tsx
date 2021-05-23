@@ -28,9 +28,10 @@ import { State as ReducerState } from 'reducers'
 import {
   Courier as CourierInterface,
   ItemRequest as ItemRequestInterface,
-  MenuAction,
   ToolbarAction,
 } from 'types'
+
+import getMenuActions from './menu-actions'
 
 import Requests, { endPoints } from 'requests'
 
@@ -45,6 +46,7 @@ import { getActiveRequests, getArchivedRequests } from 'utils'
 import { setActiveRequestsPresence } from 'session'
 
 import OrderButton from './OrderButton'
+import { TItemRequestClickAction } from './types'
 
 type Props = {
   history: History
@@ -75,10 +77,6 @@ class Component extends React.Component<Props> {
     couriers: undefined,
   }
 
-  defaultUpdateRequestBody = (requestsSelected?: Array<String>) => ({
-    'item-requests': requestsSelected || this.state.requestsSelected,
-  })
-
   toolbarActions = () => {
     const { history, showLoading, hideLoading, showToast } = this.props
     const { requestsSelected } = this.state
@@ -99,7 +97,7 @@ class Component extends React.Component<Props> {
           ...this.defaultUpdateRequestBody(),
           update: body,
         })
-          .then(this.updateRequests)
+          .then(this.updateRequestsUI)
           .catch(err => {
             console.error(err)
             showToast(err.error || err.toString())
@@ -147,60 +145,26 @@ class Component extends React.Component<Props> {
     }
   }
 
-  menuActions = () => {
+  defaultUpdateRequestBody = (
+    requestsSelected: Array<String> = this.state.requestsSelected
+  ) => ({
+    'item-requests': requestsSelected,
+  })
+
+  updateBackend = (body: Object, requestsSelected?: Array<String>) => {
     const { showLoading, hideLoading, showToast } = this.props
-
-    const defaultMenuActions: Array<MenuAction> = []
-
-    const updateBackend = (body: Object, requestsSelected?: Array<String>) => {
-      showLoading()
-      Requests.put(endPoints['item-requests'], {
-        ...this.defaultUpdateRequestBody(requestsSelected),
-        update: body,
+    showLoading()
+    Requests.put(endPoints['item-requests'], {
+      ...this.defaultUpdateRequestBody(requestsSelected),
+      update: body,
+    })
+      .then(this.updateRequestsUI)
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.error(err)
+        showToast(err.error || err.toString())
       })
-        .then(this.updateRequests)
-        .catch(err => {
-          console.error(err)
-          showToast(err.error || err.toString())
-        })
-        .finally(hideLoading)
-    }
-
-    switch (window.location.pathname) {
-      case Routes.requests.path:
-        return [
-          {
-            text: 'Mark as received',
-            handler: (requestSelected: string) => {
-              updateBackend({ state: 5 }, [requestSelected]) // received
-            },
-          },
-          {
-            text: 'Mark as cancelled',
-            handler: (requestSelected: string) => {
-              updateBackend({ state: 3 }, [requestSelected]) // cancelled
-            },
-          },
-        ]
-      case Routes.courier.path:
-        return [
-          {
-            text: 'Mark as delivered',
-            handler: (requestSelected: string) => {
-              updateBackend({ state: 4 }, [requestSelected]) // delivered
-            },
-          },
-        ]
-      case Routes.admin.path:
-        return [
-          {
-            text: 'Assign to courier',
-            handler: this.onAssignCourier,
-          },
-        ]
-      default:
-        return defaultMenuActions
-    }
+      .finally(hideLoading)
   }
 
   /**
@@ -209,7 +173,7 @@ class Component extends React.Component<Props> {
    * Or events from other user
    *
    * */
-  updateRequests = (response: any, prependRequests?: true) => {
+  updateRequestsUI = (response: any, prependRequests?: true) => {
     const { requests: r, showToast, hideToast, setItemRequests } = this.props
     let requests = r ? [...r] : []
     if (prependRequests) {
@@ -248,37 +212,41 @@ class Component extends React.Component<Props> {
     this.props.history.push(Routes.search.path)
   }
 
-  onRequestTapped = (position: Number, request: String) => {
+  onRequestTapped = (action: TItemRequestClickAction, request: string) => {
     const { requestDetailed, requestsSelected } = this.state
-    if (position > 0) {
-      if (userIsClientUser()) {
-        this.props.history.push(Routes.request.path, {
-          request: (this.props.requests || []).find(
-            ({ _id }) => _id === request
-          ),
-        })
-      } else
-        this.setState({
-          requestDetailed: request === requestDetailed ? null : request,
-        })
-    } else {
-      const index = requestsSelected.indexOf(request)
-      if (index < 0) {
-        requestsSelected.push(request)
-      } else requestsSelected.splice(index, 1)
-      this.setState({ requestsSelected })
+
+    switch (action) {
+      case 'select-item': {
+        const index = requestsSelected.indexOf(request)
+        if (index < 0) {
+          requestsSelected.push(request)
+        } else requestsSelected.splice(index, 1)
+        this.setState({ requestsSelected })
+        break
+      }
+      case 'show-detail': {
+        if (userIsClientUser()) {
+          this.props.history.push(Routes.request.path, {
+            request: (this.props.requests || []).find(
+              ({ _id }) => _id === request
+            ),
+          })
+        } else
+          this.setState({
+            requestDetailed: request === requestDetailed ? null : request,
+          })
+        break
+      }
+      case 'show-menu': {
+        this.setState({ requestSelectedFromActionMenu: request })
+        break
+      }
     }
   }
 
-  onAssignCourier = (requestSelected?: string) => {
-    const o: any = {}
-    console.info('requestSelected', typeof requestSelected)
-    if (typeof requestSelected === 'string') {
-      o.requestSelectedFromActionMenu = requestSelected
-    }
+  onAssignCourier = () => {
     this.setState({
       courierPopoverShown: true,
-      ...o,
     })
   }
 
@@ -292,7 +260,7 @@ class Component extends React.Component<Props> {
         ]),
         update: { courier, state: 2 },
       })
-        .then(this.updateRequests)
+        .then(this.updateRequestsUI)
         .catch(err => {
           console.error(err)
           showToast(err.error || err.toString())
@@ -366,10 +334,10 @@ class Component extends React.Component<Props> {
   setEventListeners = () => {
     eventsInstance.removeAllListeners()
     const fn = (result: Array<ItemRequestInterface>) => {
-      this.updateRequests(result, true)
+      this.updateRequestsUI(result, true)
     }
     eventsInstance.on(requestCreateAction, fn)
-    eventsInstance.on(requestUpdateAction, this.updateRequests)
+    eventsInstance.on(requestUpdateAction, this.updateRequestsUI)
     eventsInstance.on(syncDataAction, this.syncRequestData)
   }
 
@@ -398,7 +366,7 @@ class Component extends React.Component<Props> {
       <div key={item._id}>
         <IonItem
           button
-          onClick={() => this.onRequestTapped(1, item._id)}
+          onClick={() => this.onRequestTapped('select-item', item._id)}
           className={`request ${
             selectModeOn ? 'select-mode' : ''
           } ion-no-padding`}
@@ -410,7 +378,7 @@ class Component extends React.Component<Props> {
             selected={requestsSelected.includes(item._id)}
             selectModeOn={selectModeOn}
             onTap={this.onRequestTapped}
-            actions={this.menuActions()}
+            actions={getMenuActions(this.updateBackend, this.onAssignCourier)}
           />
         </IonItem>
         {i === a.length - 1 ? null : (

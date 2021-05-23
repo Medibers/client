@@ -49,11 +49,19 @@ export interface PharmacyItem {
   distanceRaw?: number
 }
 
-export interface ItemRequest {
+export type TItemRequestState =
+  | 'awaiting transit'
+  | 'out of stock'
+  | 'in transit'
+  | 'cancelled'
+  | 'delivered'
+  | 'received'
+
+export interface ItemRequest<TState = TItemRequestState> {
   _id: string
   pharmacyItems: Array<PharmacyItem>
   notes: string
-  state: string
+  state: TState
   createdAt: number
   courier?: Courier
   lat: number
