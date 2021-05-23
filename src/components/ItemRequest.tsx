@@ -44,115 +44,125 @@ type Props = {
   actions: Array<MenuAction>
 }
 
-const Component: React.FC<Props> = ({
-  item: {
-    _id,
-    pharmacyItems,
-    state,
-    createdAt,
-    courier,
-    lat,
-    lon,
-    address,
-    user,
-  },
-  detailed,
-  selected,
-  selectModeOn,
-  onTap,
-  actions,
-}) => {
-  let menuRef: any = null
+class Component extends React.Component<Props> {
+  // eslint-disable-next-line no-undef
+  menuRef: HTMLIonSelectElement | null = null
 
-  const onClick = (position: Number, item: String, event: any) => {
-    event.stopPropagation()
-    if (position < 0) {
-      menuRef.open({ target: event.target })
-    } else onTap(position, item)
-  }
+  render() {
+    const {
+      item: {
+        _id,
+        pharmacyItems,
+        state,
+        createdAt,
+        courier,
+        lat,
+        lon,
+        address,
+        user,
+      },
+      detailed,
+      selected,
+      selectModeOn,
+      onTap,
+      actions,
+    } = this.props
 
-  const userCanViewRequestClient = userIsPharmacyOperator() || userIsAdmin()
+    const onClick = (
+      position: Number,
+      item: String,
+      event: React.MouseEvent
+    ) => {
+      event.stopPropagation()
+      if (position < 0) {
+        this.menuRef && this.menuRef.open(event.nativeEvent)
+      } else onTap(position, item)
+    }
 
-  return (
-    <>
-      {selectModeOn ? (
-        <IonIcon
-          icon={selected ? active : numb}
-          slot="start"
-          onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
-          className="ion-no-margin ion-icon-primary"
-        />
-      ) : (
-        <div
-          onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
-          className="fill-height"
-          style={{ width: 'var(--ion-padding)' }}
-        />
-      )}
-      <IonLabel
-        className="ion-padding-vertical ion-no-margin spaced"
-        onClick={e => onClick(1, _id, e)}
-      >
-        <h2
-          className={
-            'ion-label-primary ' + (detailed ? 'ion-text-wrap' : 'ellipses')
-          }
-        >
-          {pharmacyItems.map(
-            (o, i) =>
-              (i > 0 ? ', ' : '') +
-              (o.item['common-name'] || o.item['scientific-name'])
-          )}
-        </h2>
-        <h4 className="flex ion-align-items-center">
-          <span
-            style={{
-              backgroundColor: requestStatesMappedToBadgeBackground[state],
-            }}
-            className="request-badge"
+    // eslint-disable-next-line no-undef
+    const setMenuRef = (node: HTMLIonSelectElement) => {
+      this.menuRef = node
+    }
+
+    const userCanViewRequestClient = userIsPharmacyOperator() || userIsAdmin()
+
+    return (
+      <>
+        {selectModeOn ? (
+          <IonIcon
+            icon={selected ? active : numb}
+            slot="start"
+            onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
+            className="ion-no-margin ion-icon-primary"
           />
-          &nbsp;&nbsp;
-          {state}
-        </h4>
-        {lat !== undefined && lon !== undefined ? (
-          <p>Delivery at {address}</p>
-        ) : null}
-        {detailed ? (
-          <>
-            {userCanViewRequestClient ? (
-              <p>Client - {user.name || user.phone}</p>
-            ) : null}
-            {courier ? <p>Courier - {`${courier.name}`}</p> : null}
-          </>
-        ) : null}
-      </IonLabel>
-      <IonLabel
-        className="one-line"
-        style={{
-          minWidth: 'fit-content',
-          maxWidth: 'fit-content',
-        }}
-        slot="end"
-        onClick={e => onClick(2, _id, e)}
-      >
-        <p className="ion-text-end">{formatDate(createdAt)}</p>
-      </IonLabel>
-      {selectModeOn ? null : (
-        <IonButton onClick={e => onClick(-1, _id, e)} slot="end" fill="clear">
-          <IonIcon className="ion-icon-primary" icon={more} />
-        </IonButton>
-      )}
-      <ActionMenu
-        id={_id}
-        setRef={(node: any) => (menuRef = node)}
-        actions={actions}
-      />
-    </>
-  )
+        ) : (
+          <div
+            onClick={e => onClick(userIsNotClientUser() ? 0 : 1, _id, e)}
+            className="fill-height"
+            style={{ width: 'var(--ion-padding)' }}
+          />
+        )}
+        <IonLabel
+          className="ion-padding-vertical ion-no-margin spaced"
+          onClick={e => onClick(1, _id, e)}
+        >
+          <h2
+            className={
+              'ion-label-primary ' + (detailed ? 'ion-text-wrap' : 'ellipses')
+            }
+          >
+            {pharmacyItems.map(
+              (o, i) =>
+                (i > 0 ? ', ' : '') +
+                (o.item['common-name'] || o.item['scientific-name'])
+            )}
+          </h2>
+          <h4 className="flex ion-align-items-center">
+            <span
+              style={{
+                backgroundColor: requestStatesMappedToBadgeBackground[state],
+              }}
+              className="request-badge"
+            />
+            &nbsp;&nbsp;
+            {state}
+          </h4>
+          {lat !== undefined && lon !== undefined ? (
+            <p>Delivery at {address}</p>
+          ) : null}
+          {detailed ? (
+            <>
+              {userCanViewRequestClient ? (
+                <p>Client - {user.name || user.phone}</p>
+              ) : null}
+              {courier ? <p>Courier - {`${courier.name}`}</p> : null}
+            </>
+          ) : null}
+        </IonLabel>
+        <IonLabel
+          className="one-line"
+          style={{
+            minWidth: 'fit-content',
+            maxWidth: 'fit-content',
+          }}
+          slot="end"
+          onClick={e => onClick(2, _id, e)}
+        >
+          <p className="ion-text-end">{formatDate(createdAt)}</p>
+        </IonLabel>
+        {selectModeOn ? null : (
+          <IonButton onClick={e => onClick(-1, _id, e)} slot="end" fill="clear">
+            <IonIcon className="ion-icon-primary" icon={more} />
+          </IonButton>
+        )}
+        <ActionMenu id={_id} setRef={setMenuRef} actions={actions} />
+      </>
+    )
+  }
 }
-
-export default Component
 
 function formatDate(date: number) {
   return Moment(date).fromNow()
 }
+
+export default Component
