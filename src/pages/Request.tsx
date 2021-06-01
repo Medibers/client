@@ -6,8 +6,6 @@ import { bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 
-import { CallNumber } from '@ionic-native/call-number'
-
 import {
   IonBadge,
   IonButton,
@@ -29,6 +27,7 @@ import { platformIsMobile, requestStatesMappedToBadgeBackground } from 'utils'
 import { userIsCourier, userIsNotClientUser } from 'utils/role'
 import { computeOrderCostAndDistance, deliveryCost } from 'utils/charges'
 import { formatMoney } from 'utils/currency'
+import { callTelephone } from 'utils/msisdn'
 
 import Requests, { endPoints } from 'requests'
 
@@ -120,7 +119,7 @@ class Component extends React.Component<Props> {
       : courier
       ? courier.phones[0]
       : ''
-    CallNumber.callNumber(`+${phone}`, true)
+    callTelephone('+' + phone)
   }
 
   requestCost =

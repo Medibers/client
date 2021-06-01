@@ -103,9 +103,3 @@ export interface PaymentChannel {
   requiresNumber?: true
   unavailable?: true
 }
-
-export interface FAQ {
-  header?: string
-  qn?: string
-  ans?: string
-}

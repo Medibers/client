@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dispatch, bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 
@@ -21,20 +21,16 @@ import {
 
 import { Header } from 'components'
 
-import { FileServer, endPoints } from 'requests'
+import APIServer, { FileServer, endPoints } from 'requests'
 import { sessionAvailable as isSessionAvailable } from 'session'
-
-// import { userIsClientUser } from 'utils/role'
 
 import { APP_NAME, APP_VERSION } from 'utils'
 
-import { FAQ } from 'types'
 import getPageText from 'text'
 
-/*
- * How it works, FAQs, Contacts
- *
- */
+import { IFAQ, ISupportContacts } from './types'
+
+import Contacts from './Contacts'
 
 const Text = getPageText('about')
 
@@ -46,23 +42,6 @@ const steps = [
   'Make payment or pay on delivery',
 ]
 
-const contacts = [
-  {
-    header: 'Call Customer Care',
-    description: <span>{['0312 300200', '0312 239000'].join(',  ')}</span>,
-    action: () => null,
-  },
-  {
-    header: 'Send email',
-    description: null,
-    action: () => null,
-  },
-  {
-    header: 'Visit',
-    description: null,
-  },
-]
-
 const faqAnswerStyle = (show: boolean) => ({
   height: show ? undefined : 0,
 })
@@ -71,28 +50,32 @@ const ionItemStyle = {
   '--min-height': 0,
 }
 
-export type Props = {
-  showLoading: () => {}
-  hideLoading: () => {}
+type Props = {
+  showLoading: () => void
+  hideLoading: () => void
 }
 
 type State = {
-  faqs?: Array<FAQ>
+  faqs?: Array<IFAQ>
   openFAQs: Array<number>
+  supportContacts?: ISupportContacts
 }
 
 class Component extends React.Component<Props> {
   state: State = { openFAQs: [] }
 
   componentDidMount() {
-    this.fetchFAQs()
+    this.fetchFAQsAndSupportContacts()
   }
 
-  fetchFAQs = async () => {
+  fetchFAQsAndSupportContacts = async () => {
     const { showLoading, hideLoading } = this.props
     showLoading()
     const faqs = await FileServer.get(endPoints.faqs)
-    this.setState({ faqs }, hideLoading)
+    const supportContacts = await APIServer.get<Promise<ISupportContacts>>(
+      endPoints['support-contacts']
+    )
+    this.setState({ faqs, supportContacts }, hideLoading)
   }
 
   onFAQSelected = (i: number) => {
@@ -107,7 +90,7 @@ class Component extends React.Component<Props> {
   }
 
   render() {
-    const { faqs = [], openFAQs } = this.state
+    const { faqs = [], openFAQs, supportContacts } = this.state
 
     return (
       <IonPage>
@@ -212,26 +195,12 @@ class Component extends React.Component<Props> {
                     className="ion-icon-secondary"
                     icon="/assets/icons/contact.svg"
                   />
-                  Contact Us
+                  Contact Customer Care
                 </IonItem>
               </IonCardSubtitle>
             </IonCardHeader>
             <IonCardContent>
-              <IonList lines="full">
-                {contacts.map(({ header, description, action }, i, a) => (
-                  <IonItem
-                    key={i}
-                    lines={i + 1 < a.length ? undefined : 'none'}
-                    button={Boolean(action)}
-                    onClick={action}
-                  >
-                    <IonLabel>
-                      <h3 className="ion-label-primary">{header}</h3>
-                      <p>{description}</p>
-                    </IonLabel>
-                  </IonItem>
-                ))}
-              </IonList>
+              {supportContacts && <Contacts contacts={supportContacts} />}
             </IonCardContent>
           </IonCard>
 
@@ -252,7 +221,7 @@ class Component extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       showLoading: () => ({
@@ -265,4 +234,4 @@ const mapDispatchToProps = (dispatch: any) =>
     dispatch
   )
 
-export default connect(null, mapDispatchToProps)(Component)
+export const AboutPage = connect(null, mapDispatchToProps)(Component)

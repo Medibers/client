@@ -1,3 +1,5 @@
+import { CallNumber } from '@ionic-native/call-number'
+
 export function getMSISDNFromCCAndSN(cc: string, sn: string) {
   return `${cc}${sn}`
 }
@@ -40,3 +42,8 @@ export const CCs = {
 }
 
 export const mtnMSISDNStorageKey = 'mtn-msisdn'
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const callTelephone = async (number: string): Promise<any> => {
+  return CallNumber.callNumber('+' + number, true)
+}

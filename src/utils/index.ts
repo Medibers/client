@@ -1,6 +1,10 @@
 import { isPlatform } from '@ionic/react'
 import { ItemRequest as ItemRequestInterface, TItemRequestState } from 'types'
 
+export const APP_NAME = 'Medibers'
+export const APP_VERSION = require('../../package.json').version
+export const TEST_ENV = 'test'
+
 export const platformIsWeb = isPlatform('desktop')
 export const platformIsMobile = isPlatform('mobile')
 export const platformIsiOS = isPlatform('ios')
@@ -36,8 +40,7 @@ export const requestStatesMappedToBadgeBackground: {
 export const itemState = (available: boolean) =>
   available ? 'Available' : 'Out of stock'
 
-export const TEST_ENV = 'test'
-
-export const APP_NAME = 'Medibers'
-
-export const APP_VERSION = require('../../package.json').version
+export const indexIsLastInArray = (
+  index: number,
+  array: Array<unknown>
+): boolean => index === array.length - 1

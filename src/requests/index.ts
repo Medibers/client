@@ -60,6 +60,7 @@ export const endPoints = {
   'mtn-msisdn': '/user/mtn-msisdn',
   couriers: '/courier',
   'push-notification-token': '/push-notification-token',
+  'support-contacts': '/support/contacts',
   faqs: '/docs/faqs.json',
   tcs: '/docs/tcs.md',
 }
