@@ -1,4 +1,4 @@
-import Axios from 'axios'
+import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { getSessionToken, sessionAvailable } from 'session'
 
 const defaultHeaders = {
@@ -17,7 +17,30 @@ let baseURL =
     ? process.env.REACT_APP_BACKEND_URL_REMOTE
     : process.env.REACT_APP_BACKEND_URL
 
-const instance1 = Axios.create({ baseURL, headers }) // API instance
+interface IAxiosInstance extends AxiosInstance {
+  get<T = unknown, R = T>(url: string, config?: AxiosRequestConfig): Promise<R>
+  delete<T = unknown, R = T>(
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<R>
+  post<T = unknown, R = T>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig
+  ): Promise<R>
+  put<T = unknown, R = T>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig
+  ): Promise<R>
+  patch<T = unknown, R = T>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig
+  ): Promise<R>
+}
+
+const instance1: IAxiosInstance = Axios.create({ baseURL, headers }) // API instance
 
 baseURL =
   window.location.host === 'localhost' // deployment on mobile

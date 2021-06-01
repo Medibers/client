@@ -3,7 +3,7 @@ import Routes from 'routes'
 import { History } from 'history'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dispatch, bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 
@@ -48,12 +48,12 @@ import { setActiveRequestsPresence } from 'session'
 import OrderButton from './OrderButton'
 import { TItemRequestClickAction } from './types'
 
-type Props = {
+interface Props {
   history: History
   location: {
     pathname: string
   }
-  requests: undefined | Array<ItemRequestInterface>
+  requests?: Array<ItemRequestInterface>
   setItemRequests: (e: Array<ItemRequestInterface> | null) => {}
   showLoading: () => {}
   hideLoading: () => {}
@@ -93,14 +93,14 @@ class Component extends React.Component<Props> {
     if (requestsSelected.length > 0) {
       const updateBackend = (body: Object) => {
         showLoading()
-        Requests.put(endPoints['item-requests'], {
+        Requests.put<ItemRequestInterface[]>(endPoints['item-requests'], {
           ...this.defaultUpdateRequestBody(),
           update: body,
         })
           .then(this.updateRequestsUI)
           .catch(err => {
-            console.error(err)
             showToast(err.error || err.toString())
+            throw err
           })
           .finally(hideLoading)
       }
@@ -154,7 +154,7 @@ class Component extends React.Component<Props> {
   updateBackend = (body: Object, requestsSelected?: Array<String>) => {
     const { showLoading, hideLoading, showToast } = this.props
     showLoading()
-    Requests.put(endPoints['item-requests'], {
+    Requests.put<ItemRequestInterface[]>(endPoints['item-requests'], {
       ...this.defaultUpdateRequestBody(requestsSelected),
       update: body,
     })
@@ -173,13 +173,16 @@ class Component extends React.Component<Props> {
    * Or events from other user
    *
    * */
-  updateRequestsUI = (response: any, prependRequests?: true) => {
+  updateRequestsUI = (
+    response: ItemRequestInterface[],
+    prependRequests?: true
+  ) => {
     const { requests: r, showToast, hideToast, setItemRequests } = this.props
     let requests = r ? [...r] : []
     if (prependRequests) {
       requests = response.concat(requests)
     } else {
-      response.forEach((request: ItemRequestInterface) => {
+      response.forEach(request => {
         const index = requests.findIndex(o => o._id === request._id)
         requests[index] = {
           ...requests[index],
@@ -254,7 +257,7 @@ class Component extends React.Component<Props> {
     this.setState({ courierPopoverShown: false }, () => {
       const { showLoading, hideLoading, showToast } = this.props
       showLoading()
-      Requests.put(endPoints['item-requests'], {
+      Requests.put<ItemRequestInterface[]>(endPoints['item-requests'], {
         ...this.defaultUpdateRequestBody([
           this.state.requestSelectedFromActionMenu || '',
         ]),
@@ -262,8 +265,8 @@ class Component extends React.Component<Props> {
       })
         .then(this.updateRequestsUI)
         .catch(err => {
-          console.error(err)
           showToast(err.error || err.toString())
+          throw err
         })
         .finally(hideLoading)
     })
@@ -290,16 +293,16 @@ class Component extends React.Component<Props> {
   fetchRequests(animate: boolean = true, cb?: Function) {
     const { showLoading, hideLoading, showToast, setItemRequests } = this.props
     if (animate) showLoading()
-    Requests.get(endPoints['item-requests'])
-      .then((response: any) => {
+    Requests.get<ItemRequestInterface[]>(endPoints['item-requests'])
+      .then(response => {
         setItemRequests(response)
         setActiveRequestsPresence(
           response.length > getArchivedRequests(response).length
         )
       })
       .catch(err => {
-        console.error(err)
         showToast(err.error || err.toString())
+        throw err
       })
       .finally(() => {
         this.setState({ renderContent: true })
@@ -310,18 +313,18 @@ class Component extends React.Component<Props> {
 
   fetchCouriers() {
     const { showToast } = this.props
-    Requests.get(endPoints['couriers'])
-      .then((response: any) => {
+    Requests.get<CourierInterface[]>(endPoints['couriers'])
+      .then(response => {
         this.setState({
-          couriers: response.map((o: CourierInterface) => ({
+          couriers: response.map(o => ({
             label: o.name,
             value: o._id,
           })),
         })
       })
       .catch(err => {
-        console.error(err)
         showToast(err.error || err.toString())
+        throw err
       })
   }
 
@@ -359,7 +362,7 @@ class Component extends React.Component<Props> {
     const selectModeOn = userIsNotClientUser() && requestsSelected.length > 0
 
     const requestComponent = (
-      item: any,
+      item: ItemRequestInterface,
       i: number,
       a: Array<ItemRequestInterface>
     ) => (
@@ -442,11 +445,12 @@ class Component extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ReducerState) => ({
+const mapStateToProps = (state: ReducerState, props: Props) => ({
   requests: state.App.requests || undefined,
+  ...props,
 })
 
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       setItemRequests: payload => ({

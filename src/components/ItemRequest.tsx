@@ -75,9 +75,10 @@ class Component extends React.Component<Props> {
       event: React.MouseEvent
     ) => {
       event.stopPropagation()
-      if (action === 'show-menu') {
-        this.menuRef && this.menuRef.open(event.nativeEvent)
-      } else onTap(action, item)
+      action === 'show-menu' &&
+        this.menuRef &&
+        this.menuRef.open(event.nativeEvent)
+      onTap(action, item)
     }
 
     // eslint-disable-next-line no-undef
