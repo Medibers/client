@@ -1,6 +1,5 @@
 import React from 'react'
 import Routes from 'routes'
-import { History } from 'history'
 
 import { connect } from 'react-redux'
 import { Dispatch, bindActionCreators } from 'redux'
@@ -20,6 +19,8 @@ import {
 } from '@ionic/react'
 import { RefresherEventDetail } from '@ionic/core'
 import { chevronDown as down, person, chevronUp as up } from 'ionicons/icons'
+
+import { getLocationPath, navigateTo } from 'app-history'
 
 import { Header, ItemRequest } from 'components'
 import { Select as SelectPopover } from 'containers'
@@ -49,10 +50,6 @@ import OrderButton from './OrderButton'
 import { TItemRequestClickAction } from './types'
 
 interface Props {
-  history: History
-  location: {
-    pathname: string
-  }
   requests?: Array<ItemRequestInterface>
   setItemRequests: (e: Array<ItemRequestInterface> | null) => {}
   showLoading: () => {}
@@ -78,13 +75,13 @@ class Component extends React.Component<Props> {
   }
 
   toolbarActions = () => {
-    const { history, showLoading, hideLoading, showToast } = this.props
+    const { showLoading, hideLoading, showToast } = this.props
     const { requestsSelected } = this.state
 
     const defaultToolbarActions: Array<ToolbarAction> = [
       {
         icon: person,
-        handler: () => history.push(Routes.account.path),
+        handler: () => navigateTo(Routes.account.path),
       },
     ]
 
@@ -105,7 +102,7 @@ class Component extends React.Component<Props> {
           .finally(hideLoading)
       }
 
-      switch (window.location.pathname) {
+      switch (getLocationPath()) {
         case Routes.requests.path:
           return [
             {
@@ -212,7 +209,7 @@ class Component extends React.Component<Props> {
   }
 
   onPrimaryAction = () => {
-    this.props.history.push(Routes.search.path)
+    navigateTo(Routes.search.path)
   }
 
   onRequestTapped = (action: TItemRequestClickAction, request: string) => {
@@ -229,7 +226,7 @@ class Component extends React.Component<Props> {
       }
       case 'show-detail': {
         if (userIsClientUser()) {
-          this.props.history.push(Routes.request.path, {
+          navigateTo(Routes.request.path, {
             request: (this.props.requests || []).find(
               ({ _id }) => _id === request
             ),
@@ -445,9 +442,8 @@ class Component extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ReducerState, props: Props) => ({
+const mapStateToProps = (state: ReducerState) => ({
   requests: state.App.requests || undefined,
-  ...props,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) =>

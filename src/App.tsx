@@ -3,6 +3,8 @@ import { Redirect, Route } from 'react-router-dom'
 import { IonApp, IonRouterOutlet } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 
+import history from 'app-history'
+
 import Routes, { getDefaultRoute } from './routes'
 
 import { WebSplashScreen } from './pages'
@@ -74,7 +76,7 @@ export default class App extends React.Component {
           <>
             <WebSplashScreen rendered={renderSplashScreen} />
             <div style={pageTransitionStyle(renderSplashScreen)}>
-              <IonReactRouter>
+              <IonReactRouter history={history}>
                 <IonRouterOutlet>
                   {routeValues.map(
                     (

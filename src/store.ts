@@ -1,10 +1,9 @@
+import history from 'app-history'
+
 import { applyMiddleware, compose, createStore } from 'redux'
 import { routerMiddleware } from 'react-router-redux'
-import { createBrowserHistory } from 'history'
 
 import rootReducer from './reducers'
-
-export const history = createBrowserHistory()
 
 const initialState = {}
 const enhancers = []
