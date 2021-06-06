@@ -2,15 +2,8 @@ import React from 'react'
 
 import { IonPage } from '@ionic/react'
 
-const { REACT_APP_SPLASH_URL } = process.env
-
-type Props = {
-  rendered: Boolean
-}
-
-const Component: React.FC<Props> = ({ rendered }) => {
-  const imageSrc = REACT_APP_SPLASH_URL
-
+const WebSplashScreen: React.FC = () => {
+  const imageSrc = process.env.REACT_APP_SPLASH_URL
   return (
     <IonPage
       style={{
@@ -26,4 +19,4 @@ const Component: React.FC<Props> = ({ rendered }) => {
   )
 }
 
-export default Component
+export default WebSplashScreen

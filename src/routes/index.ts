@@ -19,16 +19,14 @@ import {
   TCs,
 } from 'pages'
 
-interface IRoutes {
-  [key: string]: {
-    path: string
-    component: Function
-    isPublic?: boolean
-    preventRedirect?: true
-  }
+interface IRoute {
+  path: string
+  component: Function
+  isPublic?: boolean
+  preventRedirectWhenSessionAvailable?: true
 }
 
-const Routes: IRoutes = {
+const Routes: Record<string, IRoute> = {
   courier: {
     path: '/courier',
     component: Home,
@@ -45,13 +43,13 @@ const Routes: IRoutes = {
     path: '/about',
     component: About,
     isPublic: true,
-    preventRedirect: true,
+    preventRedirectWhenSessionAvailable: true,
   },
   tcs: {
     path: '/terms-conditions',
     component: TCs,
     isPublic: true,
-    preventRedirect: true,
+    preventRedirectWhenSessionAvailable: true,
   },
   account: {
     path: '/account',

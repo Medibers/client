@@ -1,6 +1,10 @@
 /* eslint-disable no-undef */
 
-import { Geolocation } from '@ionic-native/geolocation'
+import {
+  Geolocation,
+  Geoposition,
+  PositionError,
+} from '@ionic-native/geolocation'
 
 import {
   getLastAttemptedDeliveryLocation,
@@ -20,17 +24,24 @@ export const updateCurrentPosition = async () => {
 }
 
 export const watchPosition = () => {
-  Geolocation.watchPosition().subscribe(async (res: any) => {
-    try {
-      const { latitude: lat, longitude: lon, accuracy: acc } = res.coords
-      const address = await queryAddress(lat, lon)
-      setSessionLocation({ lat, lon, acc, address })
-    } catch (e) {}
-  }, console.error)
+  return Geolocation.watchPosition().subscribe(
+    async (res: Geoposition | PositionError) => {
+      const coordinates = (res as Geoposition).coords
+      if (coordinates) {
+        const { latitude: lat, longitude: lon, accuracy: acc } = coordinates
+        const address = await queryAddress(lat, lon)
+        setSessionLocation({ lat, lon, acc, address })
+      } else {
+        // handle PositionError
+        console.error(res) // eslint-disable-line no-console
+      }
+    },
+    console.error // eslint-disable-line no-console
+  )
 }
 
 export const formatDistance = (mDistance: number) => {
-  // mDistance - meter distance
+  // mDistance -> meter distance
   if (mDistance < 50) return '< 50m'
   if (mDistance < 1000) return `${mDistance}m`
   if (mDistance < 50000) return `${mDistance / 1000}km`
@@ -63,7 +74,7 @@ export const queryAddress: (a1: number, a2: number) => Promise<string | null> =
 
     return await new Promise(resolve => {
       geocoder.geocode({ location }, (results, status) => {
-        console.debug('Geocoder query status', status, results)
+        console.debug('Geocoder query status', status, results) // eslint-disable-line no-console
         if (status !== 'OK') {
           resolve(null)
         } else if (results.length) {
@@ -116,21 +127,27 @@ export const computeDistance: (
   }
 
   return new Promise(resolve => {
-    directionsService.route(route, (response: any, status: any) => {
-      if (status !== 'OK') {
-        console.error('Directions request, status', status)
-        resolve(null)
-        return
+    directionsService.route(
+      route,
+      (
+        response: google.maps.DirectionsResult,
+        status: google.maps.DirectionsStatus
+      ) => {
+        if (status !== 'OK') {
+          console.error('Directions request, status', status) // eslint-disable-line no-console
+          resolve(null)
+          return
+        }
+        // directionsRenderer.setDirections(response) // Render route on map
+        const data = response.routes[0].legs[0] // Get first of possible routes
+        if (data) {
+          const { value: distanceInMetres /* text */ } = data.distance
+          resolve(distanceInMetres)
+        } else {
+          console.error('Directions data not returned', data) // eslint-disable-line no-console
+          resolve(null)
+        }
       }
-      // directionsRenderer.setDirections(response) // Render route on map
-      const data = response.routes[0].legs[0] // Get first of possible routes
-      if (data) {
-        const { value: distanceInMetres /* text */ } = data.distance
-        resolve(distanceInMetres)
-      } else {
-        console.error('Directions data not returned', data)
-        resolve(null)
-      }
-    })
+    )
   })
 }

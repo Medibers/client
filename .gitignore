@@ -63,3 +63,4 @@ typings/
 # capacitor-android generated folders
 android
 build
+resources

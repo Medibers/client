@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import App from 'App'
+import App from 'views/app/RootAppView'
 import Wrapper from 'tests/Wrapper'
 
 it('renders without crashing', () => {
