@@ -2,7 +2,7 @@ import React from 'react'
 import { IonToast } from '@ionic/react'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dispatch, bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 import { State as ReducerState } from 'reducers'
@@ -26,7 +26,7 @@ class Component extends React.Component<Props> {
         position="bottom"
         buttons={[
           {
-            text: 'Close',
+            icon: 'close',
             role: 'cancel',
             handler: hideToast,
           },
@@ -48,7 +48,7 @@ const mapStateToProps = (state: ReducerState) => ({
   message: state.App.toast,
 })
 
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       hideToast: () => ({

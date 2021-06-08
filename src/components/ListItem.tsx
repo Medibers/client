@@ -16,7 +16,7 @@ const Component: React.FC<Props> = ({
   button,
   onClick,
 }) => (
-  <IonItem lines={isLast ? lines : 'none'} button={button} onClick={onClick}>
+  <IonItem lines={isLast ? 'none' : lines} button={button} onClick={onClick}>
     {children}
   </IonItem>
 )

@@ -53,6 +53,7 @@ const ionItemStyle = {
 type Props = {
   showLoading: () => void
   hideLoading: () => void
+  showToast: (arg: string) => void
 }
 
 type State = {
@@ -68,14 +69,22 @@ class Component extends React.Component<Props> {
     this.fetchFAQsAndSupportContacts()
   }
 
-  fetchFAQsAndSupportContacts = async () => {
-    const { showLoading, hideLoading } = this.props
+  fetchFAQsAndSupportContacts = () => {
+    const { showLoading, hideLoading, showToast } = this.props
     showLoading()
-    const faqs = await FileServer.get(endPoints.faqs)
-    const supportContacts = await APIServer.get<Promise<ISupportContacts>>(
-      endPoints['support-contacts']
-    )
-    this.setState({ faqs, supportContacts }, hideLoading)
+    Promise.all([
+      FileServer.get<Array<IFAQ>>(endPoints.faqs),
+      APIServer.get<ISupportContacts>(endPoints['support-contacts']),
+    ])
+      .then(([faqs, supportContacts]) => {
+        this.setState({ faqs, supportContacts }, hideLoading)
+      })
+      .catch(() => {
+        showToast(
+          'We could not fetch FAQs and Customer Care information, please ensure you have an active internet connection'
+        )
+        hideLoading()
+      })
   }
 
   onFAQSelected = (i: number) => {
@@ -229,6 +238,10 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
       }),
       hideLoading: () => ({
         type: constants.HIDE_LOADING,
+      }),
+      showToast: (payload: string) => ({
+        type: constants.SHOW_TOAST,
+        payload,
       }),
     },
     dispatch
