@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
 import { IonLabel, IonRippleEffect } from '@ionic/react'
 
-const categoryImageStyle: Object = {
+const categoryImageStyle: Record<string, string> = {
   width: '100%',
   height: '250px',
   objectFit: 'cover',
 }
 
-const placeholderImageUrl = '/assets/icons/no-icon.svg'
-
 const Category: React.FC<{
   label: string
-  description: string
-  icon: string
+  imageUrl: string
   onSelect: () => void
-}> = ({ label, icon, onSelect }) => {
-  const [imageUrl, setUrl] = useState(icon)
-  const onError = () => setUrl(placeholderImageUrl)
+}> = ({ label, imageUrl, onSelect }) => {
+  const onError = () => {
+    // eslint-disable-next-line no-console
+    console.error('Could not load image at ' + imageUrl)
+  }
 
   const [loaded, setLoaded] = useState(false)
   const onLoad = () => setLoaded(true)

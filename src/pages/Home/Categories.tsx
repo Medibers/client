@@ -20,7 +20,7 @@ const onSelectCategory = (category: string) => {
 const Categories = () => (
   <IonGrid>
     <IonRow>
-      {itemCategories.map(({ icon, label, description, value }) => (
+      {itemCategories.map(({ imageUrl, label, description, value }) => (
         <IonCol
           key={value}
           className="ion-no-padding"
@@ -31,10 +31,8 @@ const Categories = () => (
         >
           <div className="fill-height ion-padding">
             <Category
-              key={value}
               label={label}
-              description={description}
-              icon={icon}
+              imageUrl={imageUrl}
               onSelect={() => onSelectCategory(value)}
             />
           </div>
