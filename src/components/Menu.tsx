@@ -1,53 +1,71 @@
+/* eslint-disable no-undef */
+
 import React from 'react'
 
-import { IonSelect, IonSelectOption } from '@ionic/react'
+import { IonList } from '@ionic/react'
 
 import { MenuAction } from 'types'
+import { ListItem, Popover } from 'components'
 
-type Props = {
-  actions: Array<MenuAction>
-  setRef: (node: any) => void
+import { connect } from 'react-redux'
+import { Dispatch, bindActionCreators } from 'redux'
+
+import { State as ReducerState } from 'reducers'
+import { indexIsLastInArray } from 'utils'
+
+import * as constants from 'reducers/constants'
+
+interface IMenuProps {
   id?: string
+  actions: Array<MenuAction>
+  open: boolean
+  event?: Event
+  hideMenu: () => void
 }
 
-const Component: React.FC<Props> = ({
+const Menu: React.FC<IMenuProps> = ({
   id,
   actions,
-  setRef: setRefAtParent,
+  open,
+  event,
+  hideMenu: dismiss,
 }) => {
-  let menuRef: any
-
-  const onChange = ({ detail: { value } }: any) => {
-    if (value === null) return
-    if (menuRef) menuRef.value = null
-    const { handler } = actions.find(({ text }) => value === text) || {}
-    handler && handler(id)
-  }
-
-  const setRef = (node: any) => {
-    menuRef = node
-    setRefAtParent(node)
+  const onItemSelect = (value: string) => {
+    dismiss()
+    const action = actions.find(({ text }) => value === text)
+    action && action.handler(id)
   }
 
   return (
-    <IonSelect
-      ref={setRef}
-      interfaceOptions={{ showBackdrop: false }}
-      interface="popover"
-      onIonChange={onChange}
-      className="select-menu"
-    >
-      {actions.map(({ text }, i, a) => (
-        <IonSelectOption
-          key={i}
-          className={i < a.length - 1 ? '' : 'last'}
-          value={text}
-        >
-          {text}
-        </IonSelectOption>
-      ))}
-    </IonSelect>
+    <Popover open={open} event={event} onDismiss={dismiss} showBackdrop={false}>
+      <IonList>
+        {actions.map((action, i, a) => (
+          <ListItem
+            key={action.text}
+            isLast={indexIsLastInArray(i, a)}
+            onClick={() => onItemSelect(action.text)}
+          >
+            {action.text}
+          </ListItem>
+        ))}
+      </IonList>
+    </Popover>
   )
 }
 
-export default Component
+const mapStateToProps = (state: ReducerState) => ({
+  open: Boolean(state.App.menu),
+  event: state.App.menu,
+})
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      hideMenu: () => ({
+        type: constants.HIDE_MENU,
+      }),
+    },
+    dispatch
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu)

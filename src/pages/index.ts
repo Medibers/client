@@ -1,6 +1,4 @@
-import Signup1 from './Signup1'
-import Signup2 from './Signup2'
-import Login from './Login'
+import { Login, Signup1, Signup2 } from './Authentication'
 import Home from './Home'
 import Account from './Account'
 import Search from './Search'
@@ -15,9 +13,9 @@ import About from './About'
 import TCs from './TCs'
 
 export {
+  Login,
   Signup1,
   Signup2,
-  Login,
   Home,
   Account,
   Search,

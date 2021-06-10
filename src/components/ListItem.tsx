@@ -9,16 +9,25 @@ interface Props {
   onClick?: () => void
 }
 
-const Component: React.FC<Props> = ({
+const ListItemStyle = {
+  cursor: 'pointer',
+}
+
+const ListIem: React.FC<Props> = ({
   isLast,
   lines,
   children,
   button,
   onClick,
 }) => (
-  <IonItem lines={isLast ? 'none' : lines} button={button} onClick={onClick}>
+  <IonItem
+    lines={isLast ? 'none' : lines}
+    button={button}
+    onClick={onClick}
+    style={ListItemStyle}
+  >
     {children}
   </IonItem>
 )
 
-export default Component
+export default ListIem

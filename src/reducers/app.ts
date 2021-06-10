@@ -5,14 +5,14 @@ import * as constants from './constants'
 
 export interface State {
   loading: boolean
-  toast: string | null
+  toast?: string
+  menu?: Event
   requests: Array<ItemRequest> | null
   items: Array<ItemSearchResult> | null
 }
 
 const initialState: State = {
   loading: false,
-  toast: null,
   requests: null,
   items: null,
 }
@@ -33,7 +33,15 @@ export default (state = initialState, action: Action) =>
         break
       }
       case constants.HIDE_TOAST: {
-        draft.toast = null
+        delete draft.toast
+        break
+      }
+      case constants.SHOW_MENU: {
+        draft.menu = action.payload
+        break
+      }
+      case constants.HIDE_MENU: {
+        delete draft.menu
         break
       }
       case constants.SET_ITEM_REQUESTS: {

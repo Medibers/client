@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { FormEvent } from 'react'
 import Routes from 'routes'
 import { History } from 'history'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dispatch, bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 
@@ -21,7 +21,7 @@ import {
 import { Link } from 'react-router-dom'
 
 import { Header } from 'components'
-import { HeadComponent } from './Login'
+import HeadComponent from './HeadComponent'
 
 import Requests, { endPoints } from 'requests'
 import { setSessionPhone, setSessionToken } from 'session'
@@ -54,13 +54,13 @@ class Component extends React.Component<Props> {
     inputFocussed: null,
   }
 
-  onChange = (e: any) => {
-    const { name, value } = e.target
-    this.setState({ ...this.state, [name]: value })
+  onChange = (event: CustomEvent<unknown>) => {
+    const { name, value } = event.target as HTMLInputElement
+    this.setState({ [name]: value })
   }
 
-  onSubmit = (e: any) => {
-    e.preventDefault()
+  onSubmit = (event?: FormEvent) => {
+    event && event.preventDefault()
     if (this.props.history.location.state === undefined) return
 
     const {
@@ -80,38 +80,35 @@ class Component extends React.Component<Props> {
     if (code && password && name) {
       hideToast()
       showLoading()
-      Requests.post(endPoints.signup2, {
+      Requests.post<{ token: string }>(endPoints.signup2, {
         token,
         code: (code || '').trim(),
         secret: (password || '').trim(),
         name: (name || '').trim(),
         email: (email || '').trim() || null,
       })
-        .then((response: any) => {
-          console.info(response)
+        .then(response => {
           setSessionToken(response.token)
           setSessionPhone(phone)
           window.location.replace(Routes.home.path)
         })
         .catch(err => {
-          console.error(err)
           showToast(err.error || err.toString())
+          throw err
         })
         .finally(() => hideLoading())
     }
   }
 
-  onInputFocus = (e: any) => {
-    if (e) {
-      const { name, value } = e.target
-      this.setState({ inputFocussed: name, [name]: value })
-    }
+  onInputFocus = ({ target }: CustomEvent<unknown>) => {
+    const { name, value } = target as HTMLInputElement
+    this.setState({ inputFocussed: name, [name]: value })
   }
 
   onInputBlur = () => this.setState({ inputFocussed: null })
 
-  onKeyUp = (e: any) =>
-    e.keyCode === 13 && this.onSubmit({ preventDefault: () => null })
+  onKeyUp = (event: { keyCode: number }) =>
+    event.keyCode === 13 && this.onSubmit()
 
   getIonLabelStyle = (name: string) => {
     return this.state.inputFocussed === name
@@ -237,7 +234,7 @@ class Component extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       showLoading: () => ({

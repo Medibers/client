@@ -9,7 +9,7 @@ import { State as ReducerState } from 'reducers'
 
 export type Props = {
   open: boolean
-  message: string | null
+  message?: string
   hideToast: () => void
 }
 

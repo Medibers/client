@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { FormEvent } from 'react'
 import Routes, { getDefaultRoute } from 'routes'
-import { History } from 'history'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dispatch, bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 
@@ -26,64 +25,72 @@ import Requests, { endPoints } from 'requests'
 import { setSessionPhone, setSessionToken } from 'session'
 
 import { CCs } from 'utils/msisdn'
+import { navigateTo } from 'app-history'
 
-export type Props = {
-  history: History
-  showLoading: Function
-  hideLoading: Function
-  showToast: Function
-  hideToast: Function
+import getMenuActions from 'pages/menu-actions'
+
+import HeadComponent from './HeadComponent'
+
+interface ILoginProps {
+  showLoading: () => void
+  hideLoading: () => void
+  showToast: (message: string) => void
+  hideToast: () => void
+  showMenu: (event: Event) => void
 }
 
 const header = 'Welcome!'
 const subHeader = 'Provide your phone and password to sign in'
 
-class Component extends React.Component<Props> {
+class Component extends React.Component<ILoginProps> {
   state = { phone: null, inputFocussed: null, password: null }
 
   // state = { phone: '773828773', inputFocussed: null, password: '773828773' } // client user
   // state = { phone: '773828774', inputFocussed: null, password: '773828773' } // courier
   // state = { phone: '773828775', inputFocussed: null, password: '773828773' } // admin
 
-  onChange = (e: any) => {
-    const { name, value } = e.target
+  onChange = (target: EventTarget | null) => {
+    const { name, value } = target as HTMLInputElement
     this.setState({ [name]: value })
   }
 
-  onSubmit = (e: any) => {
-    e.preventDefault()
+  onSubmit = (event?: FormEvent) => {
+    event && event.preventDefault()
     const { showLoading, hideLoading, showToast, hideToast } = this.props
     const { phone: partPhone, password } = this.state
     if (partPhone && password) {
       hideToast()
       showLoading()
       const phone = `${CCs.ug.value}${(partPhone || '').trim()}`
-      Requests.post(endPoints.login, { phone, secret: password })
-        .then(({ token }: any) => {
+      Requests.post<{ token: string }>(endPoints.login, {
+        phone,
+        secret: password,
+      })
+        .then(({ token }) => {
           setSessionToken(token)
           setSessionPhone(phone)
           window.location.replace(getDefaultRoute(token))
         })
         .catch(err => {
-          console.error(err)
           showToast(err.error || err.toString())
+          throw err
         })
         .finally(() => hideLoading())
     }
   }
 
   onCreateAccount = () => {
-    this.props.history.push(Routes.signup1.path)
+    navigateTo(Routes.signup1.path)
   }
 
-  onInputFocus = (e: any) => {
-    if (e) this.setState({ inputFocussed: e.target.name })
+  onInputFocus = (target: EventTarget | null) => {
+    this.setState({ inputFocussed: (target as HTMLInputElement).name })
   }
 
   onInputBlur = () => this.setState({ inputFocussed: null })
 
-  onKeyUp = (e: any) =>
-    e.keyCode === 13 && this.onSubmit({ preventDefault: () => null })
+  onKeyUp = (event: { keyCode: number }) =>
+    event.keyCode === 13 && this.onSubmit()
 
   getIonLabelStyle = (name: string) => {
     return this.state.inputFocussed === name
@@ -101,25 +108,9 @@ class Component extends React.Component<Props> {
   toolbarActions = () => [
     {
       icon: more,
-      handler: (event: any) => this.menuRef.open({ target: event.target }),
+      handler: (event: React.MouseEvent) =>
+        this.props.showMenu(event.nativeEvent),
     },
-  ]
-
-  menuRef: any
-
-  menuActions = () => [
-    {
-      text: 'About Us',
-      handler: () => this.props.history.push(Routes.about.path),
-    },
-    /* How it works, FAQs, Contacts */
-    { text: 'Key Partners', handler: () => null },
-    /* List partners with some description */
-    {
-      text: 'Terms & Conditions',
-      handler: () => this.props.history.push(Routes.tcs.path),
-    },
-    /* Terms of operation, Privacy policy */
   ]
 
   render() {
@@ -127,10 +118,7 @@ class Component extends React.Component<Props> {
     return (
       <IonPage>
         <Header omitsBack actions={this.toolbarActions()} />
-        <Menu
-          setRef={(node: any) => (this.menuRef = node)}
-          actions={this.menuActions()}
-        />
+        <Menu actions={getMenuActions()} />
         <IonContent>
           <HeadComponent header={header} subHeader={subHeader} />
           <form onSubmit={this.onSubmit}>
@@ -145,8 +133,8 @@ class Component extends React.Component<Props> {
                 <PhoneInput
                   name="phone"
                   value={phone || ''}
-                  onChange={this.onChange}
-                  onFocus={this.onInputFocus}
+                  onChange={e => this.onChange(e.target)}
+                  onFocus={e => this.onInputFocus(e.target)}
                   onBlur={this.onInputBlur}
                   onKeyUp={this.onKeyUp}
                 />
@@ -160,8 +148,8 @@ class Component extends React.Component<Props> {
                   Password <span className="ion-label-secondary">*</span>
                 </IonLabel>
                 <IonInput
-                  onIonChange={this.onChange}
-                  onIonFocus={this.onInputFocus}
+                  onIonChange={e => this.onChange(e.target)}
+                  onIonFocus={e => this.onInputFocus(e.target)}
                   onIonBlur={this.onInputBlur}
                   onKeyUp={this.onKeyUp}
                   value={password}
@@ -199,7 +187,7 @@ class Component extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       showLoading: () => ({
@@ -215,26 +203,12 @@ const mapDispatchToProps = (dispatch: any) =>
       hideToast: () => ({
         type: constants.HIDE_TOAST,
       }),
+      showMenu: (payload: Event) => ({
+        type: constants.SHOW_MENU,
+        payload,
+      }),
     },
     dispatch
   )
 
 export default connect(null, mapDispatchToProps)(Component)
-
-export const HeadComponent: React.FC<{
-  header: string
-  subHeader: string
-}> = ({ header, subHeader }) => (
-  <>
-    <IonItem lines="none" className="ion-margin-bottom">
-      <IonLabel className="ion-text-wrap ion-head">
-        {/* <h1>{header}</h1> */}
-        <p>{subHeader}</p>
-      </IonLabel>
-    </IonItem>
-    {/* <IonItemDivider className="ion-margin-vertical" style={{
-    minHeight: .4,
-    '--background': 'var(--ion-color-label-secondary)'
-  }} /> */}
-  </>
-)

@@ -4,6 +4,8 @@ import { IonPopover } from '@ionic/react'
 
 type Props = {
   open: boolean
+  event?: Event
+  showBackdrop?: boolean
   onPresent?: () => void
   onDismiss?: () => void
   cssClass?: string
@@ -11,6 +13,8 @@ type Props = {
 
 const Component: React.FC<Props> = ({
   open,
+  event,
+  showBackdrop,
   onPresent,
   onDismiss,
   cssClass,
@@ -18,8 +22,10 @@ const Component: React.FC<Props> = ({
 }) => (
   <IonPopover
     isOpen={open}
+    event={event}
     onDidPresent={onPresent}
     onDidDismiss={onDismiss}
+    showBackdrop={showBackdrop}
     cssClass={cssClass}
   >
     {children}

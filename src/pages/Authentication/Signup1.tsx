@@ -1,9 +1,9 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, FormEvent } from 'react'
 import Routes from 'routes'
 import { History } from 'history'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dispatch, bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 
@@ -17,7 +17,7 @@ import {
   IonPage,
 } from '@ionic/react'
 import { Header, PhoneInput } from 'components'
-import { HeadComponent } from './Login'
+import HeadComponent from './HeadComponent'
 
 import Requests, { endPoints } from 'requests'
 
@@ -42,8 +42,8 @@ class Component extends React.Component<Props> {
     this.setState({ ...this.state, [name]: value })
   }
 
-  onSubmit = (e: any) => {
-    e.preventDefault()
+  onSubmit = (event?: FormEvent) => {
+    event && event.preventDefault()
 
     const { showLoading, hideLoading, showToast, hideToast, history } =
       this.props
@@ -53,30 +53,31 @@ class Component extends React.Component<Props> {
       hideToast()
       showLoading()
       const phone = `${CCs.ug.value}${(partPhone || '').trim()}`
-      Requests.post(endPoints.signup1, { phone })
-        .then((response: any) => {
-          console.info(response)
+      Requests.post<{ token: string; phone: string }>(endPoints.signup1, {
+        phone,
+      })
+        .then(response => {
           history.push({
             pathname: Routes.signup2.path,
             state: { token: response.token, phone },
           })
         })
         .catch(err => {
-          console.error(err)
           showToast(err.error || err.toString())
+          throw err
         })
         .finally(() => hideLoading())
     }
   }
 
-  onInputFocus = (e: any) => {
-    if (e) this.setState({ inputFocussed: e.target.name })
+  onInputFocus = (target: EventTarget | null) => {
+    this.setState({ inputFocussed: (target as HTMLInputElement).name })
   }
 
   onInputBlur = () => this.setState({ inputFocussed: null })
 
-  onKeyUp = (e: any) =>
-    e.keyCode === 13 && this.onSubmit({ preventDefault: () => null })
+  onKeyUp = (event: { keyCode: number }) =>
+    event.keyCode === 13 && this.onSubmit()
 
   getIonLabelStyle = (name: string) => {
     return this.state.inputFocussed === name
@@ -112,7 +113,7 @@ class Component extends React.Component<Props> {
                   name="phone"
                   value={phone || ''}
                   onChange={this.onChange}
-                  onFocus={this.onInputFocus}
+                  onFocus={e => this.onInputFocus(e.target)}
                   onBlur={this.onInputBlur}
                   onKeyUp={this.onKeyUp}
                 />
@@ -135,7 +136,7 @@ class Component extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       showLoading: () => ({
