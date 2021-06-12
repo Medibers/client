@@ -1,6 +1,6 @@
-import { Type } from './base'
+import { TPageText } from './base'
 
-const text: Type = {
+const text: TPageText = {
   name: {
     en: 'App',
     local: 'App',

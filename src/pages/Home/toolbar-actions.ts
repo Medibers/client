@@ -3,7 +3,6 @@ import React from 'react'
 import {
   ellipsisVertical as more,
   person,
-  bicycle as requestsIcon,
   searchSharp as search,
 } from 'ionicons/icons'
 
@@ -13,8 +12,9 @@ import Routes from 'routes'
 import { navigateTo } from 'app-history'
 
 import store from 'store'
-
 import * as constants from 'reducers/constants'
+
+import getPageText from 'text'
 
 const showMenu = (payload: Event) => {
   store.dispatch({
@@ -23,10 +23,12 @@ const showMenu = (payload: Event) => {
   })
 }
 
+const Text = getPageText('home')
+
 export const getHomeToolbarActions = (): ToolbarAction[] => {
   return [
     {
-      icon: requestsIcon,
+      text: Text['toolbar-action-orders'],
       handler: () => navigateTo(Routes.requests.path),
     },
     {

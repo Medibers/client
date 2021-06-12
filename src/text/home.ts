@@ -1,6 +1,9 @@
-import { Type } from './base'
+import { TPageText } from './base'
 
-const text: Type = {
+const text: TPageText = {
+  'toolbar-action-orders': {
+    en: 'Orders',
+  },
   'delivery-to': {
     en: 'Delivery to',
   },
@@ -22,12 +25,6 @@ const text: Type = {
   'category-medical-devices-description': {
     en: 'Lorem labs loren ipsum',
   },
-  // "category-lab-equipment": {
-  //   "en": "Lab Equipment"
-  // },
-  // "category-lab-equipment-description": {
-  //   "en": "Lorem labs loren"
-  // },
   'category-maintenance-tools': {
     en: 'Maintenance Tools and Resources',
   },
