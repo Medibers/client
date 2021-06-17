@@ -2,47 +2,45 @@ import Routes from 'routes'
 
 import { ItemRequest, MenuAction } from 'types'
 
-type TGetMenuActions = (
-  updateBackend: (
-    update: Partial<ItemRequest<number>>,
-    requests: string[]
-  ) => void,
-  onAssignCourier: () => void
-) => MenuAction[]
+import { updateBackend } from '../utils'
 
-const fn: TGetMenuActions = (updateBackend, onAssignCourier) => {
+function fn(this: {
+  updateRequestsUI: (response: ItemRequest[]) => void
+  onCourierPopoverShow: () => void
+}): MenuAction[] {
+  const { updateRequestsUI, onCourierPopoverShow } = this
   const defaultMenuActions: Array<MenuAction> = []
 
   switch (window.location.pathname) {
     case Routes.requests.path:
       return [
         {
-          text: 'Mark as received',
+          text: 'Mark as Received',
           handler: (requestSelected: string) => {
-            updateBackend({ state: 5 }, [requestSelected]) // received
+            updateBackend({ state: 5 }, [requestSelected], updateRequestsUI) // received
           },
         },
         {
           text: 'Cancel',
           handler: (requestSelected: string) => {
-            updateBackend({ state: 3 }, [requestSelected]) // cancelled
+            updateBackend({ state: 3 }, [requestSelected], updateRequestsUI) // cancelled
           },
         },
       ]
     case Routes.courier.path:
       return [
         {
-          text: 'Mark as delivered',
+          text: 'Mark as Delivered',
           handler: (requestSelected: string) => {
-            updateBackend({ state: 4 }, [requestSelected]) // delivered
+            updateBackend({ state: 4 }, [requestSelected], updateRequestsUI) // delivered
           },
         },
       ]
     case Routes.admin.path:
       return [
         {
-          text: 'Assign to courier',
-          handler: onAssignCourier,
+          text: 'Assign Courier',
+          handler: onCourierPopoverShow,
         },
       ]
     default:

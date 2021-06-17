@@ -7,6 +7,7 @@ interface Props {
   lines?: 'full' | 'inset' | 'none'
   button?: boolean
   onClick?: () => void
+  className?: string
 }
 
 const ListItemStyle = {
@@ -19,12 +20,14 @@ const ListIem: React.FC<Props> = ({
   children,
   button,
   onClick,
+  className,
 }) => (
   <IonItem
     lines={isLast ? 'none' : lines}
     button={button}
     onClick={onClick}
     style={ListItemStyle}
+    className={className}
   >
     {children}
   </IonItem>

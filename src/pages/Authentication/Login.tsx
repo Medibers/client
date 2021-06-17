@@ -203,9 +203,9 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
       hideToast: () => ({
         type: constants.HIDE_TOAST,
       }),
-      showMenu: (payload: Event) => ({
+      showMenu: (event: Event) => ({
         type: constants.SHOW_MENU,
-        payload,
+        payload: { event },
       }),
     },
     dispatch

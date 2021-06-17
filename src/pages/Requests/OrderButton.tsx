@@ -1,32 +1,36 @@
-import React from 'react'
-import { IonButton } from '@ionic/react'
-import { userIsNotClientUser } from 'utils/role'
+import React, { useContext } from 'react'
+import { IonButton, IonFab } from '@ionic/react'
+import { userIsClientUser } from 'utils/role'
 
-type Props = {
-  onClick: () => void
-  requestsReturned?: boolean
-  activeRequestsPresent?: boolean
-}
+import Routes from 'routes'
+import { navigateTo } from 'app-history'
+
+import Context from './context'
 
 const actionTextWithActiveRequests = 'Make another order'
 const actionTextWithoutActiveRequests = 'Make an order'
 
-const OrderButton: React.FC<Props> = ({
-  onClick,
-  requestsReturned,
-  activeRequestsPresent,
-}) => {
-  if (userIsNotClientUser() || !requestsReturned) return null
+const OrderButton: React.FC = () => {
+  const { activeRequests } = useContext(Context)
 
-  return (
-    <div className="ion-padding">
-      <IonButton onClick={onClick} className="ion-no-margin ion-action-primary">
-        {activeRequestsPresent
+  const onClick = () => {
+    navigateTo(Routes.search.path)
+  }
+
+  return userIsClientUser() ? (
+    <IonFab
+      className="ion-margin"
+      vertical="bottom"
+      horizontal="end"
+      slot="fixed"
+    >
+      <IonButton onClick={onClick} className="ion-action-primary">
+        {activeRequests.length > 0
           ? actionTextWithActiveRequests
           : actionTextWithoutActiveRequests}
       </IonButton>
-    </div>
-  )
+    </IonFab>
+  ) : null
 }
 
 export default OrderButton

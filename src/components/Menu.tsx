@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 
 import { IonList } from '@ionic/react'
 
@@ -16,28 +16,34 @@ import { indexIsLastInArray } from 'utils'
 import * as constants from 'reducers/constants'
 
 interface IMenuProps {
-  id?: string
+  menuId?: string
+  entityId?: string
   actions: Array<MenuAction>
-  open: boolean
+  open?: boolean
   event?: Event
-  hideMenu: () => void
+  hideMenu?: () => void
 }
 
 const Menu: React.FC<IMenuProps> = ({
-  id,
+  entityId,
   actions,
   open,
   event,
   hideMenu: dismiss,
 }) => {
   const onItemSelect = (value: string) => {
-    dismiss()
+    dismiss && dismiss()
     const action = actions.find(({ text }) => value === text)
-    action && action.handler(id)
+    action && action.handler(entityId)
   }
 
   return (
-    <Popover open={open} event={event} onDismiss={dismiss} showBackdrop={false}>
+    <Popover
+      open={Boolean(open)}
+      event={event}
+      onDismiss={dismiss}
+      showBackdrop={false}
+    >
       <IonList>
         {actions.map((action, i, a) => (
           <ListItem
@@ -53,9 +59,12 @@ const Menu: React.FC<IMenuProps> = ({
   )
 }
 
-const mapStateToProps = (state: ReducerState) => ({
-  open: Boolean(state.App.menu),
-  event: state.App.menu,
+const mapStateToProps = (
+  { App: { menu } }: ReducerState,
+  { menuId }: PropsWithChildren<IMenuProps>
+) => ({
+  open: menu && menu.id === menuId,
+  event: menu && menu.event,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) =>

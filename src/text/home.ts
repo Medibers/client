@@ -1,6 +1,9 @@
 import { TPageText } from './base'
 
 const text: TPageText = {
+  title: {
+    en: 'Orders',
+  },
   'toolbar-action-orders': {
     en: 'Orders',
   },

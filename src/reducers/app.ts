@@ -6,7 +6,7 @@ import * as constants from './constants'
 export interface State {
   loading: boolean
   toast?: string
-  menu?: Event
+  menu?: { id?: string; event: Event }
   requests: Array<ItemRequest> | null
   items: Array<ItemSearchResult> | null
 }
