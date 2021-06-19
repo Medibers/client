@@ -12,6 +12,7 @@ import {
   IonRefresherContent,
 } from '@ionic/react'
 import { RefresherEventDetail } from '@ionic/core'
+import { home } from 'ionicons/icons'
 
 import { Header, Menu } from 'components'
 import { Select as SelectPopover } from 'containers'
@@ -211,9 +212,9 @@ class Component extends React.Component<Props> {
         <Context.Provider value={context}>
           <IonPage>
             <Header
-              omitsBack
               title={title}
               actions={getRequestsToolbarActions.call(context)}
+              icon={home}
             />
             <Menu menuId={menuId} actions={getRequestsMenuActions()} />
             <IonContent>

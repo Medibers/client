@@ -40,6 +40,7 @@ import { formatMoney } from 'utils/currency'
 import Requests, { endPoints } from 'requests'
 
 import { AlertText } from 'pages/Pay'
+import { getLocationState, goBack, redirectTo } from 'app-history'
 
 type Props = {
   history: History | any
@@ -113,7 +114,7 @@ class Component extends React.Component<Props> {
 
   onAddItem = () => {
     const { selectedItems } = this.state
-    this.props.history.replace(Routes.search.path, { selectedItems })
+    redirectTo(Routes.search.path, { selectedItems })
   }
 
   locationNotAvailable = () => {
@@ -169,7 +170,13 @@ class Component extends React.Component<Props> {
           showToast(response.error)
         } else {
           setActiveRequestsPresence(true)
-          window.location.replace(Routes.home.path)
+          const { requestInitiatedFromRequestsPage } =
+            getLocationState() as Record<string, unknown>
+          if (requestInitiatedFromRequestsPage) {
+            goBack()
+          } else {
+            redirectTo(Routes.requests.path)
+          }
         }
       })
       .catch(err => {

@@ -1,14 +1,10 @@
 import { Plugins, PushNotificationToken } from '@capacitor/core'
+import { BackButtonEvent } from '@ionic/core'
 
-import {
-  platformIsAndroid,
-  platformIsMobile,
-  platformIsWebBrowser,
-} from 'utils'
+import { platformIsAndroid, platformIsMobile } from 'utils'
 
 import Routes from 'routes'
 import Requests, { endPoints } from 'requests'
-import { getActiveRequestsPresence } from 'session'
 import eventsInstance, { syncData } from '../events'
 
 const { App, Network, PushNotifications } = Plugins
@@ -19,8 +15,6 @@ platformIsMobile &&
     setNetworkListener()
     setBackButtonListener()
   })()
-
-platformIsWebBrowser && forbidBackNavsFromRequests()
 
 async function sendPushNotificationTokenToServer(token: string) {
   return await Requests.put(endPoints['push-notification-token'], {
@@ -43,21 +37,23 @@ function setPushNotificationListener() {
           }
         )
 
-        PushNotifications.addListener('registrationError', (error: any) => {
-          console.error('Error on registration', JSON.stringify(error))
+        PushNotifications.addListener('registrationError', error => {
+          throw error
         })
 
         // Register with Apple / Google to receive push via APNS/FCM
         PushNotifications.register()
       })
-      .catch(console.error)
+      .catch(error => {
+        throw error
+      })
 }
 
 function setNetworkListener() {
   Network.removeAllListeners()
   // Attempt to run callback once when the network listener fires multiple times
   let i = 0,
-    previousConnectionType: any = null
+    previousConnectionType: unknown = null
   Network.addListener(
     'networkStatusChange',
     ({ connected, connectionType }) => {
@@ -76,37 +72,11 @@ function setNetworkListener() {
 const deadPaths = [Routes.login.path, Routes.home.path]
 
 function setBackButtonListener() {
-  document.addEventListener('ionBackButton', (ev: any) => {
-    ev.detail.register(-1, () => {
+  // @ts-ignore
+  document.addEventListener('ionBackButton', (event: BackButtonEvent) => {
+    event.detail.register(-1, () => {
       const path = window.location.pathname
-      if (path === Routes.requests.path) {
-        const activeRequestsPresent = getActiveRequestsPresence()
-        if (activeRequestsPresent) {
-          App.exitApp()
-        } else {
-          window.location.href = Routes.home.path
-        }
-      } else if (deadPaths.includes(path)) App.exitApp()
+      if (deadPaths.includes(path)) App.exitApp()
     })
   })
-}
-
-function forbidBackNavsFromRequests() {
-  const key = 'path',
-    path = window.location.pathname
-
-  const navForbidden =
-    window.localStorage.getItem(key) === Routes.requests.path &&
-    window.location.pathname === Routes.order.path
-
-  window.localStorage.setItem(key, path)
-
-  if (navForbidden) {
-    window.location.replace(Routes.requests.path)
-    return
-  }
-
-  window.onpopstate = (e: any) => {
-    window.localStorage.setItem(key, e.target.location.pathname)
-  }
 }

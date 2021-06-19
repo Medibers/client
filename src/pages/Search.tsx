@@ -42,6 +42,7 @@ import {
 
 import { platformIsWebBrowser } from 'utils'
 import ItemCategoryMap from 'utils/item-category-map'
+import { redirectTo } from 'app-history'
 
 export type Props = {
   history: History
@@ -135,7 +136,7 @@ class Component extends React.Component<Props> {
 
   onSubmit = () => {
     const { selectedItems } = this.state
-    this.props.history.push(Routes.order.path, { selectedItems })
+    redirectTo(Routes.order.path, { selectedItems })
   }
 
   onCategorySelected = (category: string) => {

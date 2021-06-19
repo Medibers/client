@@ -15,9 +15,10 @@ import { APP_NAME, platformIsWebBrowser } from 'utils'
 
 export type Props = {
   omitsBack?: boolean
-  title?: any
+  title?: string | JSX.Element
   size?: 'small' | 'large'
   actions?: Array<ToolbarAction>
+  icon?: string
 }
 
 const buttonStyle = {
@@ -29,6 +30,7 @@ const Component: React.FC<Props> = ({
   title,
   size,
   actions = [],
+  icon,
 }) => {
   const omitsBack = ob || platformIsWebBrowser
   return (
@@ -36,7 +38,7 @@ const Component: React.FC<Props> = ({
       <IonToolbar>
         {omitsBack ? null : (
           <IonButtons slot="start">
-            <IonBackButton color="primary" defaultHref="/" />
+            <IonBackButton icon={icon} color="primary" defaultHref="/" />
           </IonButtons>
         )}
         <IonTitle size={size} color="primary">

@@ -1,5 +1,5 @@
 import React from 'react'
-import Routes, { getDefaultRoute } from 'routes'
+import { getDefaultRoute } from 'routes'
 
 import {
   IonContent,
@@ -11,9 +11,7 @@ import {
 
 import { Header, Menu } from 'components'
 
-import { getLocationPath, navigateTo } from 'app-history'
-import { userIsClientUser, userIsNotClientUser } from 'utils/role'
-import { getActiveRequestsPresence } from 'session'
+import { getLocationPath } from 'app-history'
 
 import getPageText from 'text'
 import getMenuActions from 'pages/menu-actions'
@@ -40,16 +38,7 @@ class Home extends React.Component<IHomeProps> {
       return
     }
 
-    const activeRequestsPresent =
-      userIsClientUser() && getActiveRequestsPresence()
-
-    if (activeRequestsPresent) {
-      navigateTo(Routes.requests.path)
-    } else if (userIsNotClientUser()) {
-      navigateTo(Routes.requests.path)
-    } else {
-      this.setState({ renderContent: true })
-    }
+    this.setState({ renderContent: true })
   }
 
   render() {
