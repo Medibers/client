@@ -75,7 +75,10 @@ class Component extends React.Component<Props> {
     const { history } = this.props
 
     const mtnMSISDNKey = 'mtn-msisdn'
-    const { [mtnMSISDNKey]: msisdn } = decrypt(getSessionToken())
+    const { [mtnMSISDNKey]: msisdn } = decrypt(getSessionToken()) as Record<
+      string,
+      string
+    >
 
     currentLanguage = (
       languages.find(({ value }) => value === getLanguage()) || languages[0]
@@ -104,7 +107,7 @@ class Component extends React.Component<Props> {
       userIsClient && false
         ? {
             name: 'MTN account to debit',
-            value: formatUGMSISDN(msisdn || getSessionPhone()),
+            value: formatUGMSISDN(msisdn || getSessionPhone() || ''),
             handler: this.showMSISDNPopover,
             icon: '/assets/icons/mobile-pay.svg',
           }

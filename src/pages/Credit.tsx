@@ -33,8 +33,6 @@ import { formatMoney } from 'utils/currency'
 
 import { PaymentChannel as Channel, CreditOffer as Offer } from 'types'
 
-console.info('a')
-
 type Props = {
   history: History
   showLoading: () => {}
@@ -114,9 +112,12 @@ class Component extends React.Component<Props> {
   }
 
   onPaymentChannelSelect = ({ _id: id }: Channel) => {
-    const { [mtnMSISDNKey]: msisdn } = decrypt(getSessionToken())
+    const { [mtnMSISDNKey]: msisdn } = decrypt(getSessionToken()) as Record<
+      string,
+      string
+    >
     const { header, message } = AlertText[id](
-      formatUGMSISDN(msisdn || getSessionPhone())
+      formatUGMSISDN(msisdn || getSessionPhone() || '')
     )
     this.showAlert({ header, message, confirmsPayment: true })
   }

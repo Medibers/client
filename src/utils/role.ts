@@ -4,7 +4,10 @@ import { getSessionToken } from 'session'
 export function getUserRole() {
   try {
     return decrypt(getSessionToken()).role
-  } catch (error) {}
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error)
+  }
 }
 
 export function userIsClientUser() {

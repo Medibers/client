@@ -27,14 +27,6 @@ interface IRoute {
 }
 
 const Routes: Record<string, IRoute> = {
-  courier: {
-    path: '/courier',
-    component: Home,
-  },
-  admin: {
-    path: '/admin',
-    component: Requests,
-  },
   home: {
     path: '/',
     component: Home,
@@ -108,13 +100,13 @@ export default Routes
 
 const RoutesIndexedOnRoles = [
   Routes.home.path,
-  Routes.courier.path,
-  Routes.admin.path,
-  Routes.admin.path,
+  Routes.home.path, // Routes.courier.path,
+  Routes.home.path, // Routes.admin.path,
+  Routes.home.path, // Routes.admin.path,
 ]
 
 export const getDefaultRoute = (token = getSessionToken()) => {
-  const role = decrypt(token).role
+  const role = decrypt(token).role as number
   if (role === undefined) {
     // Force logout for old client
     clearSession()

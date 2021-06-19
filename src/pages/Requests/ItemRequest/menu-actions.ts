@@ -1,7 +1,6 @@
-import Routes from 'routes'
-
 import { ItemRequest, MenuAction } from 'types'
 
+import { getUserRole } from 'utils/role'
 import { updateBackend } from '../utils'
 
 function fn(this: {
@@ -11,8 +10,8 @@ function fn(this: {
   const { updateRequestsUI, onCourierPopoverShow } = this
   const defaultMenuActions: Array<MenuAction> = []
 
-  switch (window.location.pathname) {
-    case Routes.requests.path:
+  switch (getUserRole()) {
+    case 1:
       return [
         {
           text: 'Mark as Received',
@@ -27,7 +26,7 @@ function fn(this: {
           },
         },
       ]
-    case Routes.courier.path:
+    case 2:
       return [
         {
           text: 'Mark as Delivered',
@@ -36,7 +35,14 @@ function fn(this: {
           },
         },
       ]
-    case Routes.admin.path:
+    case 3:
+      return [
+        {
+          text: 'Assign Courier',
+          handler: onCourierPopoverShow,
+        },
+      ]
+    case 4:
       return [
         {
           text: 'Assign Courier',

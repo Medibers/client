@@ -4,10 +4,10 @@ import { ellipsisVertical as more, person } from 'ionicons/icons'
 
 import { showMenu } from 'store/utils'
 
-import { getLocationPath, navigateTo } from 'app-history'
+import { navigateTo } from 'app-history'
 import { ItemRequest, ToolbarAction } from 'types'
 
-import { userIsClientUser } from 'utils/role'
+import { getUserRole, userIsClientUser } from 'utils/role'
 
 import { updateBackend } from './utils'
 
@@ -35,8 +35,8 @@ function getRequestsToolbarActions(this: {
   if (userIsClientUser()) return defaultToolbarActions
 
   if (requestsSelected.length > 0) {
-    switch (getLocationPath()) {
-      case Routes.requests.path:
+    switch (getUserRole()) {
+      case 1:
         return [
           {
             text: 'Mark as Received',
@@ -51,7 +51,7 @@ function getRequestsToolbarActions(this: {
             },
           },
         ]
-      case Routes.courier.path:
+      case 2:
         return [
           {
             text: 'Mark as Delivered',
@@ -60,7 +60,14 @@ function getRequestsToolbarActions(this: {
             },
           },
         ]
-      case Routes.admin.path:
+      case 3:
+        return [
+          {
+            text: 'Assign to Courier',
+            handler: onCourierPopoverShow,
+          },
+        ]
+      case 4:
         return [
           {
             text: 'Assign to Courier',

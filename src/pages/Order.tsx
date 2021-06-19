@@ -114,7 +114,7 @@ class Component extends React.Component<Props> {
 
   onAddItem = () => {
     const { selectedItems } = this.state
-    redirectTo(Routes.search.path, { selectedItems })
+    redirectTo(Routes.search.path, { items: selectedItems })
   }
 
   locationNotAvailable = () => {

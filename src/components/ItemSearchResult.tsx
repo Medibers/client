@@ -19,9 +19,9 @@ import { wrapperWidthSpan as imageWrapperWidthSpan } from 'components/LazyLoad'
 
 export type Props = {
   selected: boolean
-  onSelect: (a1: any) => void
+  onSelect?: (a1: ItemSearchResult) => void
   onImageClick: () => void
-  onMore: (a1: any) => void
+  onMore: (a1: ItemSearchResult) => void
   lines: boolean
   result: ItemSearchResult
 }
@@ -36,13 +36,13 @@ const Component: React.FC<Props> = ({
 }) => {
   const { item, price } = result
 
-  const onClick = (e: any, action: string) => {
-    if (action === 'primary') {
+  const onClick = (event: React.MouseEvent, action: string) => {
+    if (onSelect && action === 'primary') {
       onSelect(result)
-      return
+    } else {
+      event.stopPropagation()
+      onMore(result)
     }
-    e.stopPropagation()
-    onMore(result)
   }
 
   return (
@@ -86,9 +86,6 @@ const Component: React.FC<Props> = ({
               <h4>{formatMoney(price)}</h4>
             </IonLabel>
           </IonCol>
-          {/* <IonCol className="ion-no-padding">
-            <IonLabel className="ion-text-right"><p>{distance}</p></IonLabel>
-          </IonCol> */}
         </IonRow>
         {result.available ? null : (
           <IonRow>
@@ -103,7 +100,7 @@ const Component: React.FC<Props> = ({
           <IonCol className="ion-no-padding ion-padding-top">
             <IonLabel
               onClick={e => onClick(e, 'more')}
-              className="ion-label-primary"
+              className="ion-label-primary flex-inline"
             >
               <h4>
                 <b>More</b>

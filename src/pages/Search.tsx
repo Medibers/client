@@ -1,9 +1,8 @@
 import React from 'react'
 import Routes from 'routes'
-import { History } from 'history'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dispatch, bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 
@@ -35,36 +34,23 @@ import {
 import Requests, { endPoints } from 'requests'
 import { getDeliveryLocationForNextOrder } from 'location'
 
-import {
-  ItemSearchResult as ItemSearchResultInterface,
-  ToolbarAction,
-} from 'types'
+import { ItemSearchResult as IItemSearchResult, ToolbarAction } from 'types'
 
 import { platformIsWebBrowser } from 'utils'
-import ItemCategoryMap from 'utils/item-category-map'
-import { redirectTo } from 'app-history'
+import { getLocationState, navigateTo, redirectTo } from 'app-history'
+import { userIsClientUser } from 'utils/role'
 
-export type Props = {
-  history: History
-  location: {
-    state: { selectedItems: Array<ItemSearchResultInterface>; category: string }
-  }
-  selectedItems?: Array<ItemSearchResultInterface>
-  items: Array<ItemSearchResultInterface> | undefined
-  setItems: (e: Array<ItemSearchResultInterface> | null) => {}
-  showLoading: () => {}
-  hideLoading: () => {}
+import ItemCategoryMap from 'utils/item-category-map'
+
+interface ISearchPageProps {
+  items: Array<IItemSearchResult> | undefined
+  setItems: (e: Array<IItemSearchResult> | null) => {}
+  showLoading: () => void
+  hideLoading: () => void
   showToast: (e: string) => {}
 }
 
-type State = {
-  selectedItems: Array<ItemSearchResultInterface>
-  selectedCategory: string
-  search: string | undefined
-  popoverResult: ItemSearchResultInterface | null
-}
-
-const searchPlaceholder = 'search'
+const searchPlaceholder = 'Search'
 const noItemsPlaceholder = 'No items found, please try a different search'
 
 const itemCategories = Object.keys(ItemCategoryMap).map((key: string) => ({
@@ -72,17 +58,17 @@ const itemCategories = Object.keys(ItemCategoryMap).map((key: string) => ({
   value: key,
 }))
 
-class Component extends React.Component<Props> {
-  selectedItems = this.props.location.state
-    ? this.props.location.state.selectedItems || []
-    : []
-  selectedCategory = this.props.location.state
-    ? this.props.location.state.category
-    : null
+interface ILocationState {
+  items?: Array<IItemSearchResult>
+  category?: string
+}
 
-  state: State = {
-    selectedItems: this.selectedItems,
-    selectedCategory: this.selectedCategory || itemCategories[0].value,
+class SearchPage extends React.Component<ISearchPageProps> {
+  locationState = getLocationState() as ILocationState
+
+  state = {
+    selectedItems: this.locationState.items || [],
+    selectedCategory: this.locationState.category || itemCategories[0].value,
     search: undefined,
     popoverResult: null,
   }
@@ -101,13 +87,15 @@ class Component extends React.Component<Props> {
     const { setItems, showLoading, hideLoading, showToast } = this.props
 
     showLoading()
-    Requests.get(endPoints['item-search'], { params: { search, lat, lon } })
-      .then((response: any) => {
+    Requests.get<Array<IItemSearchResult>>(endPoints['item-search'], {
+      params: { search, lat, lon },
+    })
+      .then(response => {
         setItems(response)
       })
       .catch(err => {
         showToast(err.error || err.toString())
-        console.error(err)
+        throw err
       })
       .finally(hideLoading)
   }
@@ -116,7 +104,7 @@ class Component extends React.Component<Props> {
     this.setState({ search: value.toLowerCase() })
   }
 
-  onSelect = (result: ItemSearchResultInterface) => {
+  onSelect = (result: IItemSearchResult) => {
     const { selectedItems } = this.state
     const index = selectedItems.findIndex(item => item._id === result._id)
     if (index < 0) {
@@ -127,11 +115,11 @@ class Component extends React.Component<Props> {
     this.setState({ selectedItems })
   }
 
-  onMore = (result: ItemSearchResultInterface) => {
-    this.props.history.push(Routes.item.path, result)
+  onMore = (result: IItemSearchResult) => {
+    navigateTo(Routes.item.path, result)
   }
 
-  isSelected = (result: ItemSearchResultInterface) =>
+  isSelected = (result: IItemSearchResult) =>
     this.state.selectedItems.findIndex(item => item._id === result._id) > -1
 
   onSubmit = () => {
@@ -155,7 +143,7 @@ class Component extends React.Component<Props> {
                 cssClass: 'search-category-select-popover',
               }}
               interface="popover"
-              onIonChange={({ detail: { value } }: any) =>
+              onIonChange={({ detail: { value } }: CustomEvent) =>
                 this.onCategorySelected(value)
               }
               value={selectedCategory}
@@ -209,7 +197,7 @@ class Component extends React.Component<Props> {
         )
   }
 
-  onImageClick = (result: ItemSearchResultInterface) => {
+  onImageClick = (result: IItemSearchResult) => {
     this.setState({ popoverResult: result })
   }
 
@@ -221,6 +209,9 @@ class Component extends React.Component<Props> {
     const { popoverResult } = this.state
     const items = this.computeItemsShown()
     const itemsReturned = Boolean(items)
+
+    const onSelect = userIsClientUser() ? this.onSelect : undefined
+
     return (
       <IonPage className="search">
         <Header title={this.title()} actions={this.toolbarActions()} />
@@ -233,7 +224,7 @@ class Component extends React.Component<Props> {
                   result={result}
                   lines={i !== a.length - 1}
                   selected={this.isSelected(result)}
-                  onSelect={this.onSelect}
+                  onSelect={onSelect}
                   onImageClick={() => this.onImageClick(result)}
                   onMore={this.onMore}
                 />
@@ -278,7 +269,7 @@ const mapStateToProps = (state: ReducerState) => ({
   items: state.App.items || undefined,
 })
 
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       setItems: payload => ({
@@ -299,4 +290,4 @@ const mapDispatchToProps = (dispatch: any) =>
     dispatch
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(Component)
+export default connect(mapStateToProps, mapDispatchToProps)(SearchPage)
