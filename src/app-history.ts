@@ -24,5 +24,5 @@ export const goBack = (): void => {
 
 export const getLocationPath = (): string => history.location.pathname
 
-export const getLocationState = (): LocationState =>
-  history.location.state as Record<string, unknown>
+export const getLocationState = <T = LocationState>(): T =>
+  (history.location.state || {}) as T

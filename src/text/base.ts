@@ -3,6 +3,7 @@ import home from './home'
 import about from './about'
 import itemRequest from './item-request'
 import itemRequestList from './item-request-list'
+import order from './order'
 
 interface TPageTextValue {
   en: string
@@ -17,6 +18,7 @@ type TPageTextKey =
   | 'about'
   | 'item-request'
   | 'item-request-list'
+  | 'order'
 
 type Language = 'en' | 'local'
 
@@ -28,6 +30,7 @@ const text: Record<TPageTextKey, TPageText> = {
   about,
   'item-request': itemRequest,
   'item-request-list': itemRequestList,
+  order,
 }
 
 const textTranslated: Record<TPageTextKey, Record<string, string>> = (

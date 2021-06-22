@@ -18,10 +18,7 @@ import { Header, Menu } from 'components'
 import { Select as SelectPopover } from 'containers'
 
 import { State as ReducerState } from 'reducers'
-import {
-  ItemRequest as IItemRequest,
-  ItemRequest as ItemRequestInterface,
-} from 'types'
+import { ItemRequest as IItemRequest } from 'types'
 
 import eventsInstance, {
   requestCreate as requestCreateAction,
@@ -46,8 +43,8 @@ import Context from './context'
 import getPageText from 'text'
 
 interface Props {
-  requests?: Array<ItemRequestInterface>
-  setItemRequests: (e: Array<ItemRequestInterface> | null) => {}
+  requests?: Array<IItemRequest>
+  setItemRequests: (e: Array<IItemRequest> | null) => {}
   showToast: (e: string) => {}
   hideToast: () => {}
 }
@@ -69,10 +66,7 @@ class Component extends React.Component<Props> {
    * Or events from other user
    *
    * */
-  updateRequestsUI = (
-    response: ItemRequestInterface[],
-    prependRequests?: true
-  ) => {
+  updateRequestsUI = (response: IItemRequest[], prependRequests?: true) => {
     const { requests: r, showToast, hideToast, setItemRequests } = this.props
     let requests = r ? [...r] : []
     if (prependRequests) {
@@ -173,7 +167,7 @@ class Component extends React.Component<Props> {
 
   setEventListeners = () => {
     eventsInstance.removeAllListeners()
-    const fn = (result: Array<ItemRequestInterface>) => {
+    const fn = (result: Array<IItemRequest>) => {
       this.updateRequestsUI(result, true)
     }
     eventsInstance.on(requestCreateAction, fn)

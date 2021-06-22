@@ -3,7 +3,7 @@ import React from 'react'
 import { IonItem } from '@ionic/react'
 
 interface Props {
-  isLast: boolean
+  isLast?: boolean
   lines?: 'full' | 'inset' | 'none'
   button?: boolean
   onClick?: () => void
@@ -15,7 +15,7 @@ const ListItemStyle = {
 }
 
 const ListIem: React.FC<Props> = ({
-  isLast,
+  isLast = false,
   lines,
   children,
   button,

@@ -20,7 +20,7 @@ import { closeSharp, search } from 'ionicons/icons'
 
 import { Location as LocationInterface } from 'types'
 
-const title = 'Deliver to'
+const title = 'Deliver at'
 const primaryAction = 'Select location'
 
 const actionButtonStyle = {

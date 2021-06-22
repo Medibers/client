@@ -14,7 +14,10 @@ const OrderButton: React.FC = () => {
   const { activeRequests } = useContext(Context)
 
   const onClick = () => {
-    navigateTo(Routes.search.path, { requestInitiatedFromRequestsPage: true })
+    navigateTo(Routes.search.path, {
+      requestInitiatedFromRequestsPage: true,
+      items: [],
+    })
   }
 
   return userIsClientUser() ? (

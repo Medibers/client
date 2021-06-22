@@ -1,3 +1,5 @@
+import { IOrderDeliveryContact } from 'pages/Order/types'
+
 export interface Action {
   type: string
   payload?: any
@@ -64,6 +66,7 @@ export interface ItemRequest<TState = TItemRequestState> {
   state: TState
   createdAt: number
   courier?: Courier
+  contacts: Array<IOrderDeliveryContact>
   lat: number
   lon: number
   aDistance?: number // Directions Service computed value

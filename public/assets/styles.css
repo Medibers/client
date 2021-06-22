@@ -292,3 +292,7 @@ ion-title {
 * {
   --background: #fdffff
 }
+
+form ion-item.errored {
+  --border-color: var(--ion-color-danger)
+}

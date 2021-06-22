@@ -4,6 +4,9 @@ const text: TPageText = {
   'delivery-at': {
     en: 'Delivery at',
   },
+  'delivery-contact': {
+    en: 'Delivery contact',
+  },
   'made-by': {
     en: 'Client -',
   },

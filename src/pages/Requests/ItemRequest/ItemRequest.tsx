@@ -28,6 +28,7 @@ import Context from 'pages/Requests/context'
 import getItemRequestMenuActions from './menu-actions'
 
 import getPageText from 'text'
+import { getDeliveryOrderContactsListed } from '../utils'
 
 type TItemRequestClickAction = 'show-menu' | 'show-detail' | 'select-item'
 
@@ -138,6 +139,12 @@ const ItemRequest: React.FC<IItemRequestProps> = ({ item, selected }) => {
             {item.lat && item.lon && (
               <h4>
                 {Text['delivery-at']} {item.address}
+              </h4>
+            )}
+            {item.contacts && item.contacts.length > 0 && (
+              <h4>
+                {Text['delivery-contact']}{' '}
+                {getDeliveryOrderContactsListed(item.contacts)}
               </h4>
             )}
             {userCanViewRequestClient && (

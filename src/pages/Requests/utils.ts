@@ -2,11 +2,12 @@ import { TItemRequestState } from 'types'
 
 import { Courier as ICourier, ItemRequest as IItemRequest } from 'types'
 
-// import getMenuActions from './menu-actions'
-
 import Requests, { endPoints } from 'requests'
 
 import { hideLoading, showLoading, showToast } from 'store/utils'
+import { formatUGMSISDN } from 'utils/msisdn'
+
+import { IOrderDeliveryContact } from 'pages/Order/types'
 
 export const requestStatesFormattedForApi: {
   // eslint-disable-next-line no-unused-vars
@@ -71,3 +72,12 @@ export const fetchCouriers = async () => {
     value: o._id,
   }))
 }
+
+export const getDeliveryOrderContactsListed = (
+  contacts: Array<IOrderDeliveryContact | string>
+) =>
+  contacts
+    .map(contact =>
+      formatUGMSISDN(typeof contact === 'string' ? contact : contact.phone)
+    )
+    .join(', ')

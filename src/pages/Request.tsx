@@ -32,6 +32,7 @@ import { callTelephone } from 'utils/msisdn'
 import Requests, { endPoints } from 'requests'
 
 import { computeDistance } from 'location'
+import { getDeliveryOrderContactsListed } from './Requests/utils'
 
 type Props = {
   location: { state?: { request: ItemRequestInterface } }
@@ -143,6 +144,7 @@ class Component extends React.Component<Props> {
       lat,
       lon,
       address,
+      contacts,
       user,
     } = state.request
     const { distance = null } = this.state
@@ -231,8 +233,28 @@ class Component extends React.Component<Props> {
             </IonList>
           </IonLabel>
           <Divider />
-          <IonList lines="none" className="fill-height ion-no-padding">
-            <IonItem>
+          <IonList className="fill-height ion-no-padding">
+            {courier ? (
+              <IonItem>
+                <IonLabel>
+                  <h4>Courier contact</h4>
+                  <p className="ion-label-primary">
+                    <b>{getDeliveryOrderContactsListed(courier.phones)}</b>
+                  </p>
+                </IonLabel>
+              </IonItem>
+            ) : null}
+            {contacts ? (
+              <IonItem>
+                <IonLabel>
+                  <h4>Client delivery contact</h4>
+                  <p className="ion-label-primary">
+                    <b>{getDeliveryOrderContactsListed(contacts)}</b>
+                  </p>
+                </IonLabel>
+              </IonItem>
+            ) : null}
+            <IonItem lines="none">
               <IonLabel>
                 <p className="ion-label-primary">
                   Delivery at <b>{address}</b>

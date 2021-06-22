@@ -14,7 +14,7 @@ type Props = {
 const Component: React.FC<Props> = ({
   open,
   event,
-  showBackdrop,
+  showBackdrop = true,
   onPresent,
   onDismiss,
   cssClass,

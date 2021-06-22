@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ItemRequest as IItemRequest } from 'types'
 
-interface IRequestContext {
+interface IRequestsContext {
   selectModeOn: boolean
   activeRequests: Array<IItemRequest>
   archivedRequests: Array<IItemRequest>
@@ -13,7 +13,7 @@ interface IRequestContext {
   onCourierPopoverShow: () => void
 }
 
-const Context = React.createContext<IRequestContext>({
+const Context = React.createContext<IRequestsContext>({
   selectModeOn: false,
   activeRequests: [],
   archivedRequests: [],

@@ -14,7 +14,7 @@ const itemCategories = Object.keys(ItemCategories)
   .map((key: string) => ({ ...ItemCategories[key], value: key }))
 
 const onSelectCategory = (category: string) => {
-  navigateTo(Routes.search.path, { category })
+  navigateTo(Routes.search.path, { category, items: [] })
 }
 
 const Categories = () => (

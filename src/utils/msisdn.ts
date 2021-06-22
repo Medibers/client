@@ -13,13 +13,27 @@ export function parseMTNUGSN(sn: string) {
   throw new Error('Subscriber number not valid')
 }
 
+export function parseUGSN(sn: string) {
+  if (
+    /^(77|78|70|75|71|79)/.test(sn) && // Regex accepts text starting with 77 or 78
+    /^[0-9]{9}$/.test(sn) // Regex accepts text, length 9 containing only numbers
+  )
+    return sn
+  throw new Error('Subscriber number not valid')
+}
+
 export function formatUGMSISDN(msisdn: string) {
   const cc = CCs.ug.value
   if (msisdn.startsWith(cc)) {
-    return `${msisdn.slice(0, cc.length)} ${msisdn.slice(
+    return `+${msisdn.slice(0, cc.length)} ${msisdn.slice(
       cc.length,
       6
     )} ${msisdn.slice(6)}`
+  } else if (msisdn.startsWith('+' + cc)) {
+    return `${msisdn.slice(0, cc.length + 1)} ${msisdn.slice(
+      cc.length + 1,
+      8
+    )} ${msisdn.slice(8)}`
   } else if (msisdn.startsWith('0')) {
     return `${msisdn.slice(0, 4)} ${msisdn.slice(4)}`
   }

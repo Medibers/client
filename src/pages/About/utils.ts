@@ -12,9 +12,7 @@ export const mapContactsToListItem = ({
   return [
     {
       header: 'Telephone numbers',
-      description: telephones
-        .map(line => `+${formatUGMSISDN(line)}`)
-        .join(', '),
+      description: telephones.map(line => formatUGMSISDN(line)).join(', '),
       action: platformIsMobile ? () => callTelephone(telephones[0]) : undefined,
     },
     {

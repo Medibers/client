@@ -1,0 +1,28 @@
+.self {
+
+  h4 {
+    margin-top: 5px;
+
+    .delivery-contact-badge {
+      display: inline-flex;
+      align-items: center;
+      color: var(--ion-color-primary);
+      border: 1px solid var(--ion-color-primary);
+      padding: 0 0 0 8px;
+
+      ion-icon {
+        padding: 8px;
+        margin-left: 5px;
+      }
+    }
+
+    .delivery-contact-badge.no-close {
+      padding: 4px 8px;
+    }
+
+    .delivery-contact-badge:not(:last-child) {
+      margin-right: var(--ion-margin);
+    }
+  }
+
+}
