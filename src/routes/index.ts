@@ -4,13 +4,11 @@ import { clearSession, getSessionToken } from 'session'
 import {
   About,
   Account,
-  Credit,
   Home,
   Item,
   Location,
   Login,
   Order,
-  Pay,
   Request,
   Requests,
   Search,
@@ -59,10 +57,6 @@ const Routes: Record<string, IRoute> = {
     path: '/order',
     component: Order,
   },
-  pay: {
-    path: '/pay',
-    component: Pay,
-  },
   location: {
     path: '/location',
     component: Location,
@@ -74,10 +68,6 @@ const Routes: Record<string, IRoute> = {
   request: {
     path: '/request',
     component: Request,
-  },
-  credit: {
-    path: '/credit',
-    component: Credit,
   },
   signup1: {
     path: '/signup1',

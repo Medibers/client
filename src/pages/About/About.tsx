@@ -19,12 +19,12 @@ import {
   IonPage,
 } from '@ionic/react'
 
-import { Header } from 'components'
+import { Header, Refresher } from 'components'
 
 import APIServer, { FileServer, endPoints } from 'requests'
 import { sessionAvailable as isSessionAvailable } from 'session'
 
-import { APP_NAME, APP_VERSION } from 'utils'
+import { APP_NAME, getAppVersion } from 'utils'
 
 import getPageText from 'text'
 
@@ -60,31 +60,31 @@ type State = {
   faqs?: Array<IFAQ>
   openFAQs: Array<number>
   supportContacts?: ISupportContacts
+  version?: string
 }
 
 class Component extends React.Component<Props> {
   state: State = { openFAQs: [] }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.fetchFAQsAndSupportContacts()
+    this.setState({ version: await getAppVersion() })
   }
 
-  fetchFAQsAndSupportContacts = () => {
+  fetchFAQsAndSupportContacts = async () => {
     const { showLoading, hideLoading, showToast } = this.props
     showLoading()
-    Promise.all([
+    const data = await Promise.all([
       FileServer.get<Array<IFAQ>>(endPoints.faqs),
       APIServer.get<ISupportContacts>(endPoints['support-contacts']),
-    ])
-      .then(([faqs, supportContacts]) => {
-        this.setState({ faqs, supportContacts }, hideLoading)
-      })
-      .catch(() => {
-        showToast(
-          'We could not fetch FAQs and Customer Care information, please ensure you have an active internet connection'
-        )
-        hideLoading()
-      })
+    ]).catch(() => {
+      showToast('No connection, please refresh this page to try again.')
+      hideLoading()
+    })
+    if (data) {
+      const [faqs, supportContacts] = data
+      this.setState({ faqs, supportContacts }, hideLoading)
+    }
   }
 
   onFAQSelected = (i: number) => {
@@ -99,12 +99,13 @@ class Component extends React.Component<Props> {
   }
 
   render() {
-    const { faqs = [], openFAQs, supportContacts } = this.state
+    const { faqs = [], openFAQs, supportContacts, version } = this.state
 
     return (
       <IonPage>
         <Header title={Text.title} />
         <IonContent className="ion-padding">
+          <Refresher onRefresh={this.fetchFAQsAndSupportContacts} />
           <IonLabel>
             <IonList lines="none" className="ion-no-padding">
               <IonItem className="ion-no-padding" style={ionItemStyle}>
@@ -220,7 +221,7 @@ class Component extends React.Component<Props> {
           >
             <IonLabel>
               <h2 className="ion-text-center ion-label-secondary">
-                {APP_NAME}&nbsp;&nbsp;{`v${APP_VERSION}`}
+                {APP_NAME}&nbsp;&nbsp;{`${version}`}
               </h2>
             </IonLabel>
           </div>

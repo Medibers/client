@@ -4,11 +4,9 @@ import Account from './Account'
 import Search from './Search'
 import Item from './Item'
 import Order from './Order'
-import Pay from './Pay'
 import Location from './Location'
 import Requests from './Requests'
 import Request from './Request'
-import Credit from './Credit'
 import About from './About'
 import TCs from './TCs'
 
@@ -21,11 +19,9 @@ export {
   Search,
   Item,
   Order,
-  Pay,
   Location,
   Requests,
   Request,
-  Credit,
   About,
   TCs,
 }

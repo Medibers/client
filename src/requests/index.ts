@@ -40,16 +40,18 @@ interface IAxiosInstance extends AxiosInstance {
   ): Promise<R>
 }
 
-const instance1: IAxiosInstance = Axios.create({ baseURL, headers }) // API instance
+const timeout = 20000
+
+const instance1: IAxiosInstance = Axios.create({ baseURL, headers, timeout }) // API instance
 
 baseURL =
   window.location.host === 'localhost' // deployment on mobile
     ? process.env.REACT_APP_FILE_SERVER_URL_REMOTE
     : process.env.REACT_APP_FILE_SERVER_URL
 
-const instance2 = Axios.create({ baseURL }) // File server instance
+const instance2 = Axios.create({ baseURL, timeout }) // File server instance
 
-const NETWORK_ERROR = 'Please check that you have an active internet connection'
+const NETWORK_ERROR = 'No connection'
 
 const instances = [instance1, instance2]
 

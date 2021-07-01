@@ -1,8 +1,15 @@
 import { isPlatform } from '@ionic/react'
 import { ItemRequest as ItemRequestInterface, TItemRequestState } from 'types'
 
+import { AppVersion } from '@ionic-native/app-version'
+
 export const APP_NAME = 'Medibers'
-export const APP_VERSION = require('../../package.json').version
+
+export const getAppVersion = async () =>
+  platformIsWebBrowser
+    ? require('../../package.json').version
+    : await AppVersion.getVersionNumber()
+
 export const TEST_ENV = 'test'
 
 export const platformIsWeb = isPlatform('desktop')

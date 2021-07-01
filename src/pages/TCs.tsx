@@ -1,21 +1,12 @@
 import React from 'react'
 import Markdown from 'react-markdown'
 
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-
-import * as constants from 'reducers/constants'
-
 import { FileServer, endPoints } from 'requests'
 
 import { IonContent, IonPage } from '@ionic/react'
+import { Refresher } from 'components'
 
-type Props = {
-  history: History
-  showLoading: () => {}
-  hideLoading: () => {}
-  showToast: (e: string) => {}
-}
+import { hideLoading, showLoading } from 'store/utils'
 
 const styles = `
   <style>
@@ -48,18 +39,22 @@ const styles = `
  *
  */
 
-class Component extends React.Component<Props> {
+class Component extends React.Component {
   state = { text: undefined }
 
-  componentDidMount() {
-    this.fetchTCs()
+  async componentDidMount() {
+    await this.fetchTCs()
   }
 
   fetchTCs = async () => {
-    const { showLoading, hideLoading } = this.props
     showLoading()
-    const text = await FileServer.get(endPoints.tcs)
-    this.setState({ text }, hideLoading)
+    const text =
+      // eslint-disable-next-line no-console
+      (await FileServer.get(endPoints.tcs).catch(console.error)) ||
+      'No connection, please refresh this page to try again.'
+    this.setState({ text }, () => {
+      hideLoading()
+    })
   }
 
   render() {
@@ -67,6 +62,7 @@ class Component extends React.Component<Props> {
     return (
       <IonPage>
         <IonContent className="ion-padding">
+          <Refresher onRefresh={this.fetchTCs} />
           <Markdown allowDangerousHtml>{styles.concat(text)}</Markdown>
         </IonContent>
       </IonPage>
@@ -74,21 +70,4 @@ class Component extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) =>
-  bindActionCreators(
-    {
-      showLoading: () => ({
-        type: constants.SHOW_LOADING,
-      }),
-      hideLoading: () => ({
-        type: constants.HIDE_LOADING,
-      }),
-      showToast: (payload: string) => ({
-        type: constants.SHOW_TOAST,
-        payload,
-      }),
-    },
-    dispatch
-  )
-
-export default connect(null, mapDispatchToProps)(Component)
+export default Component

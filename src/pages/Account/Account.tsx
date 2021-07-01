@@ -294,4 +294,4 @@ const mapDispatchToProps = (dispatch: any) =>
     dispatch
   )
 
-export default connect(null, mapDispatchToProps)(Component)
+export const AccountPage = connect(null, mapDispatchToProps)(Component)

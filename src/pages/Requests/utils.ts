@@ -53,11 +53,10 @@ export const fetchRequests = async (
     endPoints['item-requests']
   ).catch(err => {
     showToast(err.error || err.toString())
-    throw err
   })
   hideLoading()
   cb && cb()
-  return response
+  return response || []
 }
 
 export const fetchCouriers = async () => {
