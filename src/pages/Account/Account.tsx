@@ -1,142 +1,44 @@
 import React from 'react'
-import Routes from 'routes'
-import { History } from 'history'
-
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-
-import * as constants from 'reducers/constants'
 
 import {
   IonButton,
   IonContent,
   IonIcon,
-  IonItem,
   IonLabel,
   IonList,
   IonPage,
 } from '@ionic/react'
 
-import { Header, Popover } from 'components'
+import { ellipsisVertical as more } from 'ionicons/icons'
+
+import { Header, ListItem, Menu, Popover } from 'components'
 import { MSISDNModify as MSISDNModifyPopover } from 'containers'
 
 import Requests, { endPoints } from 'requests'
-import { getDeliveryAddressForNextOrder } from 'location'
+import { setSessionToken } from 'session'
+import { setLanguage } from 'languages'
 
-import decrypt from 'utils/jwt'
-import { formatUGMSISDN } from 'utils/msisdn'
-import { getSessionPhone, getSessionToken, setSessionToken } from 'session'
+import LanguagesList from './LanguagesList'
+import LogoutAlert from './LogoutAlert'
 
-import { userIsClientUser } from 'utils/role'
-import { formatMoney } from 'utils/currency'
+import { currentLanguage, getListItems, menuId } from './utils'
+import { hideLoading, showLoading, showMenu, showToast } from 'store/utils'
 
-import { getLanguage, languages, setLanguage } from 'languages'
-
-import {
-  pushSharp as deposit,
-  languageSharp as language,
-  locationSharp as location,
-  person,
-  star,
-} from 'ionicons/icons'
-
-type Props = {
-  history: History
-  showLoading: () => {}
-  hideLoading: () => {}
-  showToast: (e: string) => {}
-}
-
-type Item = {
-  name: string
-  value: any
-  icon: string
-  actionText?: any
-  handler?: () => void
-} | null
-
-const address = getDeliveryAddressForNextOrder()
-
-/*
- * To get address from coordinates,
- * Query here
- * https://maps.googleapis.com/maps/api/geocode/json?key=GEOCODE_API_KEY&latlng=44.4647452,7.3553838&sensor=true
- *
- */
-
-const userIsClient = userIsClientUser()
-
-let currentLanguage: string | null = null
-
-class Component extends React.Component<Props> {
-  state = { credits: 0, msisdnPopoverShown: false, languagePopoverShown: false }
-
-  getListItems = () => {
-    const { history } = this.props
-
-    const mtnMSISDNKey = 'mtn-msisdn'
-    const { [mtnMSISDNKey]: msisdn } = decrypt(getSessionToken()) as Record<
-      string,
-      string
-    >
-
-    currentLanguage = (
-      languages.find(({ value }) => value === getLanguage()) || languages[0]
-    ).label
-
-    const items: Array<Item> = [
-      userIsClient
-        ? {
-            name: 'Wallet',
-            value: formatMoney(this.state.credits),
-            actionText: <IonIcon icon={deposit} />,
-            handler: () => history.push(Routes.credit.path),
-            icon: '/assets/icons/wallet.svg',
-          }
-        : null,
-      userIsClient
-        ? {
-            name: 'Delivery location',
-            value: address,
-            actionText: address ? null : 'Set',
-            handler: () => history.push(Routes.location.path),
-            icon: location,
-          }
-        : null,
-      // eslint-disable-next-line no-constant-condition
-      userIsClient && false
-        ? {
-            name: 'MTN account to debit',
-            value: formatUGMSISDN(msisdn || getSessionPhone() || ''),
-            handler: this.showMSISDNPopover,
-            icon: '/assets/icons/mobile-pay.svg',
-          }
-        : null,
-      {
-        name: 'Phone',
-        value: formatUGMSISDN(getSessionPhone() || ''),
-        icon: person,
-      },
-      {
-        name: 'Language',
-        value: currentLanguage,
-        handler: this.showLanguagePopover,
-        icon: language,
-      },
-    ]
-
-    return items
+export class AccountPage extends React.Component {
+  state = {
+    credits: 0,
+    msisdnPopoverShown: false,
+    languagePopoverShown: false,
+    logoutAlertShown: false,
   }
 
   componentDidMount() {
-    const { showLoading, hideLoading, showToast } = this.props
     showLoading()
     Requests.get(endPoints['credits'])
-      .then((response: any) => {
+      .then(response => {
         this.setState({ credits: response })
       })
       .catch(err => {
-        console.error(err)
         showToast(err.error || err.toString())
       })
       .finally(hideLoading)
@@ -150,6 +52,14 @@ class Component extends React.Component<Props> {
     this.setState({ msisdnPopoverShown: false })
   }
 
+  showLogoutAlert = () => {
+    this.setState({ logoutAlertShown: true })
+  }
+
+  hideLogoutAlert = () => {
+    this.setState({ logoutAlertShown: false })
+  }
+
   showLanguagePopover = () => {
     this.setState({ languagePopoverShown: true })
   }
@@ -160,14 +70,12 @@ class Component extends React.Component<Props> {
 
   onSubmitChangeNumber = (msisdn: string) => {
     this.hideMSISDNPopover()
-    const { showLoading, hideLoading, showToast } = this.props
     showLoading()
-    Requests.post(endPoints['mtn-msisdn'], { msisdn })
-      .then((response: any) => {
+    Requests.post<string>(endPoints['mtn-msisdn'], { msisdn })
+      .then(response => {
         setSessionToken(response)
       })
       .catch(err => {
-        console.error(err)
         showToast(err.error || err.toString())
       })
       .finally(hideLoading)
@@ -178,20 +86,43 @@ class Component extends React.Component<Props> {
     this.hideLanguagePopover()
   }
 
+  toolbarActions = () => [
+    {
+      icon: more,
+      handler: (event: React.MouseEvent) => showMenu(event.nativeEvent, menuId),
+    },
+  ]
+
+  menuActions = () => [
+    {
+      text: 'Logout',
+      handler: this.showLogoutAlert,
+    },
+  ]
+
   render() {
-    const { msisdnPopoverShown, languagePopoverShown } = this.state
+    const { msisdnPopoverShown, languagePopoverShown, logoutAlertShown } =
+      this.state
+
+    const context = {
+      showLanguagePopover: this.showLanguagePopover,
+    }
+
+    const listItems = getListItems.call(context)
+
     return (
       <IonPage>
-        <Header title="Profile" />
+        <Header title="Profile" actions={this.toolbarActions()} />
+        <Menu menuId={menuId} actions={this.menuActions()} />
         <IonContent>
           <IonList lines="inset" className="ion-no-margin ion-no-padding">
-            {this.getListItems().map((item, i, a) => {
+            {listItems.map((item, i, a) => {
               return item ? (
-                <IonItem
-                  {...(i + 1 === a.length ? { lines: 'none' } : {})}
+                <ListItem
                   key={i}
                   button={Boolean(item.handler)}
                   onClick={item.handler}
+                  isLast={i + 1 === a.length}
                 >
                   <IonIcon
                     icon={item.icon}
@@ -201,18 +132,13 @@ class Component extends React.Component<Props> {
                   <IonLabel>
                     <p>{item.name}</p>
                     <h3
-                      style={{
-                        ...(item.handler
-                          ? { color: 'var(--ion-color-primary)' }
-                          : {}),
-                      }}
+                      className={item.handler ? 'ion-label-primary' : undefined}
                     >
                       {item.value}
                     </h3>
                   </IonLabel>
                   {item.actionText ? (
                     <IonButton
-                      {...(item.handler ? {} : { fill: 'clear' })}
                       type="button"
                       slot="end"
                       className={
@@ -220,11 +146,12 @@ class Component extends React.Component<Props> {
                           ? 'ion-no-margin ion-action-secondary'
                           : 'ion-no-margin'
                       }
+                      fill={item.handler ? undefined : 'clear'}
                     >
                       {item.actionText}
                     </IonButton>
                   ) : null}
-                </IonItem>
+                </ListItem>
               ) : null
             })}
           </IonList>
@@ -237,61 +164,17 @@ class Component extends React.Component<Props> {
             open={languagePopoverShown}
             onDismiss={this.hideLanguagePopover}
           >
-            <LanguagesComponent
+            <LanguagesList
               language={currentLanguage}
               onSelect={this.onSelectLanguage}
             />
           </Popover>
+          <LogoutAlert
+            open={logoutAlertShown}
+            onDismiss={this.hideLogoutAlert}
+          />
         </IonContent>
       </IonPage>
     )
   }
 }
-
-const LanguagesComponent: React.FC<{
-  language: string | null
-  onSelect: (a1: string) => void
-}> = ({ language, onSelect }) => (
-  <IonList className="ion-no-padding">
-    {languages.map(({ label, value, disabled = false, description = null }) => (
-      <IonItem
-        key={value}
-        onClick={() => (disabled ? null : onSelect(value))}
-        button={!disabled}
-      >
-        <IonIcon
-          icon={language === label ? star : 'no-icon'}
-          size="small"
-          className="ion-icon-primary"
-          slot="start"
-        />
-        <IonLabel>
-          {label}
-          <p className="ion-label-primary">{description}</p>
-        </IonLabel>
-      </IonItem>
-    ))}
-  </IonList>
-)
-
-const mapDispatchToProps = (dispatch: any) =>
-  bindActionCreators(
-    {
-      showLoading: () => ({
-        type: constants.SHOW_LOADING,
-      }),
-      hideLoading: () => ({
-        type: constants.HIDE_LOADING,
-      }),
-      showToast: (payload: string) => ({
-        type: constants.SHOW_TOAST,
-        payload,
-      }),
-      hideToast: () => ({
-        type: constants.HIDE_TOAST,
-      }),
-    },
-    dispatch
-  )
-
-export const AccountPage = connect(null, mapDispatchToProps)(Component)

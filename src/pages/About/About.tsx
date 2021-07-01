@@ -50,13 +50,13 @@ const ionItemStyle = {
   '--min-height': 0,
 }
 
-type Props = {
+interface Props {
   showLoading: () => void
   hideLoading: () => void
   showToast: (arg: string) => void
 }
 
-type State = {
+interface State {
   faqs?: Array<IFAQ>
   openFAQs: Array<number>
   supportContacts?: ISupportContacts
