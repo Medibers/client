@@ -4,12 +4,12 @@ import { clearSession, getSessionToken } from 'session'
 import {
   About,
   Account,
+  CompletedOrder,
   Home,
   Item,
   Location,
   Login,
   Order,
-  Request,
   Requests,
   Search,
   Signup1,
@@ -67,7 +67,7 @@ const Routes: Record<string, IRoute> = {
   },
   request: {
     path: '/request',
-    component: Request,
+    component: CompletedOrder,
   },
   signup1: {
     path: '/signup1',

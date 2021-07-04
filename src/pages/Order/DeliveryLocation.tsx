@@ -16,7 +16,7 @@ const DeliveryLocation: React.FC = () => {
         </IonLabel>
       ) : (
         <IonLabel className="ion-text-wrap">
-          <p>Delivery location</p>
+          <p>Delivery Location</p>
           <h4 className="ion-label-primary">
             {locationInfo().deliveryAddress}
           </h4>

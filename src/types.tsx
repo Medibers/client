@@ -1,7 +1,9 @@
+import { MouseEvent } from 'react'
 import { IOrderDeliveryContact } from 'pages/Order/types'
 
 export interface Action {
   type: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: any
 }
 
@@ -9,11 +11,12 @@ export interface ToolbarAction {
   text?: string
   icon?: string
   component?: () => JSX.Element
-  handler: (e: any) => void
+  handler: (a1: MouseEvent) => void
 }
 
 export interface MenuAction {
   text: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handler: (a1: any) => void
 }
 
@@ -101,7 +104,7 @@ export interface CreditOffer {
 export interface PaymentChannel {
   _id: string
   name: string
-  description: string | any
+  description: string | JSX.Element
   icon?: string
   requiresNumber?: true
   unavailable?: true

@@ -17,8 +17,6 @@ import { getLanguage, languages } from 'languages'
 
 import { IItem } from './types'
 
-const address = getDeliveryAddressForNextOrder()
-
 const userIsClient = userIsClientUser()
 
 export function getListItems(this: {
@@ -40,11 +38,13 @@ export function getListItems(this: {
     },
   ]
 
+  const address = getDeliveryAddressForNextOrder()
+
   return userIsClient
     ? [
         {
-          name: 'Delivery location',
-          value: address,
+          name: 'Delivery Location',
+          value: address || 'Not known',
           actionText: address ? undefined : 'Set',
           handler: () => navigateTo(Routes.location.path),
           icon: location,

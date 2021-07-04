@@ -6,7 +6,7 @@ import Item from './Item'
 import Order from './Order'
 import Location from './Location'
 import Requests from './Requests'
-import Request from './Request'
+import CompletedOrder from './CompletedOrder'
 import About from './About'
 import TCs from './TCs'
 
@@ -21,7 +21,7 @@ export {
   Order,
   Location,
   Requests,
-  Request,
+  CompletedOrder,
   About,
   TCs,
 }

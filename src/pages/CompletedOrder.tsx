@@ -2,22 +2,20 @@ import React from 'react'
 import Moment from 'moment'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dispatch, bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 
 import {
   IonBadge,
-  IonButton,
   IonContent,
   IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
-  IonText,
 } from '@ionic/react'
-import { close } from 'ionicons/icons'
+import { callOutline as call, close } from 'ionicons/icons'
 
 import { Divider, Header } from 'components'
 import { MapContainer } from 'containers'
@@ -25,53 +23,48 @@ import { MapContainer } from 'containers'
 import { ItemRequest as ItemRequestInterface } from 'types'
 import { platformIsMobile, requestStatesMappedToBadgeBackground } from 'utils'
 import { userIsCourier, userIsNotClientUser } from 'utils/role'
-import { computeOrderCostAndDistance, deliveryCost } from 'utils/charges'
+import { computeOrderCostAndDistance } from 'utils/charges'
 import { formatMoney } from 'utils/currency'
 import { callTelephone } from 'utils/msisdn'
 
 import Requests, { endPoints } from 'requests'
+import Routes from 'routes'
 
 import { computeDistance } from 'location'
 import { getDeliveryOrderContactsListed } from './Requests/utils'
+import { getLocationState, redirectTo } from 'app-history'
 
-type Props = {
-  location: { state?: { request: ItemRequestInterface } }
+interface ICompletedOrderProps {
   setItemRequest: (a: ItemRequestInterface) => {}
 }
 
-const callCourierButtonStyle = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-}
+class CompletedOrder extends React.Component<ICompletedOrderProps> {
+  locationState = getLocationState() as { request: ItemRequestInterface }
 
-class Component extends React.Component<Props> {
-  state =
-    this.props.location.state !== undefined &&
-    this.props.location.state.request !== undefined
-      ? {
-          distance: this.props.location.state.request.aDistance,
-          address: this.props.location.state.request.address,
-        }
-      : {
-          distance: null,
-          address: null,
-        }
+  state = this.locationState.request
+    ? {
+        distance: this.locationState.request.aDistance,
+        address: this.locationState.request.address,
+      }
+    : {
+        distance: null,
+        address: null,
+      }
 
   saveComputedDistance(distance: number) {
-    const {
-      location: { state },
-      setItemRequest,
-    } = this.props
-    if (state === undefined || state.request === undefined) return null
+    const { request } = this.locationState
 
     this.setState({ distance }, () =>
-      setItemRequest({ ...state.request, aDistance: distance })
+      this.props.setItemRequest({
+        ...request,
+        aDistance: distance,
+      })
     )
 
     Requests.put(endPoints['item-requests'], {
-      'item-requests': [state.request._id],
+      'item-requests': [request._id],
       update: { aDistance: distance },
+      // eslint-disable-next-line no-console
     }).catch(console.error)
   }
 
@@ -85,20 +78,8 @@ class Component extends React.Component<Props> {
     }
   }
 
-  requestPresent = () => {
-    const {
-      location: { state },
-    } = this.props
-    return state !== undefined && state.request !== undefined
-  }
-
   callAction = () => {
-    const {
-      location: { state },
-    } = this.props
-    if (state === undefined || state.request === undefined) return null
-
-    const { courier, user } = state.request
+    const { courier, user } = this.locationState.request
 
     return userIsCourier()
       ? `Call Client - ${user.name || user.phone}`
@@ -108,33 +89,32 @@ class Component extends React.Component<Props> {
   }
 
   onCall = () => {
-    const {
-      location: { state },
-    } = this.props
-    if (state === undefined || state.request === undefined) return null
+    if (this.locationState.request === undefined) return null
 
-    const { courier, user } = state.request
+    const { courier, user } = this.locationState.request
 
     const phone = userIsCourier()
       ? user.phone
       : courier
       ? courier.phones[0]
       : ''
-    callTelephone('+' + phone)
+    callTelephone(phone)
   }
 
-  requestCost =
-    this.props.location.state && this.props.location.state.request
-      ? computeOrderCostAndDistance(
-          this.props.location.state.request.pharmacyItems
-        ).cost
-      : 0
+  requestCost = this.locationState.request
+    ? computeOrderCostAndDistance(this.locationState.request.pharmacyItems).cost
+    : 0
+
+  componentDidMount() {
+    if (!this.locationState.request) {
+      return redirectTo(Routes.requests.path)
+    }
+  }
 
   render() {
-    const {
-      location: { state },
-    } = this.props
-    if (state === undefined || state.request === undefined) return null
+    if (!this.locationState.request) {
+      return null
+    }
 
     const {
       pharmacyItems,
@@ -146,7 +126,7 @@ class Component extends React.Component<Props> {
       address,
       contacts,
       user,
-    } = state.request
+    } = this.locationState.request
     const { distance = null } = this.state
 
     const title = (
@@ -220,34 +200,34 @@ class Component extends React.Component<Props> {
                   <b>{formatMoney(this.requestCost)}</b>
                 </h4>
               </IonItem>
-              <IonItem lines="none" className="ion-no-padding mini-list-item">
-                <IonText>
-                  <IonLabel>
-                    <p>Delivery fee</p>
-                  </IonLabel>
-                </IonText>
-                <h4 slot="end" className="flex ion-align-items-center">
-                  {formatMoney(deliveryCost)}
-                </h4>
-              </IonItem>
             </IonList>
           </IonLabel>
           <Divider />
           <IonList className="fill-height ion-no-padding">
             {courier ? (
-              <IonItem>
+              <IonItem
+                onClick={userCanViewCallButton ? this.onCall : undefined}
+                button={userCanViewCallButton}
+              >
                 <IonLabel>
-                  <h4>Courier contact</h4>
+                  <h4>Courier Contact</h4>
                   <p className="ion-label-primary">
                     <b>{getDeliveryOrderContactsListed(courier.phones)}</b>
                   </p>
                 </IonLabel>
+                {userCanViewCallButton ? (
+                  <IonIcon
+                    className="ion-icon-secondary"
+                    icon={call}
+                    slot="end"
+                  />
+                ) : null}
               </IonItem>
             ) : null}
             {contacts ? (
               <IonItem>
                 <IonLabel>
-                  <h4>Client delivery contact</h4>
+                  <h4>Client Delivery Contact</h4>
                   <p className="ion-label-primary">
                     <b>{getDeliveryOrderContactsListed(contacts)}</b>
                   </p>
@@ -280,15 +260,6 @@ class Component extends React.Component<Props> {
                 mapCenter={{ lat, lon }}
                 onMapApiLoaded={this.onMapApiLoaded}
               />
-              {courier && userCanViewCallButton ? (
-                <IonButton
-                  onClick={this.onCall}
-                  style={callCourierButtonStyle}
-                  className="ion-margin"
-                >
-                  {this.callAction()}
-                </IonButton>
-              ) : null}
             </IonItem>
           </IonList>
         </IonContent>
@@ -301,11 +272,7 @@ function formatDate(date: number) {
   return Moment(date).fromNow()
 }
 
-// const mapStateToProps = (state: ReducerState) => ({
-//   requests: state.App.requests || undefined
-// })
-
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       setItemRequest: payload => ({
@@ -316,4 +283,4 @@ const mapDispatchToProps = (dispatch: any) =>
     dispatch
   )
 
-export default connect(null, mapDispatchToProps)(Component)
+export default connect(null, mapDispatchToProps)(CompletedOrder)

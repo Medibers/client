@@ -129,7 +129,6 @@ class Component extends React.Component<IOrderProps> {
         item: o._id,
         quantity: o.quantity,
       })),
-      // notes: '',
       contacts,
       lat,
       lon,

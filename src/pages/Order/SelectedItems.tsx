@@ -8,7 +8,6 @@ import SelectedItem from './SelectedItem'
 import Context from './context'
 
 import { ionButtonStyle } from './styles'
-import { deliveryCost } from 'utils/charges'
 import { formatMoney } from 'utils/currency'
 
 const SelectedItems: React.FC = () => {
@@ -37,8 +36,6 @@ const SelectedItems: React.FC = () => {
               <IonIcon className="ion-icon-secondary" icon={addCircleOutline} />
             </IonButton>
           </IonItem>
-        </IonList>
-        <IonList className="ion-no-margin ion-no-padding">
           <IonItem
             lines="none"
             className="ion-no-padding mini-list-item"
@@ -50,16 +47,6 @@ const SelectedItems: React.FC = () => {
             <h4 className="ion-label-primary" slot="end">
               {formatMoney(cost)}
             </h4>
-          </IonItem>
-          <IonItem
-            lines="none"
-            className="ion-no-margin ion-no-padding mini-list-item"
-            style={{ '--min-height': '15px' }}
-          >
-            <IonLabel className="ion-no-margin" slot="start">
-              <p>Delivery fee</p>
-            </IonLabel>
-            <h4 slot="end">{formatMoney(deliveryCost)}</h4>
           </IonItem>
         </IonList>
       </IonLabel>

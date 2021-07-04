@@ -11,7 +11,7 @@ const text: TPageText = {
     en: 'Delivery to',
   },
   'category-header': {
-    en: 'What do you need?',
+    en: 'Please select what you need',
   },
   'category-all': {
     en: 'All items',

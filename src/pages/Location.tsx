@@ -20,8 +20,8 @@ import { closeSharp, search } from 'ionicons/icons'
 
 import { Location as LocationInterface } from 'types'
 
-const title = 'Deliver at'
-const primaryAction = 'Select location'
+const title = 'Delivery Location'
+const primaryAction = 'Select Location'
 
 const actionButtonStyle = {
   position: 'absolute',
@@ -45,7 +45,7 @@ class Component extends React.Component<{ history: History }> {
     searchText: string
     location: LocationInterface | null
     searchShown: Boolean
-    results: Array<any>
+    results: Array<google.maps.places.PlaceResult>
   } = {
     searchText: '',
     location: null,
@@ -68,17 +68,17 @@ class Component extends React.Component<{ history: History }> {
 
   map: google.maps.Map | undefined
 
-  onMapApiLoaded = (map: any) => {
+  onMapApiLoaded = (map: google.maps.Map) => {
     this.map = map
   }
 
-  onSearch = async ({ detail: { value } }: any) => {
+  onSearch = async (value: string) => {
     const results = await queryPlace(this.map, value)
     this.setState({ searchText: value, results })
   }
 
-  onPlacesResultClick = (result: any) => {
-    this.map && this.map.setCenter(result.geometry.location)
+  onPlacesResultClick = (result: google.maps.places.PlaceResult) => {
+    this.map && result.geometry && this.map.setCenter(result.geometry.location)
     this.setState({ results: [] })
   }
 
@@ -100,7 +100,8 @@ class Component extends React.Component<{ history: History }> {
           },
         ]
 
-  searchRef: any = null
+  // eslint-disable-next-line no-undef
+  searchRef: HTMLIonSearchbarElement | null = null
 
   searchComponent = () => (
     <IonSearchbar
@@ -116,7 +117,7 @@ class Component extends React.Component<{ history: History }> {
       clearIcon="no-icon"
       showCancelButton="always"
       cancelButtonIcon={closeSharp}
-      onIonChange={this.onSearch}
+      onIonChange={e => this.onSearch(e.detail.value || '')}
       onIonCancel={this.onIonCancel}
     />
   )

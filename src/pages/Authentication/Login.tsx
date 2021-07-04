@@ -45,10 +45,6 @@ const subHeader = 'Provide your phone and password to sign in'
 class Component extends React.Component<ILoginProps> {
   state = { phone: null, inputFocussed: null, password: null }
 
-  // state = { phone: '773828773', inputFocussed: null, password: '773828773' } // client user
-  // state = { phone: '773828774', inputFocussed: null, password: '773828773' } // courier
-  // state = { phone: '773828775', inputFocussed: null, password: '773828773' } // admin
-
   onChange = (target: EventTarget | null) => {
     const { name, value } = target as HTMLInputElement
     this.setState({ [name]: value })

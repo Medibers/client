@@ -48,7 +48,7 @@ const DeliveryContact: React.FC = () => {
     <React.Fragment>
       <IonItem button onClick={onShowPopover} className="self">
         <IonLabel className="ion-text-wrap">
-          <p>Delivery contact</p>
+          <p>Delivery Contact</p>
           <h4 className="ion-label-primary">
             {contacts.map(contact => (
               <DeliveryContactBadge

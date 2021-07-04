@@ -1,7 +1,5 @@
 import { ItemSearchResult, PharmacyItem } from 'types'
 
-export const deliveryCost = 2000
-
 export const computeOrderCostAndDistance = (
   items: Array<ItemSearchResult | PharmacyItem>
 ) => {
@@ -11,6 +9,6 @@ export const computeOrderCostAndDistance = (
       acc.distance = acc.distance + distanceRaw / 2
       return acc
     },
-    { cost: 0 /* deliveryCost */, distance: 0 }
+    { cost: 0, distance: 0 }
   )
 }

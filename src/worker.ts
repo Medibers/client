@@ -23,9 +23,11 @@ import { TEST_ENV } from './utils'
         eventsInstance.emit(action, result)
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Worker script failed', error)
     }
   else if (process.env.NODE_ENV !== TEST_ENV) {
+    // eslint-disable-next-line no-console
     console.error('Worker not supported')
   }
 })()
