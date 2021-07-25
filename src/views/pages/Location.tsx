@@ -10,8 +10,7 @@ import {
   IonSearchbar,
 } from '@ionic/react'
 
-import { Header } from 'components'
-import { MapContainer } from 'containers'
+import { Header, MapContainer } from 'components'
 
 import { setDeliveryLocation } from 'session'
 import { queryAddress, queryPlace } from 'location'

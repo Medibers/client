@@ -11,8 +11,13 @@ import {
 
 import { ellipsisVertical as more } from 'ionicons/icons'
 
-import { Header, ListItem, Menu, Popover } from 'components'
-import { MSISDNModify as MSISDNModifyPopover } from 'containers'
+import {
+  Header,
+  ListItem,
+  MSISDNModify as MSISDNModifyPopover,
+  Menu,
+  Popover,
+} from 'components'
 
 import Requests, { endPoints } from 'requests'
 import { setSessionToken } from 'session'

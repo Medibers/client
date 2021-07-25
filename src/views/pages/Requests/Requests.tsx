@@ -14,8 +14,7 @@ import {
 import { RefresherEventDetail } from '@ionic/core'
 import { home } from 'ionicons/icons'
 
-import { Header, Menu } from 'components'
-import { Select as SelectPopover } from 'containers'
+import { Header, Menu, Select as SelectPopover } from 'components'
 
 import { State as ReducerState } from 'reducers'
 import { ItemRequest as IItemRequest } from 'types'

@@ -17,8 +17,7 @@ import {
 } from '@ionic/react'
 import { callOutline as call, close } from 'ionicons/icons'
 
-import { Divider, Header } from 'components'
-import { MapContainer } from 'containers'
+import { Divider, Header, MapContainer } from 'components'
 
 import { ItemRequest as ItemRequestInterface } from 'types'
 import { platformIsMobile, requestStatesMappedToBadgeBackground } from 'utils'
