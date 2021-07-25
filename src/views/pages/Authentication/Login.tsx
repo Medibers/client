@@ -27,7 +27,7 @@ import { setSessionPhone, setSessionToken } from 'session'
 import { CCs } from 'utils/msisdn'
 import { navigateTo } from 'app-history'
 
-import getMenuActions from 'pages/menu-actions'
+import getMenuActions from 'views/pages/menu-actions'
 
 import HeadComponent from './HeadComponent'
 

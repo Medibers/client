@@ -23,7 +23,7 @@ import {
 } from 'utils/role'
 import { Menu as ActionMenu } from 'components'
 
-import Context from 'pages/Requests/context'
+import Context from 'views/pages/Requests/context'
 
 import getItemRequestMenuActions from './menu-actions'
 

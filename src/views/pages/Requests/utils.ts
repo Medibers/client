@@ -7,7 +7,7 @@ import Requests, { endPoints } from 'requests'
 import { hideLoading, showLoading, showToast } from 'store/utils'
 import { formatUGMSISDN } from 'utils/msisdn'
 
-import { IOrderDeliveryContact } from 'pages/Order/types'
+import { IOrderDeliveryContact } from 'views/pages/Order/types'
 
 export const requestStatesFormattedForApi: {
   // eslint-disable-next-line no-unused-vars

@@ -14,7 +14,7 @@ import { Header, Menu } from 'components'
 import { getLocationPath } from 'app-history'
 
 import getPageText from 'text'
-import getMenuActions from 'pages/menu-actions'
+import getMenuActions from 'views/pages/menu-actions'
 
 import Categories from './Categories'
 import DeliveryLocation from './DeliveryLocation'

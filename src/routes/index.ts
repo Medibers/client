@@ -15,7 +15,7 @@ import {
   Signup1,
   Signup2,
   TCs,
-} from 'pages'
+} from 'views/pages'
 
 interface IRoute {
   path: string

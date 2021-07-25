@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react'
-import { IOrderDeliveryContact } from 'pages/Order/types'
+import { IOrderDeliveryContact } from 'views/pages/Order/types'
 
 export interface Action {
   type: string
