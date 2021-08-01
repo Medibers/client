@@ -1,17 +1,16 @@
 import React, { useContext } from 'react'
 
-import { IonButton, IonIcon, IonItem, IonLabel, IonList } from '@ionic/react'
-import { addCircleOutline } from 'ionicons/icons'
+import { IonButton, IonItem, IonLabel, IonList } from '@ionic/react'
 
 import SelectedItem from './SelectedItem'
 
 import Context from './context'
 
-import { ionButtonStyle } from './styles'
+import { addItemIonButtonStyle } from './styles'
 import { formatMoney } from 'utils/currency'
 
 const SelectedItems: React.FC = () => {
-  const { cost, selectedItems, onAddItem } = useContext(Context)
+  const { cost, selectedItems, onModifyCart } = useContext(Context)
   return (
     <IonItem>
       <IonLabel>
@@ -26,16 +25,6 @@ const SelectedItems: React.FC = () => {
               quantity={quantity}
             />
           ))}
-          <IonItem lines="none" className="ion-no-padding mini-list-item">
-            <IonButton
-              onClick={onAddItem}
-              slot="end"
-              fill="clear"
-              style={ionButtonStyle}
-            >
-              <IonIcon className="ion-icon-secondary" icon={addCircleOutline} />
-            </IonButton>
-          </IonItem>
           <IonItem
             lines="none"
             className="ion-no-padding mini-list-item"
@@ -47,6 +36,16 @@ const SelectedItems: React.FC = () => {
             <h4 className="ion-label-primary" slot="end">
               {formatMoney(cost)}
             </h4>
+          </IonItem>
+          <IonItem lines="none" className="ion-no-padding mini-list-item">
+            <IonButton
+              onClick={onModifyCart}
+              color="secondary"
+              slot="end"
+              style={addItemIonButtonStyle}
+            >
+              Modify Cart
+            </IonButton>
           </IonItem>
         </IonList>
       </IonLabel>

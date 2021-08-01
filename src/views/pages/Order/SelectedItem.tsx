@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-import { close, pencilOutline, removeCircleOutline } from 'ionicons/icons'
+import { addCircleOutline, close, removeCircleOutline } from 'ionicons/icons'
 
 import { formatMoney } from 'utils/currency'
 import { costTextStyle, ionButtonStyle } from './styles'
@@ -21,13 +21,12 @@ const SelectedItem: React.FC<ISelectedItem> = ({
   _id,
   item,
   price,
-  quantity,
+  quantity = 1,
 }) => {
-  const { onModifyItemQuantity, onRemoveItem } = useContext(Context)
+  const { onModifyItemQuantity } = useContext(Context)
   return (
     <IonItem lines="none" className="ion-no-padding mini-list-item">
       <h4>{item.name}</h4>
-      {/* ion-grid, ion-toolbar don't work, try table */}
       <h4
         slot="end"
         style={costTextStyle}
@@ -39,20 +38,20 @@ const SelectedItem: React.FC<ISelectedItem> = ({
         {formatMoney(price)}
       </h4>
       <IonButton
-        onClick={() => onModifyItemQuantity(_id)}
-        slot="end"
-        fill="clear"
-        style={ionButtonStyle}
-      >
-        <IonIcon className="ion-icon-secondary" icon={pencilOutline} />
-      </IonButton>
-      <IonButton
-        onClick={() => onRemoveItem(_id)}
+        onClick={() => onModifyItemQuantity(_id, quantity - 1)}
         slot="end"
         fill="clear"
         style={ionButtonStyle}
       >
         <IonIcon className="ion-icon-secondary" icon={removeCircleOutline} />
+      </IonButton>
+      <IonButton
+        onClick={() => onModifyItemQuantity(_id, quantity + 1)}
+        slot="end"
+        fill="clear"
+        style={ionButtonStyle}
+      >
+        <IonIcon className="ion-icon-secondary" icon={addCircleOutline} />
       </IonButton>
     </IonItem>
   )

@@ -29,7 +29,6 @@ import history, {
 } from 'app-history'
 
 import SelectedItems from './SelectedItems'
-import ItemQuantity from './ItemQuantity'
 
 import Context from './context'
 
@@ -71,7 +70,6 @@ class Component extends React.Component<IOrderProps> {
   selectedItems = this.getInitialSelectedItems()
 
   state = {
-    quantityModifyItem: null,
     orderConfirmationShown: false,
     selectedItems: this.selectedItems,
     ...computeOrderCostAndDistance(this.selectedItems),
@@ -82,19 +80,11 @@ class Component extends React.Component<IOrderProps> {
     ] as Array<IOrderDeliveryContact>,
   }
 
-  onRemoveItem = (id: string) => {
+  onModifyCart = () => {
     const { selectedItems } = this.state
-    const index = selectedItems.findIndex(item => item._id === id)
-    selectedItems.splice(index, 1)
-    this.setState({
-      selectedItems,
-      ...computeOrderCostAndDistance(selectedItems),
+    redirectTo(Routes.search.path, {
+      items: selectedItems,
     })
-  }
-
-  onAddItem = () => {
-    const { selectedItems } = this.state
-    redirectTo(Routes.search.path, { items: selectedItems })
   }
 
   locationNotAvailable = () => {
@@ -168,19 +158,18 @@ class Component extends React.Component<IOrderProps> {
   setOrderConfirmationVisibility = (orderConfirmationShown: boolean) =>
     this.setState({ orderConfirmationShown })
 
-  onSubmitModifiedItemQuantity = (quantity: string) => {
-    if (Number(quantity) > Number.MAX_SAFE_INTEGER) return
-    const { quantityModifyItem, selectedItems } = this.state
+  onModifyItemQuantity = (searchResultId: string, quantity: number) => {
+    const { selectedItems } = this.state
     const newSelectedItems = selectedItems.map(e => {
-      if (e._id === quantityModifyItem && parseInt(quantity))
-        e.quantity = parseInt(quantity)
+      if (e._id === searchResultId && quantity > 0) {
+        e.quantity = quantity
+      }
       return e
     })
     this.setState(
       {
         selectedItems: newSelectedItems,
         ...computeOrderCostAndDistance(newSelectedItems),
-        quantityModifyItem: null, // dismiss quantity popover
       },
       () => {
         history.location.state = { selectedItems: newSelectedItems }
@@ -188,28 +177,14 @@ class Component extends React.Component<IOrderProps> {
     )
   }
 
-  onModifyItemQuantity = (searchResultId: string) => {
-    this.setState({ quantityModifyItem: searchResultId })
-  }
-
   onPrimaryAction = () => {
     this.setOrderConfirmationVisibility(true)
   }
 
   render() {
-    const {
-      cost,
-      orderConfirmationShown,
-      quantityModifyItem,
-      selectedItems,
-      contacts,
-    } = this.state
+    const { cost, orderConfirmationShown, selectedItems, contacts } = this.state
 
     const locationNotAvailable = this.locationNotAvailable()
-
-    const itemSelectedToModifyQuantity = selectedItems.find(
-      ({ _id }) => _id === quantityModifyItem
-    )
 
     const context = {
       cost,
@@ -217,8 +192,7 @@ class Component extends React.Component<IOrderProps> {
       locationNotAvailable,
       contacts,
       onModifyItemQuantity: this.onModifyItemQuantity,
-      onAddItem: this.onAddItem,
-      onRemoveItem: this.onRemoveItem,
+      onModifyCart: this.onModifyCart,
       onSelectDestination: this.onSelectDestination,
       onSetContacts: this.onSetContacts,
     }
@@ -245,15 +219,6 @@ class Component extends React.Component<IOrderProps> {
             </IonList>
           </IonContent>
         </Context.Provider>
-        <ItemQuantity
-          open={Boolean(quantityModifyItem)}
-          item={
-            itemSelectedToModifyQuantity
-              ? itemSelectedToModifyQuantity.item.name
-              : null
-          }
-          onSubmit={this.onSubmitModifiedItemQuantity}
-        />
         <OrderConfirmationAlert
           open={orderConfirmationShown}
           header={alertText.header}
