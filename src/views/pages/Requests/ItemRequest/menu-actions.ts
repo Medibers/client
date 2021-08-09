@@ -1,6 +1,11 @@
 import { ItemRequest, MenuAction } from 'types'
 
-import { getUserRole } from 'utils/role'
+import {
+  userIsAdmin,
+  userIsClientUser,
+  userIsCourier,
+  userIsPharmacyOperator,
+} from 'utils/role'
 import { updateBackend } from '../utils'
 
 function fn(this: {
@@ -10,48 +15,44 @@ function fn(this: {
   const { updateRequestsUI, onCourierPopoverShow } = this
   const defaultMenuActions: Array<MenuAction> = []
 
-  switch (getUserRole()) {
-    case 1:
-      return [
-        {
-          text: 'Mark as Received',
-          handler: (requestSelected: string) => {
-            updateBackend({ state: 5 }, [requestSelected], updateRequestsUI) // received
-          },
-        },
-        {
-          text: 'Cancel',
-          handler: (requestSelected: string) => {
-            updateBackend({ state: 3 }, [requestSelected], updateRequestsUI) // cancelled
-          },
-        },
-      ]
-    case 2:
-      return [
-        {
-          text: 'Mark as Delivered',
-          handler: (requestSelected: string) => {
-            updateBackend({ state: 4 }, [requestSelected], updateRequestsUI) // delivered
-          },
-        },
-      ]
-    case 3:
-      return [
-        {
-          text: 'Assign Courier',
-          handler: onCourierPopoverShow,
-        },
-      ]
-    case 4:
-      return [
-        {
-          text: 'Assign Courier',
-          handler: onCourierPopoverShow,
-        },
-      ]
-    default:
-      return defaultMenuActions
+  if (userIsAdmin() || userIsPharmacyOperator()) {
+    return [
+      {
+        text: 'Assign Courier',
+        handler: onCourierPopoverShow,
+      },
+    ]
   }
+
+  if (userIsClientUser()) {
+    return [
+      {
+        text: 'Mark as Received',
+        handler: (requestSelected: string) => {
+          updateBackend({ state: 5 }, [requestSelected], updateRequestsUI) // received
+        },
+      },
+      {
+        text: 'Cancel',
+        handler: (requestSelected: string) => {
+          updateBackend({ state: 3 }, [requestSelected], updateRequestsUI) // cancelled
+        },
+      },
+    ]
+  }
+
+  if (userIsCourier()) {
+    return [
+      {
+        text: 'Mark as Delivered',
+        handler: (requestSelected: string) => {
+          updateBackend({ state: 4 }, [requestSelected], updateRequestsUI) // delivered
+        },
+      },
+    ]
+  }
+
+  return defaultMenuActions
 }
 
 export default fn

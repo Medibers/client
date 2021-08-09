@@ -78,6 +78,8 @@ export const endPoints = {
   login: '/user/login',
   signup1: '/user/new',
   signup2: '/user/register',
+  'password-reset-1': '/user/password-reset',
+  'password-reset-2': '/user/password-reset/confirm',
   'item-search': '/items/search',
   'item-requests': '/item-request',
   credits: '/credits',

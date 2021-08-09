@@ -262,6 +262,10 @@ ion-title {
   color: var(--ion-color-secondary) !important
 }
 
+.ion-label-danger {
+  color: var(--ion-color-danger) !important
+}
+
 .ion-head h1,
 .ion-head p {
   color: var(--ion-color-primary)

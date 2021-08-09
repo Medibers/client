@@ -16,6 +16,7 @@ import Refresher from './Refresher'
 import MapContainer from './MapContainer'
 import MSISDNModify from './MSISDNModify'
 import Select from './Select'
+import FormFieldError from './FormFieldError'
 
 export {
   Header,
@@ -36,4 +37,5 @@ export {
   MapContainer,
   MSISDNModify,
   Select,
+  FormFieldError,
 }

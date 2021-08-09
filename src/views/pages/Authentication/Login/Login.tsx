@@ -1,5 +1,6 @@
 import React, { FormEvent } from 'react'
-import Routes, { getDefaultRoute } from 'routes'
+
+import { getDefaultRoute } from 'routes'
 
 import { connect } from 'react-redux'
 import { Dispatch, bindActionCreators } from 'redux'
@@ -25,11 +26,12 @@ import Requests, { endPoints } from 'requests'
 import { setSessionPhone, setSessionToken } from 'session'
 
 import { CCs } from 'utils/msisdn'
-import { navigateTo } from 'app-history'
 
 import getMenuActions from 'views/pages/menu-actions'
 
-import HeadComponent from './HeadComponent'
+import HeadComponent from '../HeadComponent'
+import CreateAccountButton from './CreateAccountButton'
+import ResetPasswordButton from './ResetPasswordButton'
 
 interface ILoginProps {
   showLoading: () => void
@@ -73,10 +75,6 @@ class Component extends React.Component<ILoginProps> {
         })
         .finally(() => hideLoading())
     }
-  }
-
-  onCreateAccount = () => {
-    navigateTo(Routes.signup1.path)
   }
 
   onInputFocus = (target: EventTarget | null) => {
@@ -155,27 +153,15 @@ class Component extends React.Component<ILoginProps> {
               </IonItem>
               <IonItemDivider style={this.getIonItemDividerStyle('password')} />
             </IonList>
-            <div className="ion-padding">
-              <IonButton
-                expand="block"
-                type="submit"
-                className="ion-no-margin ion-action-primary"
-              >
-                Submit
-              </IonButton>
-            </div>
-            <div className="ion-padding">
-              <IonButton
-                onClick={this.onCreateAccount}
-                expand="block"
-                type="button"
-                color="secondary"
-                className="ion-no-margin"
-                fill="clear"
-              >
-                Create account
-              </IonButton>
-            </div>
+            <IonButton
+              expand="block"
+              type="submit"
+              className="ion-margin ion-action-primary"
+            >
+              Submit
+            </IonButton>
+            <CreateAccountButton />
+            <ResetPasswordButton />
           </form>
         </IonContent>
       </IonPage>

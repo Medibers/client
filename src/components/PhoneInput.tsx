@@ -7,7 +7,7 @@ const cc = CCs.ug.value
 
 type Props = {
   name?: string
-  value: string
+  value?: string
   onKeyUp?: (e: { keyCode: number }) => void
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   onFocus?: (e: FocusEvent<HTMLInputElement>) => void

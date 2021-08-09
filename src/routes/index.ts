@@ -10,6 +10,8 @@ import {
   Location,
   Login,
   Order,
+  PasswordReset1,
+  PasswordReset2,
   Requests,
   Search,
   Signup1,
@@ -68,6 +70,16 @@ const Routes: Record<string, IRoute> = {
   request: {
     path: '/request',
     component: CompletedOrder,
+  },
+  passwordReset1: {
+    path: '/password-reset',
+    component: PasswordReset1,
+    isPublic: true,
+  },
+  passwordReset2: {
+    path: '/password-reset/confirm',
+    component: PasswordReset2,
+    isPublic: true,
   },
   signup1: {
     path: '/signup1',

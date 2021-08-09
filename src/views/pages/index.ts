@@ -1,4 +1,10 @@
-import { Login, Signup1, Signup2 } from './Authentication'
+import {
+  Login,
+  PasswordReset1,
+  PasswordReset2,
+  Signup1,
+  Signup2,
+} from './Authentication'
 import Home from './Home'
 import Account from './Account'
 import Search from './Search'
@@ -14,6 +20,8 @@ export {
   Login,
   Signup1,
   Signup2,
+  PasswordReset1,
+  PasswordReset2,
   Home,
   Account,
   Search,
