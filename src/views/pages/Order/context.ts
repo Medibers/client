@@ -5,6 +5,7 @@ import { IOrderDeliveryContact } from './types'
 
 interface IOrderContext {
   cost: number
+  deliveryFee: number | null
   selectedItems: Array<IItemSearchResult>
   locationNotAvailable: boolean
   contacts: Array<IOrderDeliveryContact>
@@ -16,6 +17,7 @@ interface IOrderContext {
 
 const Context = React.createContext<IOrderContext>({
   cost: 0,
+  deliveryFee: null,
   selectedItems: [],
   contacts: [],
   locationNotAvailable: true,

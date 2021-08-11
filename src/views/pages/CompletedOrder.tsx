@@ -22,14 +22,12 @@ import { Divider, Header, MapContainer } from 'components'
 import { ItemRequest as ItemRequestInterface } from 'types'
 import { platformIsMobile, requestStatesMappedToBadgeBackground } from 'utils'
 import { userIsCourier, userIsNotClientUser } from 'utils/role'
-import { computeOrderCostAndDistance } from 'utils/charges'
+import { computeOrderCost } from 'utils/charges'
 import { formatMoney } from 'utils/currency'
 import { callTelephone } from 'utils/msisdn'
 
-import Requests, { endPoints } from 'requests'
 import Routes from 'routes'
 
-import { computeDistance } from 'location'
 import { getDeliveryOrderContactsListed } from './Requests/utils'
 import { getLocationState, redirectTo } from 'app-history'
 
@@ -39,43 +37,6 @@ interface ICompletedOrderProps {
 
 class CompletedOrder extends React.Component<ICompletedOrderProps> {
   locationState = getLocationState() as { request: ItemRequestInterface }
-
-  state = this.locationState.request
-    ? {
-        distance: this.locationState.request.aDistance,
-        address: this.locationState.request.address,
-      }
-    : {
-        distance: null,
-        address: null,
-      }
-
-  saveComputedDistance(distance: number) {
-    const { request } = this.locationState
-
-    this.setState({ distance }, () =>
-      this.props.setItemRequest({
-        ...request,
-        aDistance: distance,
-      })
-    )
-
-    Requests.put(endPoints['item-requests'], {
-      'item-requests': [request._id],
-      update: { aDistance: distance },
-      // eslint-disable-next-line no-console
-    }).catch(console.error)
-  }
-
-  onMapApiLoaded = async (map: google.maps.Map) => {
-    const { distance = null } = this.state
-
-    if (distance === null) {
-      // else Directions Service already computed distance
-      const distanceInMetres: number | null = await computeDistance(map)
-      distanceInMetres && this.saveComputedDistance(distanceInMetres)
-    }
-  }
 
   callAction = () => {
     const { courier, user } = this.locationState.request
@@ -101,7 +62,7 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
   }
 
   requestCost = this.locationState.request
-    ? computeOrderCostAndDistance(this.locationState.request.pharmacyItems).cost
+    ? computeOrderCost(this.locationState.request.pharmacyItems)
     : 0
 
   componentDidMount() {
@@ -120,13 +81,14 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
       state: requestState,
       createdAt,
       courier,
+      contacts,
+      deliveryFee,
       lat,
       lon,
+      distance,
       address,
-      contacts,
       user,
     } = this.locationState.request
-    const { distance = null } = this.state
 
     const title = (
       <p className="ion-text-wrap">
@@ -190,13 +152,24 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
                   </h4>
                 </IonItem>
               ))}
+              {deliveryFee && deliveryFee > 0 ? (
+                <IonItem lines="none" className="ion-no-padding mini-list-item">
+                  <h4 className="ion-label-primary italicize">Delivery Fee</h4>
+                  <h4
+                    slot="end"
+                    className="flex ion-align-items-center ion-label-primary"
+                  >
+                    <b>{formatMoney(deliveryFee)}</b>
+                  </h4>
+                </IonItem>
+              ) : null}
               <IonItem lines="none" className="ion-no-padding mini-list-item">
                 <h4 className="ion-text-uppercase ion-label-primary">Total</h4>
                 <h4
                   slot="end"
                   className="flex ion-align-items-center ion-label-primary"
                 >
-                  <b>{formatMoney(this.requestCost)}</b>
+                  <b>{formatMoney(this.requestCost + (deliveryFee || 0))}</b>
                 </h4>
               </IonItem>
             </IonList>
@@ -238,7 +211,7 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
                 <p className="ion-label-primary">
                   Delivery at <b>{address}</b>
                 </p>
-                {distance !== null ? (
+                {distance !== undefined && distance !== null ? (
                   <p className="ion-label-primary">
                     ~ <b>{distance}m</b>
                   </p>
@@ -255,10 +228,7 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
                 '--inner-padding-end': 0,
               }}
             >
-              <MapContainer
-                mapCenter={{ lat, lon }}
-                onMapApiLoaded={this.onMapApiLoaded}
-              />
+              <MapContainer mapCenter={{ lat, lon }} />
             </IonItem>
           </IonList>
         </IonContent>

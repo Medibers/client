@@ -72,8 +72,9 @@ export interface ItemRequest<TState = TItemRequestState> {
   contacts: Array<IOrderDeliveryContact>
   lat: number
   lon: number
-  aDistance?: number // Directions Service computed value
-  address: string // Places Service value
+  distance?: number | null
+  deliveryFee?: number | null
+  address: string
   user: {
     _id: string
     name: string

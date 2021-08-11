@@ -13,6 +13,7 @@ import {
 } from 'session'
 
 import { platformIsWeb } from 'utils'
+import { ILocationPoint } from './types'
 
 export const updateCurrentPosition = async () => {
   const res = await Geolocation.getCurrentPosition()
@@ -108,21 +109,25 @@ export const queryPlace = async (
   })
 }
 
-export const computeDistance: (
-  a1: google.maps.Map | undefined
-) => Promise<number | null> = async (map: google.maps.Map | undefined) => {
+const BaseLocation: ILocationPoint = {
+  lat: 0.32499999999999574,
+  lng: 32.57500000000002,
+}
+
+export const computeDeliveryDistance: (
+  map: google.maps.Map | undefined
+) => Promise<number | null> = async map => {
   if (map === undefined) return null
 
   let directionsService = new google.maps.DirectionsService()
   let directionsRenderer = new google.maps.DirectionsRenderer()
   directionsRenderer.setMap(map)
 
-  const origin = { lat: 40.7767644, lng: -73.9761399 }
-  const destination = { lat: 40.771209, lng: -73.9673991 }
+  const { lat, lon } = getDeliveryLocationForNextOrder()
 
   const route = {
-    origin,
-    destination,
+    origin: BaseLocation,
+    destination: { lat, lng: lon },
     travelMode: google.maps.TravelMode.DRIVING,
   }
 

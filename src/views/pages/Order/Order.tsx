@@ -8,16 +8,23 @@ import * as constants from 'reducers/constants'
 
 import { IonButton, IonContent, IonItem, IonList, IonPage } from '@ionic/react'
 
-import { Header, Alert as OrderConfirmationAlert } from 'components'
+import {
+  Header,
+  MapContainer,
+  Alert as OrderConfirmationAlert,
+} from 'components'
 import { getSessionPhone, setActiveRequestsPresence } from 'session'
-import { getDeliveryLocationForNextOrder } from 'location'
+import {
+  computeDeliveryDistance,
+  getDeliveryLocationForNextOrder,
+} from 'location'
 
 import { State as ReducerState } from 'reducers'
 import {
   ItemRequest as IItemRequest,
   ItemSearchResult as IItemSearchResult,
 } from 'types'
-import { computeOrderCostAndDistance } from 'utils/charges'
+import { computeOrderCost } from 'utils/charges'
 
 import Requests, { endPoints } from 'requests'
 
@@ -52,6 +59,10 @@ interface IOrderProps {
 interface ILocationState {
   selectedItems: Array<IItemSearchResult>
 }
+interface IItemRequestDetailsRequest {
+  fee: number
+  distance: number
+}
 
 const title = 'Your order'
 const primaryAction = 'Order now'
@@ -72,7 +83,9 @@ class Component extends React.Component<IOrderProps> {
   state = {
     orderConfirmationShown: false,
     selectedItems: this.selectedItems,
-    ...computeOrderCostAndDistance(this.selectedItems),
+    cost: computeOrderCost(this.selectedItems),
+    distance: null,
+    deliveryFee: null,
     contacts: [
       {
         phone: formatUGMSISDN(getSessionPhone() as string),
@@ -102,7 +115,7 @@ class Component extends React.Component<IOrderProps> {
   }
 
   onConfirmOrder = () => {
-    const { contacts } = this.state
+    const { contacts, distance, deliveryFee } = this.state
     const {
       requests = [],
       setItemRequests,
@@ -118,11 +131,14 @@ class Component extends React.Component<IOrderProps> {
       'pharmacy-items': locationState.selectedItems.map(o => ({
         item: o._id,
         quantity: o.quantity,
+        price: o.price,
       })),
+      deliveryFee,
       contacts,
       lat,
       lon,
       address,
+      distance,
     }
     showLoading()
     Requests.post<Array<IItemRequest> | { error?: string }>(
@@ -169,7 +185,7 @@ class Component extends React.Component<IOrderProps> {
     this.setState(
       {
         selectedItems: newSelectedItems,
-        ...computeOrderCostAndDistance(newSelectedItems),
+        cost: computeOrderCost(newSelectedItems),
       },
       () => {
         history.location.state = { selectedItems: newSelectedItems }
@@ -181,13 +197,34 @@ class Component extends React.Component<IOrderProps> {
     this.setOrderConfirmationVisibility(true)
   }
 
+  onMapApiLoaded = async (map: google.maps.Map) => {
+    // distance in m
+    const distance: number | null = await computeDeliveryDistance(map)
+
+    if (distance !== null) {
+      const { fee: deliveryFee } =
+        await Requests.get<IItemRequestDetailsRequest>(
+          `${endPoints['item-requests-delivery-details']}?distance=${distance}`
+        )
+
+      this.setState({ deliveryFee, distance })
+    }
+  }
+
   render() {
-    const { cost, orderConfirmationShown, selectedItems, contacts } = this.state
+    const {
+      cost,
+      deliveryFee,
+      orderConfirmationShown,
+      selectedItems,
+      contacts,
+    } = this.state
 
     const locationNotAvailable = this.locationNotAvailable()
 
     const context = {
       cost,
+      deliveryFee,
       selectedItems,
       locationNotAvailable,
       contacts,
@@ -227,6 +264,9 @@ class Component extends React.Component<IOrderProps> {
           onConfirm={this.onConfirmOrder}
           onDismiss={() => this.setOrderConfirmationVisibility(false)}
         />
+        <div className="ion-hide">
+          <MapContainer onMapApiLoaded={this.onMapApiLoaded} />
+        </div>
       </IonPage>
     )
   }

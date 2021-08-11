@@ -82,6 +82,7 @@ export const endPoints = {
   'password-reset-2': '/user/password-reset/confirm',
   'item-search': '/items/search',
   'item-requests': '/item-request',
+  'item-requests-delivery-details': '/item-request/delivery-details',
   credits: '/credits',
   'credit-offers': '/credits/offers',
   'mtn-msisdn': '/user/mtn-msisdn',
