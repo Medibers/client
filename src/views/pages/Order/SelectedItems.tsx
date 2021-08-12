@@ -51,10 +51,14 @@ const SelectedItems: React.FC = () => {
             style={ionItemStyle}
           >
             <IonLabel className="ion-no-margin ion-label-primary">
-              <h4 className="italicize">Delivery Fee</h4>
+              <h4 className="italicize">
+                {deliveryFee && deliveryFee > 0
+                  ? 'Delivery Fee'
+                  : 'Delivery Fee will be determined after your order'}
+              </h4>
             </IonLabel>
             <h4 className="ion-label-primary" slot="end">
-              {formatMoney(deliveryFee || 0)}
+              {deliveryFee && deliveryFee > 0 ? formatMoney(deliveryFee) : null}
             </h4>
           </IonItem>
           <IonItem

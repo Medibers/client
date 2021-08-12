@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Routes from 'routes'
 
 import { connect } from 'react-redux'
@@ -47,13 +47,11 @@ import DeliveryContact from './DeliveryContact'
 import { formatUGMSISDN } from 'utils/msisdn'
 import { IOrderDeliveryContact } from './types'
 
+import { hideLoading, showLoading, showToast } from 'store/utils'
+
 interface IOrderProps {
   requests?: Array<IItemRequest>
   setItemRequests: (e: Array<IItemRequest> | null) => {}
-  showLoading: () => void
-  hideLoading: () => void
-  showToast: (e: string) => void
-  hideToast: () => void
 }
 
 interface ILocationState {
@@ -69,60 +67,47 @@ const primaryAction = 'Order now'
 
 const alertText = AlertText.confirmation()
 
-class Component extends React.Component<IOrderProps> {
-  getInitialSelectedItems = () => {
-    const { selectedItems = [] } = getLocationState<ILocationState>()
-    return selectedItems.map(e => {
-      if (e.quantity) return e
-      return { ...e, quantity: 1 }
-    })
-  }
+const getInitialSelectedItems = () => {
+  const { selectedItems = [] } = getLocationState<ILocationState>()
+  return selectedItems.map(e => {
+    if (e.quantity) return e
+    return { ...e, quantity: 1 }
+  })
+}
 
-  selectedItems = this.getInitialSelectedItems()
+const onSelectDestination = () => {
+  let { lat, lon } = getDeliveryLocationForNextOrder()
+  // .push(Routes.location.path, lat && lon ? { lat, lon } : undefined)
+  navigateTo(Routes.location.path, lat && lon ? { lat, lon } : undefined)
+}
 
-  state = {
-    orderConfirmationShown: false,
-    selectedItems: this.selectedItems,
-    cost: computeOrderCost(this.selectedItems),
-    distance: null,
-    deliveryFee: null,
-    contacts: [
-      {
-        phone: formatUGMSISDN(getSessionPhone() as string),
-      },
-    ] as Array<IOrderDeliveryContact>,
-  }
+const Component: React.FC<IOrderProps> = props => {
+  const [orderConfirmationShown, setOrderConfirmationShown] = useState(false)
+  const [selectedItems, setSelectedItems] = useState(getInitialSelectedItems())
+  const [cost, setCost] = useState(computeOrderCost(selectedItems))
+  const [distance, setDistance] = useState<number | null>(null)
+  const [deliveryFee, setDeliveryFee] = useState<number | null>(null)
+  const [contacts, setContacts] = useState<Array<IOrderDeliveryContact>>([
+    {
+      phone: formatUGMSISDN(getSessionPhone() as string),
+    },
+  ])
 
-  onModifyCart = () => {
-    const { selectedItems } = this.state
+  const { lat, lon } = getDeliveryLocationForNextOrder()
+
+  const locationNotAvailableRef = useRef(lat === undefined || lon === undefined)
+  const locationNotAvailable = locationNotAvailableRef.current
+
+  const mapRef = useRef<google.maps.Map | null>(null)
+
+  const onModifyCart = () => {
     redirectTo(Routes.search.path, {
       items: selectedItems,
     })
   }
 
-  locationNotAvailable = () => {
-    let { lat, lon } = getDeliveryLocationForNextOrder()
-    return lat === undefined || lon === undefined
-  }
-
-  onSelectDestination = async () => {
-    let { lat, lon } = getDeliveryLocationForNextOrder()
-    navigateTo(Routes.location.path, lat && lon ? { lat, lon } : undefined)
-  }
-
-  onSetContacts = (contacts: IOrderDeliveryContact[]) => {
-    this.setState({ contacts })
-  }
-
-  onConfirmOrder = () => {
-    const { contacts, distance, deliveryFee } = this.state
-    const {
-      requests = [],
-      setItemRequests,
-      showLoading,
-      hideLoading,
-      showToast,
-    } = this.props
+  const onConfirmOrder = () => {
+    const { requests = [], setItemRequests } = props
     const { lat, lon, address } = getDeliveryLocationForNextOrder()
 
     const locationState = getLocationState<ILocationState>()
@@ -171,105 +156,100 @@ class Component extends React.Component<IOrderProps> {
       .finally(hideLoading)
   }
 
-  setOrderConfirmationVisibility = (orderConfirmationShown: boolean) =>
-    this.setState({ orderConfirmationShown })
-
-  onModifyItemQuantity = (searchResultId: string, quantity: number) => {
-    const { selectedItems } = this.state
+  const onModifyItemQuantity = (searchResultId: string, quantity: number) => {
     const newSelectedItems = selectedItems.map(e => {
       if (e._id === searchResultId && quantity > 0) {
         e.quantity = quantity
       }
       return e
     })
-    this.setState(
-      {
-        selectedItems: newSelectedItems,
-        cost: computeOrderCost(newSelectedItems),
-      },
-      () => {
-        history.location.state = { selectedItems: newSelectedItems }
+
+    setSelectedItems(newSelectedItems)
+    setCost(computeOrderCost(newSelectedItems))
+
+    history.location.state = { selectedItems: newSelectedItems }
+  }
+
+  const onPrimaryAction = () => {
+    setOrderConfirmationShown(true)
+  }
+
+  const onMapApiLoaded = async (map: google.maps.Map) => {
+    mapRef.current = map
+  }
+
+  const getDeliveryFeeAndDistance = async () => {
+    if (mapRef.current !== null) {
+      // distance in m
+      const distance: number | null = await computeDeliveryDistance(
+        mapRef.current
+      )
+
+      if (distance !== null) {
+        const { fee: deliveryFee } =
+          await Requests.get<IItemRequestDetailsRequest>(
+            `${endPoints['item-requests-delivery-details']}?distance=${distance}`
+          )
+
+        setDeliveryFee(deliveryFee)
+        setDistance(distance)
       }
-    )
-  }
-
-  onPrimaryAction = () => {
-    this.setOrderConfirmationVisibility(true)
-  }
-
-  onMapApiLoaded = async (map: google.maps.Map) => {
-    // distance in m
-    const distance: number | null = await computeDeliveryDistance(map)
-
-    if (distance !== null) {
-      const { fee: deliveryFee } =
-        await Requests.get<IItemRequestDetailsRequest>(
-          `${endPoints['item-requests-delivery-details']}?distance=${distance}`
-        )
-
-      this.setState({ deliveryFee, distance })
     }
   }
 
-  render() {
-    const {
-      cost,
-      deliveryFee,
-      orderConfirmationShown,
-      selectedItems,
-      contacts,
-    } = this.state
+  useEffect(() => {
+    getDeliveryFeeAndDistance()
+    locationNotAvailableRef.current = lat === undefined || lon === undefined
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapRef.current, lat, lon])
 
-    const locationNotAvailable = this.locationNotAvailable()
-
-    const context = {
-      cost,
-      deliveryFee,
-      selectedItems,
-      locationNotAvailable,
-      contacts,
-      onModifyItemQuantity: this.onModifyItemQuantity,
-      onModifyCart: this.onModifyCart,
-      onSelectDestination: this.onSelectDestination,
-      onSetContacts: this.onSetContacts,
-    }
-
-    return (
-      <IonPage className="order">
-        <Header title={title} />
-        <Context.Provider value={context}>
-          <IonContent>
-            <IonList lines="full">
-              <SelectedItems />
-              <DeliveryLocation />
-              <DeliveryContact />
-              <IonItem lines="none">
-                <IonButton
-                  onClick={this.onPrimaryAction}
-                  disabled={locationNotAvailable}
-                  className="ion-margin-top ion-action-primary"
-                  size="default"
-                >
-                  {primaryAction}
-                </IonButton>
-              </IonItem>
-            </IonList>
-          </IonContent>
-        </Context.Provider>
-        <OrderConfirmationAlert
-          open={orderConfirmationShown}
-          header={alertText.header}
-          message={alertText.message}
-          buttonText={alertText.buttonText}
-          onConfirm={this.onConfirmOrder}
-          onDismiss={() => this.setOrderConfirmationVisibility(false)}
-        />
-        <div className="ion-hide">
-          <MapContainer onMapApiLoaded={this.onMapApiLoaded} />
-        </div>
-      </IonPage>
-    )
+  const context = {
+    cost,
+    deliveryFee,
+    selectedItems,
+    locationNotAvailable,
+    contacts,
+    onModifyItemQuantity,
+    onModifyCart,
+    onSelectDestination,
+    onSetContacts: setContacts,
   }
+
+  return (
+    <IonPage className="order">
+      <Header title={title} />
+      <Context.Provider value={context}>
+        <IonContent>
+          <IonList lines="full">
+            <SelectedItems />
+            <DeliveryLocation />
+            <DeliveryContact />
+            <IonItem lines="none">
+              <IonButton
+                onClick={onPrimaryAction}
+                disabled={locationNotAvailable}
+                className="ion-margin-top ion-action-primary"
+                size="default"
+              >
+                {primaryAction}
+              </IonButton>
+            </IonItem>
+          </IonList>
+        </IonContent>
+      </Context.Provider>
+      <OrderConfirmationAlert
+        open={orderConfirmationShown}
+        header={alertText.header}
+        message={alertText.message}
+        buttonText={alertText.buttonText}
+        onConfirm={onConfirmOrder}
+        onDismiss={() => setOrderConfirmationShown(false)}
+      />
+      <div className="ion-hide">
+        <MapContainer containerId="map-order" onMapApiLoaded={onMapApiLoaded} />
+      </div>
+    </IonPage>
+  )
 }
 
 const mapStateToProps = (state: ReducerState) => ({
@@ -282,19 +262,6 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
       setItemRequests: payload => ({
         type: constants.SET_ITEM_REQUESTS,
         payload,
-      }),
-      showLoading: () => ({
-        type: constants.SHOW_LOADING,
-      }),
-      hideLoading: () => ({
-        type: constants.HIDE_LOADING,
-      }),
-      showToast: (payload: string) => ({
-        type: constants.SHOW_TOAST,
-        payload,
-      }),
-      hideToast: () => ({
-        type: constants.HIDE_TOAST,
       }),
     },
     dispatch
