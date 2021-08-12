@@ -15,11 +15,11 @@ export function parseMTNUGSN(sn: string) {
 
 export function parseUGSN(sn: string) {
   if (
-    /^(77|78|70|75|71|79)/.test(sn) && // Regex accepts text starting with 77 or 78
+    /^(70|71|72|73|74|75|76|77|78|79)/.test(sn) && // Regex accepts text starting with 77 or 78
     /^[0-9]{9}$/.test(sn) // Regex accepts text, length 9 containing only numbers
   )
     return sn
-  throw new Error('Subscriber number not valid')
+  console.error('Subscriber number not valid') // eslint-disable-line no-console
 }
 
 export function formatUGMSISDN(msisdn: string) {
@@ -36,6 +36,8 @@ export function formatUGMSISDN(msisdn: string) {
     )} ${msisdn.slice(8)}`
   } else if (msisdn.startsWith('0')) {
     return `${msisdn.slice(0, 4)} ${msisdn.slice(4)}`
+  } else if (/^(77|78|70|75|71|79)/.test(msisdn)) {
+    return `+${cc} ${msisdn.slice(0, 3)} ${msisdn.slice(3)}`
   }
   return msisdn
 }

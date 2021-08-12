@@ -6,7 +6,7 @@ import { send } from 'ionicons/icons'
 
 import { ListItem, PhoneInput } from 'components'
 
-import { formatUGMSISDN } from 'utils/msisdn'
+import { formatUGMSISDN, parseUGSN } from 'utils/msisdn'
 
 import 'styles'
 
@@ -55,7 +55,7 @@ const DeliveryContactForm: React.FC<IDeliveryContactFormProps> = ({
               />
             )}
             rules={{
-              validate: value => value.trim().length === 9,
+              validate: value => Boolean(parseUGSN(value)),
             }}
           />
         </ListItem>
