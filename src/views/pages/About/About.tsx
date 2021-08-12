@@ -22,7 +22,6 @@ import {
 import { Header, Refresher } from 'components'
 
 import APIServer, { FileServer, endPoints } from 'requests'
-import { sessionAvailable as isSessionAvailable } from 'session'
 
 import { APP_NAME, getAppVersion } from 'utils'
 
@@ -30,25 +29,14 @@ import getPageText from 'text'
 
 import { IFAQ, ISupportContacts } from './types'
 
+import Intro from './Intro'
 import Contacts from './Contacts'
 
 const Text = getPageText('about')
 
-const sessionAvailable = isSessionAvailable()
-
-const steps = [
-  'Request for any item initially selecting one of the categories',
-  'Choose a delivery location',
-  'Make payment or pay on delivery',
-]
-
 const faqAnswerStyle = (show: boolean) => ({
   height: show ? undefined : 0,
 })
-
-const ionItemStyle = {
-  '--min-height': 0,
-}
 
 interface Props {
   showLoading: () => void
@@ -106,44 +94,7 @@ class Component extends React.Component<Props> {
         <Header title={Text.title} />
         <IonContent className="ion-padding">
           <Refresher onRefresh={this.fetchFAQsAndSupportContacts} />
-          <IonLabel>
-            <IonList lines="none" className="ion-no-padding">
-              <IonItem className="ion-no-padding" style={ionItemStyle}>
-                <h3>
-                  {APP_NAME} securely fast delivers medical items right to where
-                  you choose
-                </h3>
-              </IonItem>
-              <IonItem
-                className="ion-no-padding ion-margin-vertical"
-                style={ionItemStyle}
-              >
-                <h3>
-                  {sessionAvailable
-                    ? `Get started in ${steps.length} quick steps`
-                    : `
-                      Set up an account with your telephone number
-                      and enjoy this service in ${steps.length} quick steps
-                    `}
-                </h3>
-              </IonItem>
-              {steps.map((step, i) => (
-                <IonItem
-                  key={i}
-                  className="ion-align-items-start ion-no-padding ion-margin-vertical"
-                  style={ionItemStyle}
-                >
-                  <h3
-                    style={{ marginInlineEnd: '8px' }}
-                    className="ion-label-primary"
-                  >
-                    {i + 1}.
-                  </h3>
-                  <h3 className="ion-label-primary">{step}</h3>
-                </IonItem>
-              ))}
-            </IonList>
-          </IonLabel>
+          <Intro />
           <IonCard className="ion-no-margin ion-margin-top">
             <IonCardHeader className="ion-no-padding ion-padding-top ion-padding-horizontal">
               <IonCardSubtitle>
