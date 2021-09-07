@@ -5,7 +5,7 @@ import { ImageSlider } from 'components'
 
 import { ItemSearchResult } from 'types'
 
-type Props = {
+interface IPopoverItemDetails {
   result: ItemSearchResult | null
 }
 
@@ -16,11 +16,12 @@ const wrapperStyle = {
   '--inner-padding-end': 0,
 }
 
-const Component: React.FC<Props> = ({ result }) => {
+const PopoverItemDetails: React.FC<IPopoverItemDetails> = ({ result }) => {
   if (result === null) return null
 
   const {
-    item: { 'icon-urls': urls, name },
+    item: { name },
+    images: urls,
   } = result
 
   return (
@@ -33,4 +34,4 @@ const Component: React.FC<Props> = ({ result }) => {
   )
 }
 
-export default Component
+export default PopoverItemDetails

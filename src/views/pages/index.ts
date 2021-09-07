@@ -15,6 +15,14 @@ import Requests from './Requests'
 import CompletedOrder from './CompletedOrder'
 import About from './About'
 import TCs from './TCs'
+import AddItem from './Admin/ItemForm/AddItem'
+import UpdateItem from './Admin/ItemForm/UpdateItem'
+import AddSupplierItem from './Admin/SupplierItemForm/AddSupplierItem'
+import UpdateSupplierItem from './Admin/SupplierItemForm/UpdateSupplierItem'
+import Suppliers from './Admin/Suppliers'
+import Supplier from './Admin/Supplier'
+import AddSupplier from './Admin/SupplierForm/AddSupplier'
+import UpdateSupplier from './Admin/SupplierForm/UpdateSupplier'
 
 export {
   Login,
@@ -32,4 +40,12 @@ export {
   CompletedOrder,
   About,
   TCs,
+  AddItem,
+  UpdateItem,
+  Suppliers,
+  Supplier,
+  AddSupplier,
+  UpdateSupplier,
+  AddSupplierItem,
+  UpdateSupplierItem,
 }

@@ -20,30 +20,30 @@ export interface MenuAction {
   handler: (a1: any) => void
 }
 
-export interface Item {
+export interface IItem {
   _id: string
   name: string
   category: string
   description: Array<string>
-  specifications?: Array<string>
+  specification?: Array<string>
   more?: Array<string>
-  'icon-urls': Array<string>
   'country-origin': string
 }
 
 export interface ItemSearchResult {
   _id: string
-  item: Item
+  item: IItem
   pharmacy: {
     _id: string
     name: string
   }
   price: number
   quantity?: number // Quantity ordered
+  images: Array<string>
   available: boolean
   distance?: string
   distanceRaw?: number
-  unit: object
+  unit: { _id: string }
 }
 
 export interface PharmacyItem {

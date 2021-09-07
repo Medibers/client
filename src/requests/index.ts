@@ -91,4 +91,7 @@ export const endPoints = {
   'support-contacts': '/support/contacts',
   faqs: '/docs/faqs.json',
   tcs: '/docs/tcs.md',
+  suppliers: '/suppliers',
+  items: '/items',
+  supplierItems: (supplierId: string) => `/suppliers/${supplierId}/items`,
 }

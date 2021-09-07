@@ -5,7 +5,7 @@ import { addCircleOutline, close, removeCircleOutline } from 'ionicons/icons'
 import { formatMoney } from 'utils/currency'
 import { costTextStyle, ionButtonStyle } from './styles'
 
-import { Item as IItem } from 'types'
+import { IItem } from 'types'
 import { IonButton, IonIcon, IonItem } from '@ionic/react'
 
 import Context from './context'

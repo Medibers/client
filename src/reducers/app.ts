@@ -1,5 +1,5 @@
 import produce from 'immer'
-import { Action, ItemRequest, ItemSearchResult } from 'types'
+import { Action, ItemRequest } from 'types'
 
 import * as constants from './constants'
 
@@ -8,13 +8,11 @@ export interface State {
   toast?: string
   menu?: { id?: string; event: Event }
   requests: Array<ItemRequest> | null
-  items: Array<ItemSearchResult> | null
 }
 
 const initialState: State = {
   loading: false,
   requests: null,
-  items: null,
 }
 
 export default (state = initialState, action: Action) =>
@@ -46,10 +44,6 @@ export default (state = initialState, action: Action) =>
       }
       case constants.SET_ITEM_REQUESTS: {
         draft.requests = action.payload
-        break
-      }
-      case constants.SET_ITEMS: {
-        draft.items = action.payload
         break
       }
       case constants.SET_ITEM_REQUEST: {

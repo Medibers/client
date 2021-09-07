@@ -88,7 +88,7 @@ export const queryAddress: (a1: number, a2: number) => Promise<string | null> =
 export const queryPlace = async (
   map: google.maps.Map | undefined,
   query: string
-) => {
+): Promise<google.maps.places.PlaceResult[]> => {
   if (query === null) return []
   if (query === '') return []
   if (map === undefined) return []
@@ -100,6 +100,12 @@ export const queryPlace = async (
     }
 
     var service = new google.maps.places.PlacesService(map)
+
+    /**
+     * Search only within the country
+     * Use LocationBias
+     *
+     */
 
     service.findPlaceFromQuery(request, function (results, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK) {

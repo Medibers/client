@@ -10,7 +10,7 @@ type Props = {
 }
 
 const Component: React.FC<Props> = ({ urls, imageStyle = {} }) => {
-  let swiper: any = null
+  let swiper: any = null // eslint-disable-line
 
   const slideOpts = {
     speed: 500,
@@ -27,7 +27,7 @@ const Component: React.FC<Props> = ({ urls, imageStyle = {} }) => {
   const prev = () => swiper && swiper.slidePrev()
 
   return (
-    <>
+    <React.Fragment>
       <IonSlides options={slideOpts}>
         {urls.map((url, i) => (
           <IonSlide key={i}>
@@ -35,9 +35,9 @@ const Component: React.FC<Props> = ({ urls, imageStyle = {} }) => {
           </IonSlide>
         ))}
       </IonSlides>
-      <div onClick={next} className="swiper-button-next"></div>
-      <div onClick={prev} className="swiper-button-prev"></div>
-    </>
+      <div onClick={next} className="swiper-button-next" />
+      <div onClick={prev} className="swiper-button-prev" />
+    </React.Fragment>
   )
 }
 

@@ -4,6 +4,7 @@ import { clearSession, getSessionToken } from 'session'
 import {
   About,
   Account,
+  AddItem,
   CompletedOrder,
   Home,
   Item,
@@ -17,16 +18,14 @@ import {
   Signup1,
   Signup2,
   TCs,
+  UpdateItem,
 } from 'views/pages'
 
-interface IRoute {
-  path: string
-  component: Function
-  isPublic?: boolean
-  preventRedirectWhenSessionAvailable?: true
-}
+import { TRoutes } from './types'
 
-const Routes: Record<string, IRoute> = {
+import supplierRoutes from './suppliers'
+
+const Routes: TRoutes = {
   home: {
     path: '/',
     component: Home,
@@ -63,6 +62,14 @@ const Routes: Record<string, IRoute> = {
     path: '/location',
     component: Location,
   },
+  'item-add': {
+    path: '/items/add',
+    component: AddItem,
+  },
+  'item-update': {
+    path: '/items/update',
+    component: UpdateItem,
+  },
   requests: {
     path: '/requests',
     component: Requests,
@@ -96,6 +103,7 @@ const Routes: Record<string, IRoute> = {
     component: Login,
     isPublic: true,
   },
+  ...supplierRoutes,
 }
 
 export default Routes

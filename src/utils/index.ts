@@ -44,10 +44,14 @@ export const requestStatesMappedToBadgeBackground: {
   received: 'var(--ion-color-primary)',
 }
 
-export const itemState = (available: boolean) =>
+export const getItemState = (available: boolean) =>
   available ? 'Available' : 'Out of stock'
 
 export const indexIsLastInArray = (
   index: number,
   array: Array<unknown>
 ): boolean => index === array.length - 1
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+export const isEmail = (str: string) => emailRegex.test(str)

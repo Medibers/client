@@ -1,0 +1,24 @@
+.input-file::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+.input-file::after {
+  display: none;
+}
+
+.input-file::before {
+  content: 'Tap to select one or more pictures of the item';
+  display: inline-block;
+  width: 99.5%;
+  margin-top: 15px;
+  outline: none;
+  color: var(--ion-color-primary);
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 90%;
+}
+
+.input-file:hover::before,
+.input-file:active::before {
+  background-color: var(--ion-item-color);
+}
