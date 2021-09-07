@@ -13,6 +13,8 @@ import { Header, Menu } from 'components'
 
 import { getLocationPath } from 'app-history'
 
+import { userIsClientUser } from 'utils/role'
+
 import getPageText from 'text'
 import getMenuActions from 'views/pages/menu-actions'
 
@@ -50,14 +52,19 @@ class Home extends React.Component<IHomeProps> {
           <Menu actions={getMenuActions()} />
           <IonContent>
             <IonList className="ion-no-padding">
-              <DeliveryLocation />
-              <IonListHeader lines="full">
-                <IonLabel>
-                  <h3 style={{ fontSize: '105%' }}>
-                    {Text['category-header']}
-                  </h3>
-                </IonLabel>
-              </IonListHeader>
+              {userIsClientUser() ? (
+                <React.Fragment>
+                  <DeliveryLocation />
+                  <IonListHeader lines="full">
+                    <IonLabel>
+                      <h3 style={{ fontSize: '105%' }}>
+                        {Text['category-header']}
+                      </h3>
+                    </IonLabel>
+                  </IonListHeader>
+                </React.Fragment>
+              ) : null}
+
               <Categories />
             </IonList>
           </IonContent>
