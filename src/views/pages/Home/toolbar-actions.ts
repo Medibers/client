@@ -44,5 +44,12 @@ export const getHomeToolbarActions = (): ToolbarAction[] => {
         },
         moreAction,
       ]
-    : [searchAction, moreAction]
+    : [
+        {
+          text: 'Login',
+          handler: () => navigateTo(Routes.login.path),
+        },
+        searchAction,
+        moreAction,
+      ]
 }

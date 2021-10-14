@@ -16,7 +16,7 @@ import {
   IonPage,
 } from '@ionic/react'
 
-import { ellipsisVertical as more } from 'ionicons/icons'
+import { home, ellipsisVertical as more } from 'ionicons/icons'
 
 import { Header, Menu, PhoneInput } from 'components'
 
@@ -25,12 +25,14 @@ import { setSessionPhone, setSessionToken } from 'session'
 
 import { CCs } from 'utils/msisdn'
 
+import Routes, { getDefaultRoute } from 'routes'
+import { redirectTo } from 'app-history'
+
 import getMenuActions from 'views/pages/menu-actions'
 
 import HeadComponent from '../HeadComponent'
 import CreateAccountButton from './CreateAccountButton'
 import ResetPasswordButton from './ResetPasswordButton'
-import { getDefaultRoute } from 'routes'
 
 interface ILoginProps {
   showLoading: () => void
@@ -101,6 +103,12 @@ class Component extends React.Component<ILoginProps> {
   }
 
   toolbarActions = () => [
+    {
+      icon: home,
+      handler: () => {
+        redirectTo(Routes.home.path)
+      },
+    },
     {
       icon: more,
       handler: (event: React.MouseEvent) =>
