@@ -7,20 +7,12 @@ import {
   IonSelectOption,
 } from '@ionic/react'
 
-import { addCircleOutline as add, closeOutline as close } from 'ionicons/icons'
+import { closeOutline as close } from 'ionicons/icons'
 
 import { SearchbarChangeEventDetail } from '@ionic/core'
 import { ToolbarAction } from 'types'
 
 import { platformIsWebBrowser } from 'utils'
-
-import Routes from 'routes'
-import { navigateTo } from 'app-history'
-import { userIsAdmin } from 'utils/role'
-
-// import getPageText from 'text'
-
-// const Text = getPageText('home')
 
 export const getTitle = (
   onSearch: (event: CustomEvent<SearchbarChangeEventDetail>) => void
@@ -51,11 +43,11 @@ export const getSearchToolbarActions = function ({
   itemCategories,
   onCategorySelected,
 }: IToolbarActionsContext): ToolbarAction[] {
-  const toolbarActions: ToolbarAction[] = [
+  return [
     {
       // eslint-disable-next-line react/display-name
       component: () => (
-        <IonButton style={{ textTransform: 'unset' }}>
+        <IonButton slot="start" style={{ textTransform: 'unset' }}>
           <IonSelect
             interfaceOptions={{
               showBackdrop: false,
@@ -82,13 +74,4 @@ export const getSearchToolbarActions = function ({
       handler: () => {},
     },
   ]
-
-  if (userIsAdmin()) {
-    toolbarActions.push({
-      icon: add,
-      handler: () => navigateTo(Routes['item-add'].path, { selectedCategory }),
-    })
-  }
-
-  return toolbarActions
 }

@@ -10,13 +10,14 @@ import { ItemSearchResult as IItemSearchResult } from 'types'
 
 import { hideLoading, showLoading, showToast } from 'store/utils'
 import { getLocationState } from 'app-history'
-import { userIsClientUser } from 'utils/role'
+import { userIsAdmin, userIsClientUser } from 'utils/role'
 
 import { getSearchToolbarActions, getTitle } from './toolbar-actions'
 import { itemCategories } from './utils'
 
 import SearchResults from './SearchResults'
 import PopoverItemDetails from './PopoverItemDetails'
+import AddItemButton from './AddItemButton'
 import SubmitButton from './SubmitButton'
 
 import Context from './context'
@@ -42,6 +43,8 @@ class SearchPage extends React.Component {
     selectedCategory: this.locationState.category || itemCategories[0].value,
     popoverResult: null,
   }
+
+  userIsAdmin = userIsAdmin()
 
   componentDidMount() {
     this.fetchItems('*').then(results => {
@@ -120,7 +123,7 @@ class SearchPage extends React.Component {
               onSelect={this.onSelect}
               onImageClick={this.onImageClick}
             />
-            <SubmitButton />
+            {this.userIsAdmin ? <AddItemButton /> : <SubmitButton />}
           </Context.Provider>
         </IonContent>
         <Popover
