@@ -10,29 +10,49 @@ import history from 'app-history'
 
 import Routes, { getDefaultRoute } from 'routes'
 import { sessionAvailable } from 'session'
+import { userIsAdmin } from 'utils/role'
 
 // Redirect to default home if session available
 const handlePublicRoutes = (
   Component: Function,
   props: RouteComponentProps,
-  preventRedirectWhenSessionAvailable = false
-) =>
-  sessionAvailable() && preventRedirectWhenSessionAvailable === false ? (
-    <Redirect to={getDefaultRoute()} />
-  ) : (
-    <Component {...props} />
-  )
+  redirectWhenSessionAvailable: boolean
+) => {
+  if (sessionAvailable() && redirectWhenSessionAvailable) {
+    return <Redirect to={getDefaultRoute()} />
+  }
+
+  return <Component {...props} />
+}
+
+const userIsAuthorizedForProtectedRoute = (routeIsForAdmin: boolean) =>
+  routeIsForAdmin ? userIsAdmin() : sessionAvailable()
 
 // Redirect to /login if session not available
 const handleProtectedRoutes = (
   Component: Function,
-  props: RouteComponentProps
-) =>
-  sessionAvailable() ? (
+  props: RouteComponentProps,
+  isForAdmin: boolean
+) => {
+  const {
+    location: { pathname, search, state },
+  } = props
+
+  const searchStr =
+    pathname === Routes.login.path ? search : search + '?to=' + pathname
+
+  return userIsAuthorizedForProtectedRoute(isForAdmin) ? (
     <Component {...props} />
   ) : (
-    <Redirect to={Routes.login.path} />
+    <Redirect
+      to={{
+        pathname: Routes.login.path,
+        search: searchStr,
+        state,
+      }}
+    />
   )
+}
 
 const routeValues = Object.values(Routes)
 
@@ -46,7 +66,8 @@ const AppRoutes: React.FC = () => {
               path,
               component: Component,
               isPublic,
-              preventRedirectWhenSessionAvailable,
+              isForAdmins = false,
+              redirectWhenSessionAvailable = false,
             },
             i
           ) => (
@@ -59,9 +80,9 @@ const AppRoutes: React.FC = () => {
                   ? handlePublicRoutes(
                       Component,
                       props,
-                      preventRedirectWhenSessionAvailable
+                      redirectWhenSessionAvailable
                     )
-                  : handleProtectedRoutes(Component, props)
+                  : handleProtectedRoutes(Component, props, isForAdmins)
               }
             />
           )

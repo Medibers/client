@@ -11,7 +11,7 @@ import {
 
 import { Header, Menu } from 'components'
 
-import { getLocationPath } from 'app-history'
+import { getLocationPath, getLocationQueryParameter } from 'app-history'
 
 import { userIsClientUser } from 'utils/role'
 
@@ -34,6 +34,12 @@ class Home extends React.Component<IHomeProps> {
   }
 
   componentDidMount() {
+    const redirectTo = getLocationQueryParameter('to')
+    if (redirectTo) {
+      window.location.replace(redirectTo)
+      return
+    }
+
     const defaultRoute = getDefaultRoute()
     if (getLocationPath() !== defaultRoute) {
       window.location.replace(defaultRoute)
@@ -45,6 +51,7 @@ class Home extends React.Component<IHomeProps> {
 
   render() {
     const { renderContent } = this.state
+
     return (
       renderContent && (
         <IonPage>

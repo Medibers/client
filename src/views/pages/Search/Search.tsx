@@ -44,7 +44,6 @@ class SearchPage extends React.Component {
   }
 
   componentDidMount() {
-    // this.setState({ results: await this.fetchItems('*') })
     this.fetchItems('*').then(results => {
       this.setState({ results })
     })
@@ -55,7 +54,6 @@ class SearchPage extends React.Component {
     if (search === null) return
 
     const { lat, lon } = getDeliveryLocationForNextOrder()
-    // const { setItems, showLoading, hideLoading, showToast } = this.props
 
     showLoading()
     const response = await Requests.get<Array<IItemSearchResult>>(

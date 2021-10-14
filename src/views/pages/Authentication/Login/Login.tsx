@@ -1,7 +1,5 @@
 import React, { FormEvent } from 'react'
 
-import { getDefaultRoute } from 'routes'
-
 import { connect } from 'react-redux'
 import { Dispatch, bindActionCreators } from 'redux'
 
@@ -32,6 +30,7 @@ import getMenuActions from 'views/pages/menu-actions'
 import HeadComponent from '../HeadComponent'
 import CreateAccountButton from './CreateAccountButton'
 import ResetPasswordButton from './ResetPasswordButton'
+import { getDefaultRoute } from 'routes'
 
 interface ILoginProps {
   showLoading: () => void
@@ -67,7 +66,9 @@ class Component extends React.Component<ILoginProps> {
         .then(({ token }) => {
           setSessionToken(token)
           setSessionPhone(phone)
-          window.location.replace(getDefaultRoute(token))
+          window.location.replace(
+            getDefaultRoute(token) + window.location.search
+          )
         })
         .catch(err => {
           showToast(err.error || err.toString())

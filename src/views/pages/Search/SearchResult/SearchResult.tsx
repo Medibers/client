@@ -54,6 +54,8 @@ const Component: React.FC<Props> = ({
     }
   }
 
+  const imageSrc = `${imageServerUrl}${images[0]}`
+
   return (
     <IonItem
       button
@@ -61,11 +63,7 @@ const Component: React.FC<Props> = ({
       onClick={e => onClick(e, 'primary')}
       className="search-result ion-no-padding"
     >
-      <LazyLoad
-        onClick={onImageClick}
-        item={item.name}
-        src={`${imageServerUrl}${images[0]}`}
-      />
+      <LazyLoad onClick={onImageClick} item={item.name} src={imageSrc} />
       <IonGrid
         style={{
           width: `calc(100% - ${imageWrapperWidthSpan}px)`, // Compute what's left after image fills space

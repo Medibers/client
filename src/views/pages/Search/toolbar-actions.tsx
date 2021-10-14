@@ -16,6 +16,7 @@ import { platformIsWebBrowser } from 'utils'
 
 import Routes from 'routes'
 import { navigateTo } from 'app-history'
+import { userIsAdmin } from 'utils/role'
 
 // import getPageText from 'text'
 
@@ -50,7 +51,7 @@ export const getSearchToolbarActions = function ({
   itemCategories,
   onCategorySelected,
 }: IToolbarActionsContext): ToolbarAction[] {
-  return [
+  const toolbarActions: ToolbarAction[] = [
     {
       // eslint-disable-next-line react/display-name
       component: () => (
@@ -80,9 +81,14 @@ export const getSearchToolbarActions = function ({
       ),
       handler: () => {},
     },
-    {
+  ]
+
+  if (userIsAdmin()) {
+    toolbarActions.push({
       icon: add,
       handler: () => navigateTo(Routes['item-add'].path, { selectedCategory }),
-    },
-  ]
+    })
+  }
+
+  return toolbarActions
 }

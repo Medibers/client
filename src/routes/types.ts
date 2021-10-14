@@ -2,7 +2,8 @@ interface IRoute {
   path: string
   component: Function
   isPublic?: boolean
-  preventRedirectWhenSessionAvailable?: true
+  isForAdmins?: true
+  redirectWhenSessionAvailable?: true
 }
 
 export type TRoutes = Record<string, IRoute>

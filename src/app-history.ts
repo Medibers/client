@@ -26,3 +26,8 @@ export const getLocationPath = (): string => history.location.pathname
 
 export const getLocationState = <T = LocationState>(): T =>
   (history.location.state || {}) as T
+
+export const getLocationQueryParameter = (key: string): string | null => {
+  const { search } = window.location
+  return new URLSearchParams(search).get(key)
+}

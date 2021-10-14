@@ -1,5 +1,5 @@
 import decrypt from 'utils/jwt'
-import { clearSession, getSessionToken } from 'session'
+import { getSessionToken } from 'session'
 
 import {
   About,
@@ -29,18 +29,17 @@ const Routes: TRoutes = {
   home: {
     path: '/',
     component: Home,
+    isPublic: true,
   },
   about: {
     path: '/about',
     component: About,
     isPublic: true,
-    preventRedirectWhenSessionAvailable: true,
   },
   tcs: {
     path: '/terms-conditions',
     component: TCs,
     isPublic: true,
-    preventRedirectWhenSessionAvailable: true,
   },
   account: {
     path: '/account',
@@ -49,10 +48,12 @@ const Routes: TRoutes = {
   search: {
     path: '/search',
     component: Search,
+    isPublic: true,
   },
   item: {
     path: '/item',
     component: Item,
+    isPublic: true,
   },
   order: {
     path: '/order',
@@ -65,10 +66,12 @@ const Routes: TRoutes = {
   'item-add': {
     path: '/items/add',
     component: AddItem,
+    isForAdmins: true,
   },
   'item-update': {
     path: '/items/update',
     component: UpdateItem,
+    isForAdmins: true,
   },
   requests: {
     path: '/requests',
@@ -82,26 +85,31 @@ const Routes: TRoutes = {
     path: '/password-reset',
     component: PasswordReset1,
     isPublic: true,
+    redirectWhenSessionAvailable: true,
   },
   passwordReset2: {
     path: '/password-reset/confirm',
     component: PasswordReset2,
     isPublic: true,
+    redirectWhenSessionAvailable: true,
   },
   signup1: {
     path: '/signup1',
     component: Signup1,
     isPublic: true,
+    redirectWhenSessionAvailable: true,
   },
   signup2: {
     path: '/signup2',
     component: Signup2,
     isPublic: true,
+    redirectWhenSessionAvailable: true,
   },
   login: {
     path: '/login',
     component: Login,
     isPublic: true,
+    redirectWhenSessionAvailable: true,
   },
   ...supplierRoutes,
 }
@@ -110,17 +118,12 @@ export default Routes
 
 const RoutesIndexedOnRoles = [
   Routes.home.path,
-  Routes.home.path, // Routes.courier.path,
-  Routes.home.path, // Routes.admin.path,
-  Routes.home.path, // Routes.admin.path,
+  Routes.home.path,
+  Routes.home.path, // Routes.admin.path, // admin
+  Routes.home.path, // Routes.admin.path, // admin
 ]
 
 export const getDefaultRoute = (token = getSessionToken()) => {
   const role = decrypt(token).role as number
-  if (role === undefined) {
-    // Force logout for old client
-    clearSession()
-    window.location.reload()
-  }
-  return RoutesIndexedOnRoles[role - 1]
+  return RoutesIndexedOnRoles[role - 1] || Routes.home.path
 }
