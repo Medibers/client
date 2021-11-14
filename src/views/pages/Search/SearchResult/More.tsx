@@ -2,12 +2,11 @@ import React from 'react'
 import { IonCol, IonLabel, IonRow } from '@ionic/react'
 
 interface IMore {
-  userIsClientUser: boolean
   onClick: (a: React.MouseEvent, b: string) => void
 }
 
-const More: React.FC<IMore> = ({ userIsClientUser, onClick }) => {
-  return userIsClientUser ? (
+const More: React.FC<IMore> = ({ onClick }) => {
+  return (
     <IonRow>
       <IonCol className="ion-no-padding ion-padding-top">
         <IonLabel
@@ -20,7 +19,7 @@ const More: React.FC<IMore> = ({ userIsClientUser, onClick }) => {
         </IonLabel>
       </IonCol>
     </IonRow>
-  ) : null
+  )
 }
 
 export default More

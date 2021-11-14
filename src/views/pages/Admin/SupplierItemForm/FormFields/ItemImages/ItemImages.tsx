@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { IonLabel } from '@ionic/react'
 
 import { ListItem } from 'components'
 import { FormFieldError } from 'components/FormFields'
 
+import { getUploadedImageUrls } from '../../utils'
 import { checkFiles, minHeight, minWidth } from './utils'
 
 import SelectedImages from './SelectedImages'
@@ -16,7 +17,9 @@ const fieldName = 'images'
 const Images: React.FC = () => {
   const { control, errors, setError, watch } = useFormContext()
 
-  const selectedImages: string[] = watch(fieldName)
+  const selectedImages: string[] = getUploadedImageUrls(watch(fieldName))
+
+  const inputRef = useRef<HTMLInputElement>()
 
   const onFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -35,6 +38,10 @@ const Images: React.FC = () => {
     }
 
     controllerOnChange(selectedImages.concat(validFiles || []))
+
+    if (inputRef.current) {
+      inputRef.current.value = ''
+    }
   }
 
   return (
@@ -53,6 +60,7 @@ const Images: React.FC = () => {
               accept="image/png,image/jpg,image/jpeg"
               onChange={event => onFileChange(event, onChange)}
               className="input-file"
+              ref={(node: HTMLInputElement) => (inputRef.current = node)}
             />
           )}
           rules={{
@@ -67,7 +75,7 @@ const Images: React.FC = () => {
             : ''
         }
       />
-      <SelectedImages images={selectedImages} />
+      <SelectedImages fieldName={fieldName} images={selectedImages} />
     </React.Fragment>
   )
 }

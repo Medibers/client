@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Route } from 'react-router'
+import { Route, Switch } from 'react-router'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 
 import { IonRouterOutlet } from '@ionic/react'
@@ -60,35 +60,37 @@ const AppRoutes: React.FC = () => {
   return (
     <IonReactRouter history={history}>
       <IonRouterOutlet>
-        {routeValues.map(
-          (
-            {
-              path,
-              component: Component,
-              isPublic,
-              isForAdmins = false,
-              redirectWhenSessionAvailable = false,
-            },
-            i
-          ) => (
-            <Route
-              exact
-              key={i}
-              path={path}
-              render={props =>
-                isPublic
-                  ? handlePublicRoutes(
-                      Component,
-                      props,
-                      redirectWhenSessionAvailable
-                    )
-                  : handleProtectedRoutes(Component, props, isForAdmins)
-              }
-            />
-          )
-        )}
-        {/* 404s */}
-        <Route render={() => <Redirect to={Routes.home.path} />} />
+        <Switch>
+          {routeValues.map(
+            (
+              {
+                path,
+                component: Component,
+                isPublic,
+                isForAdmins = false,
+                redirectWhenSessionAvailable = false,
+              },
+              i
+            ) => (
+              <Route
+                exact
+                key={i}
+                path={path}
+                render={props =>
+                  isPublic
+                    ? handlePublicRoutes(
+                        Component,
+                        props,
+                        redirectWhenSessionAvailable
+                      )
+                    : handleProtectedRoutes(Component, props, isForAdmins)
+                }
+              />
+            )
+          )}
+          {/* 404s */}
+          <Route render={() => <Redirect to={Routes.home.path} />} />
+        </Switch>
       </IonRouterOutlet>
     </IonReactRouter>
   )

@@ -21,6 +21,7 @@ import AddItemButton from './AddItemButton'
 import SubmitButton from './SubmitButton'
 
 import Context from './context'
+import { sessionAvailable } from 'session'
 
 interface ILocationState {
   items?: Array<IItemSearchResult>
@@ -78,7 +79,7 @@ class SearchPage extends React.Component {
   }
 
   onSelect = (result: IItemSearchResult) => {
-    if (userIsClientUser()) {
+    if (userIsClientUser() || !sessionAvailable()) {
       const { selectedItems } = this.state
       const index = selectedItems.findIndex(item => item._id === result._id)
       if (index < 0) {

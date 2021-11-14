@@ -5,6 +5,10 @@ export const MIN_ITEM_PRICE = 500
 
 export const urlIsDataURL = (url: string = '') => url.startsWith('data:')
 
+export const getUploadedImageUrls = (urls: string[]): string[] => {
+  return urls.filter(url => !url.endsWith('/no-icon.svg'))
+}
+
 export const getItemFormDefaultValues = (
   item?: ISupplierItem
 ): ISupplierItemFormFields => {

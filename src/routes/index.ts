@@ -26,11 +26,6 @@ import { TRoutes } from './types'
 import supplierRoutes from './suppliers'
 
 const Routes: TRoutes = {
-  home: {
-    path: '/',
-    component: Home,
-    isPublic: true,
-  },
   about: {
     path: '/about',
     component: About,
@@ -112,6 +107,11 @@ const Routes: TRoutes = {
     redirectWhenSessionAvailable: true,
   },
   ...supplierRoutes,
+  home: {
+    path: '/',
+    component: Home,
+    isPublic: true,
+  },
 }
 
 export default Routes

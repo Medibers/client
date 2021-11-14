@@ -26,7 +26,7 @@ import { setSessionPhone, setSessionToken } from 'session'
 import { CCs } from 'utils/msisdn'
 
 import Routes, { getDefaultRoute } from 'routes'
-import { redirectTo } from 'app-history'
+import { getLocationQueryParameter, redirectTo } from 'app-history'
 
 import getMenuActions from 'views/pages/menu-actions'
 
@@ -53,30 +53,34 @@ class Component extends React.Component<ILoginProps> {
     this.setState({ [name]: value })
   }
 
-  onSubmit = (event?: FormEvent) => {
+  onSubmit = async (event?: FormEvent) => {
     event && event.preventDefault()
     const { showLoading, hideLoading, showToast, hideToast } = this.props
     const { phone: partPhone, password } = this.state
     if (partPhone && password) {
       hideToast()
       showLoading()
-      const phone = `${CCs.ug.value}${(partPhone || '').trim()}`
-      Requests.post<{ token: string }>(endPoints.login, {
-        phone,
-        secret: password,
+      const phone = `${CCs.ug.value}${String(partPhone || '').trim()}`
+
+      const { token } = await Requests.post<{ token: string }>(
+        endPoints.login,
+        {
+          phone,
+          secret: password,
+        }
+      ).catch(err => {
+        showToast(err.error || err.toString())
+        throw err
       })
-        .then(({ token }) => {
-          setSessionToken(token)
-          setSessionPhone(phone)
-          window.location.replace(
-            getDefaultRoute(token) + window.location.search
-          )
-        })
-        .catch(err => {
-          showToast(err.error || err.toString())
-          throw err
-        })
-        .finally(() => hideLoading())
+
+      hideLoading()
+
+      setSessionToken(token)
+      setSessionPhone(phone)
+
+      const toUrl = getLocationQueryParameter('to') || getDefaultRoute(token)
+
+      window.location.replace(toUrl)
     }
   }
 

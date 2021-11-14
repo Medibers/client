@@ -21,7 +21,8 @@ const Text = getPageText('home')
 export const getHomeToolbarActions = (): ToolbarAction[] => {
   const searchAction = {
     icon: search,
-    handler: () => navigateTo(Routes.search.path),
+    handler: () =>
+      navigateTo(Routes.search.path, { selectedCategory: undefined }),
   }
 
   const moreAction = {

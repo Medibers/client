@@ -16,6 +16,7 @@ import Description from './Description'
 import Price from './Price'
 import Available from './Available'
 import More from './More'
+import { sessionAvailable } from 'session'
 
 export type Props = {
   selected: boolean
@@ -37,11 +38,12 @@ const Component: React.FC<Props> = ({
   const { item, price, images } = result
 
   const isClientUser = useMemo(userIsClientUser, [])
+  const sessionNotAvailable = !useMemo(sessionAvailable, [])
 
   const onClick = (event: React.MouseEvent, action: string) => {
     switch (action) {
       case 'primary':
-        if (isClientUser) {
+        if (isClientUser || sessionNotAvailable) {
           onSelect(result)
         } else {
           onMore(result)
@@ -73,7 +75,9 @@ const Component: React.FC<Props> = ({
         <Description description={result.item.description} />
         <Price price={formatMoney(price)} />
         <Available available={result.available} />
-        <More userIsClientUser={isClientUser} onClick={onClick} />
+        {isClientUser || sessionNotAvailable ? (
+          <More onClick={onClick} />
+        ) : null}
       </IonGrid>
       <IonIcon
         className="ion-icon-primary"

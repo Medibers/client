@@ -8,7 +8,7 @@ import { Header } from 'components'
 
 import { getItemState } from 'utils'
 import { formatMoney } from 'utils/currency'
-import { userIsClientUser } from 'utils/role'
+import { userIsAdmin } from 'utils/role'
 
 import Routes from 'routes'
 import { getLocationState, navigateTo } from 'app-history'
@@ -24,9 +24,8 @@ interface IItemProps {
   }
 }
 
-const toolbarActions = userIsClientUser()
-  ? undefined
-  : [
+const toolbarActions = userIsAdmin()
+  ? [
       {
         icon: edit,
         handler: () => {
@@ -34,6 +33,7 @@ const toolbarActions = userIsClientUser()
         },
       },
     ]
+  : undefined
 
 class Component extends React.Component<IItemProps> {
   title = this.props.location.state.item
