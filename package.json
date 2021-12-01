@@ -28,7 +28,7 @@
     "@types/sharedworker": "0.0.29",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.0.6",
     "babel-plugin-named-asset-import": "^0.3.4",
