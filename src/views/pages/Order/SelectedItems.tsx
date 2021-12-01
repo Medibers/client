@@ -1,30 +1,23 @@
 import React, { useContext } from 'react'
 
-import { IonButton, IonItem, IonLabel, IonList } from '@ionic/react'
+import { IonItem, IonLabel, IonList } from '@ionic/react'
 
 import SelectedItem from './SelectedItem'
 
 import Context from './context'
 
-import { addItemIonButtonStyle } from './styles'
 import { formatMoney } from 'utils/currency'
 
 const ionItemStyle = { height: '20px' }
 
 const SelectedItems: React.FC = () => {
-  const {
-    cost: itemCost,
-    deliveryFee,
-    selectedItems,
-    onModifyCart,
-  } = useContext(Context)
+  const { cost: itemCost, deliveryFee, selectedItems } = useContext(Context)
 
   const totalCost = itemCost + (deliveryFee || 0)
 
   return (
     <IonItem>
       <IonLabel>
-        <p>Cart</p>
         <IonList className="ion-no-margin ion-no-padding">
           {selectedItems.map(({ _id, item, price, quantity }) => (
             <SelectedItem
@@ -35,16 +28,6 @@ const SelectedItems: React.FC = () => {
               quantity={quantity}
             />
           ))}
-          <IonItem lines="none" className="ion-no-padding mini-list-item">
-            <IonButton
-              onClick={onModifyCart}
-              color="secondary"
-              slot="end"
-              style={addItemIonButtonStyle}
-            >
-              Modify Cart
-            </IonButton>
-          </IonItem>
           <IonItem
             lines="none"
             className="ion-no-padding mini-list-item"

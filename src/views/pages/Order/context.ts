@@ -10,7 +10,6 @@ interface IOrderContext {
   locationNotAvailable: boolean
   contacts: Array<IOrderDeliveryContact>
   onModifyItemQuantity: (itemId: string, quantity: number) => void
-  onModifyCart: () => void
   onSelectDestination: () => void
   onSetContacts: (a: Array<IOrderDeliveryContact>) => void
 }
@@ -22,7 +21,6 @@ const Context = React.createContext<IOrderContext>({
   contacts: [],
   locationNotAvailable: true,
   onModifyItemQuantity: () => null,
-  onModifyCart: () => null,
   onSelectDestination: () => null,
   onSetContacts: () => null,
 })

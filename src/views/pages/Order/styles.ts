@@ -1,8 +1,3 @@
-export const addItemIonButtonStyle = {
-  height: '20px',
-  fontSize: '70%',
-}
-
 export const ionButtonStyle = {
   width: '20px',
   height: '20px',

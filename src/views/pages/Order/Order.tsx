@@ -100,7 +100,7 @@ const Component: React.FC<IOrderProps> = props => {
 
   const mapRef = useRef<google.maps.Map | null>(null)
 
-  const onModifyCart = () => {
+  const onGoToCart = () => {
     redirectTo(Routes.search.path, {
       items: selectedItems,
     })
@@ -197,6 +197,13 @@ const Component: React.FC<IOrderProps> = props => {
     }
   }
 
+  const toolbarActions = [
+    {
+      text: 'Go to Cart',
+      handler: onGoToCart,
+    },
+  ]
+
   useEffect(() => {
     getDeliveryFeeAndDistance()
     locationNotAvailableRef.current = lat === undefined || lon === undefined
@@ -210,17 +217,16 @@ const Component: React.FC<IOrderProps> = props => {
     locationNotAvailable,
     contacts,
     onModifyItemQuantity,
-    onModifyCart,
     onSelectDestination,
     onSetContacts: setContacts,
   }
 
   return (
     <IonPage className="order">
-      <Header title={title} />
+      <Header title={title} actions={toolbarActions} />
       <Context.Provider value={context}>
         <IonContent>
-          <IonList lines="full">
+          <IonList lines="full" className="ion-no-padding">
             <SelectedItems />
             <DeliveryLocation />
             <DeliveryContact />
