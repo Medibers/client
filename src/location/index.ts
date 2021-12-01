@@ -97,6 +97,7 @@ export const queryPlace = async (
     var request = {
       query,
       fields: ['name', 'geometry'],
+      locationBias: 'IP_BIAS',
     }
 
     var service = new google.maps.places.PlacesService(map)

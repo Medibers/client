@@ -1,5 +1,4 @@
 import React from 'react'
-import { History } from 'history'
 
 import {
   IonButton,
@@ -18,6 +17,7 @@ import { queryAddress, queryPlace } from 'location'
 import { closeSharp, search } from 'ionicons/icons'
 
 import { Location as LocationInterface } from 'types'
+import { goBack } from 'app-history'
 
 const title = 'Delivery Location'
 const primaryAction = 'Select Location'
@@ -39,14 +39,14 @@ const searchResultsDivStyle: Object = {
 
 const searchPlaceholder = 'Search by address'
 
-class Component extends React.Component<{ history: History }> {
-  state: {
-    searchText: string
-    location: LocationInterface | null
-    searchShown: Boolean
-    results: Array<google.maps.places.PlaceResult>
-  } = {
-    searchText: '',
+interface IState {
+  location: LocationInterface | null
+  searchShown: Boolean
+  results: Array<google.maps.places.PlaceResult>
+}
+
+class Component extends React.Component {
+  state: IState = {
     location: null,
     searchShown: false,
     results: [],
@@ -59,7 +59,7 @@ class Component extends React.Component<{ history: History }> {
       const address = await queryAddress(lat, lon)
       setDeliveryLocation({ lat, lon, address })
     }
-    this.props.history.goBack()
+    goBack()
   }
 
   setLocation = (location: LocationInterface) => this.setState({ location })
@@ -73,7 +73,7 @@ class Component extends React.Component<{ history: History }> {
 
   onSearch = async (value: string) => {
     const results = await queryPlace(this.map, value)
-    this.setState({ searchText: value, results })
+    this.setState({ results })
   }
 
   onPlacesResultClick = (result: google.maps.places.PlaceResult) => {
@@ -81,8 +81,7 @@ class Component extends React.Component<{ history: History }> {
     this.setState({ results: [] })
   }
 
-  onIonCancel = () =>
-    this.setState({ searchShown: false, searchText: '', results: [] })
+  onIonCancel = () => this.setState({ searchShown: false, results: [] })
 
   toolbarActions = (searchShown: Boolean) =>
     searchShown
@@ -110,7 +109,6 @@ class Component extends React.Component<{ history: History }> {
         '--icon-color': 'var(--ion-color-primary)',
         '--color': 'var(--ion-color-primary)',
       }}
-      value={this.state.searchText}
       placeholder={searchPlaceholder}
       className="searchbar searchbar-location ion-no-padding"
       clearIcon="no-icon"
