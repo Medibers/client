@@ -8,9 +8,7 @@ export const getItemFormDefaultValues = (
   const values: IItemFormFields = {
     category: null,
     name: null,
-    description: null,
     specification: null,
-    more: [],
     unit: null,
   }
 
@@ -21,9 +19,7 @@ export const getItemFormDefaultValues = (
   if (state && state.item) {
     values.category = state.item.category
     values.name = state.item.name
-    values.description = state.item.description.join('\n')
     values.specification = (state.item.specification || []).join('\n')
-    // values.more = state.item.more
     values.unit = state.unit._id
   }
 

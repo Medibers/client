@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 
 import { IonContent, IonPage } from '@ionic/react'
-import { Header } from 'components'
+import { ContentHeader, Header } from 'components'
 
-import ContentHeader from '../ContentHeader'
 import ItemForm from './ItemForm'
 
 import { IItemFormFields } from './types'

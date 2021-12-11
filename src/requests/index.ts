@@ -1,4 +1,5 @@
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { QueryClient } from 'react-query'
 import { getSessionToken, sessionAvailable } from 'session'
 
 const defaultHeaders = {
@@ -80,7 +81,8 @@ export const endPoints = {
   signup2: '/user/register',
   'password-reset-1': '/user/password-reset',
   'password-reset-2': '/user/password-reset/confirm',
-  'item-search': '/items/search',
+  'item-search': (id?: string) =>
+    id ? `/items/search/${id}` : '/items/search',
   'item-requests': '/item-request',
   'item-requests-delivery-details': '/item-request/delivery-details',
   credits: '/credits',
@@ -92,6 +94,14 @@ export const endPoints = {
   faqs: '/docs/faqs.json',
   tcs: '/docs/tcs.md',
   suppliers: '/suppliers',
+  supplier: (id: string) => `/suppliers/${id}`,
   items: '/items',
-  supplierItems: (supplierId: string) => `/suppliers/${supplierId}/items`,
+  supplierItems: (supplierId: string, supplierItemId?: string) =>
+    supplierItemId
+      ? `/suppliers/${supplierId}/items/${supplierItemId}`
+      : `/suppliers/${supplierId}/items`,
 }
+
+export const queryClient = new QueryClient()
+
+export * from './hooks'

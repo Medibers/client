@@ -15,20 +15,13 @@ export const getItemFormDefaultValues = (
   const values: ISupplierItemFormFields = {
     item: null,
     price: null,
-    'country-origin': null,
     images: [],
   }
 
   if (item) {
-    const {
-      _id: itemId,
-      price,
-      'country-origin': countryOrigin,
-      images = [],
-    } = item
+    const { _id: itemId, price, images = [] } = item
     values.item = itemId
     values.price = price
-    values['country-origin'] = countryOrigin
     values.images = images
   }
 

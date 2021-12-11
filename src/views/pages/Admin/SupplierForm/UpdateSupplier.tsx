@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 
 import { ISupplier } from 'views/pages/Admin/types'
 import { ISupplierFormFields } from './types'
@@ -13,20 +13,22 @@ import Requests, { endPoints } from 'requests'
 import Routes from 'routes'
 import { redirectTo } from 'app-history'
 
-import { showToast } from 'store/utils'
-import { getLocationState } from 'app-history'
+import { setSupplier, showToast } from 'store/utils'
+import SupplierDataWrapper from 'components/DataWrapper/Supplier'
 
-const UpdateSupplier: React.FC = () => {
+interface IUpdateSupplier {
+  supplier: ISupplier
+}
+
+const UpdateSupplier: React.FC<IUpdateSupplier> = ({ supplier }) => {
   const [submitting, setSubmitting] = useState(false)
-
-  const supplier = useMemo(() => getLocationState<ISupplier>(), [])
 
   const onSubmit = (values: ISupplierFormFields) => {
     setSubmitting(true)
-    Requests.put(`${endPoints.suppliers}/${supplier._id}`, values)
-      .then(() => {
-        setSubmitting(false)
+    Requests.put<ISupplier[]>(`${endPoints.suppliers}/${supplier._id}`, values)
+      .then(([updatedSupplier]) => {
         showToast('Supplier details updated')
+        setSupplier(updatedSupplier)
         redirectTo(Routes.suppliers.path)
       })
       .catch(error => {
@@ -49,4 +51,4 @@ const UpdateSupplier: React.FC = () => {
   )
 }
 
-export default UpdateSupplier
+export default SupplierDataWrapper(UpdateSupplier, 'supplier-update')

@@ -45,11 +45,6 @@ const Routes: TRoutes = {
     component: Search,
     isPublic: true,
   },
-  item: {
-    path: '/item',
-    component: Item,
-    isPublic: true,
-  },
   order: {
     path: '/order',
     component: Order,
@@ -58,15 +53,22 @@ const Routes: TRoutes = {
     path: '/location',
     component: Location,
   },
+  'item-update': {
+    path: '/items/:id/update',
+    getPath: (id: string) => `/items/${id}/update`,
+    component: UpdateItem,
+    isForAdmins: true,
+  },
   'item-add': {
     path: '/items/add',
     component: AddItem,
     isForAdmins: true,
   },
-  'item-update': {
-    path: '/items/update',
-    component: UpdateItem,
-    isForAdmins: true,
+  item: {
+    path: '/items/:id',
+    getPath: (id: string) => `/items/${id}`,
+    component: Item,
+    isPublic: true,
   },
   requests: {
     path: '/requests',

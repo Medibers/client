@@ -2,9 +2,8 @@ import React from 'react'
 
 import { IonContent, IonItem, IonPage } from '@ionic/react'
 import { addCircleOutline as add } from 'ionicons/icons'
-import { Header } from 'components'
+import { ContentHeader, Header } from 'components'
 
-import ContentHeader from '../ContentHeader'
 import SupplierList from './SupplierList'
 
 import { useGetSuppliers } from 'views/pages/Admin/hooks'

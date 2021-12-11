@@ -24,10 +24,7 @@ export interface IItem {
   _id: string
   name: string
   category: string
-  description: Array<string>
-  specification?: Array<string>
-  more?: Array<string>
-  'country-origin': string
+  specification: Array<string>
 }
 
 export interface ItemSearchResult {

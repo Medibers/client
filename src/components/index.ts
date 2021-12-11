@@ -15,6 +15,7 @@ import MapContainer from './MapContainer'
 import MSISDNModify from './MSISDNModify'
 import Select from './Select'
 import FormFieldError from './FormFields/FormFieldError'
+import ContentHeader from './ContentHeader'
 
 export {
   Header,
@@ -34,4 +35,5 @@ export {
   MSISDNModify,
   Select,
   FormFieldError,
+  ContentHeader,
 }

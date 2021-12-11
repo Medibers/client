@@ -1,13 +1,15 @@
 import React from 'react'
 import { IonCol, IonLabel, IonRow } from '@ionic/react'
 
-const Description: React.FC<{ description: string[] }> = ({ description }) => {
+const Specification: React.FC<{ specification: string[] }> = ({
+  specification,
+}) => {
   return (
     <IonRow>
       <IonCol className="ion-no-padding">
         <IonLabel>
           <p>
-            {description.map(
+            {specification.map(
               (text, i, a) => `${text}${a.length - 1 === i ? '' : ', '}`
             )}
           </p>
@@ -17,4 +19,4 @@ const Description: React.FC<{ description: string[] }> = ({ description }) => {
   )
 }
 
-export default Description
+export default Specification

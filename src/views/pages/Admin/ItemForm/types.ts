@@ -3,9 +3,7 @@ import { ItemSearchResult as IItemSearchResult } from 'types'
 export interface IItemFormFields {
   category: string | null
   name: string | null
-  description: string | null
   specification: string | null
-  more: string[]
   unit: string | null
 }
 

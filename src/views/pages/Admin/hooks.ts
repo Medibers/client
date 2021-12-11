@@ -32,7 +32,8 @@ export const useGetSupplierItems = (
   const { pathname: locationPath } = useLocation()
 
   useEffect(() => {
-    locationPath === Routes.supplier.path &&
+    locationPath ===
+      (Routes.supplier.getPath && Routes.supplier.getPath(supplierId)) &&
       supplierId &&
       Requests.get<ISupplierItem[]>(
         endPoints.supplierItems(supplierId) + '?returnPricesRaw=true'

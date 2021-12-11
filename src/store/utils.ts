@@ -1,6 +1,8 @@
 import store from './store'
 
 import * as constants from 'reducers/constants'
+import { ItemSearchResult } from 'types'
+import { ISupplier, ISupplierItem } from 'views/pages/Admin/types'
 
 export const showLoading = () => {
   store.dispatch({ type: constants.SHOW_LOADING })
@@ -24,4 +26,16 @@ export const showMenu = (event: Event, id?: string) => {
 
 export const hideMenu = () => {
   store.dispatch({ type: constants.HIDE_MENU })
+}
+
+export const setSearchResult = (payload: ItemSearchResult) => {
+  store.dispatch({ type: constants.SET_SEARCH_RESULT, payload })
+}
+
+export const setSupplier = (payload: ISupplier) => {
+  store.dispatch({ type: constants.SET_SUPPLIER, payload })
+}
+
+export const setSupplierItem = (payload: ISupplierItem) => {
+  store.dispatch({ type: constants.SET_SUPPLIER_ITEM, payload })
 }

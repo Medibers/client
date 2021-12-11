@@ -15,18 +15,20 @@ const routes: TRoutes = {
     component: Suppliers,
     isForAdmins: true,
   },
-  supplier: {
-    path: '/supplier',
-    component: Supplier,
-    isForAdmins: true,
-  },
   'supplier-add': {
     path: '/suppliers/add',
     component: AddSupplier,
     isForAdmins: true,
   },
+  supplier: {
+    path: '/suppliers/:id',
+    getPath: (id: string) => `/suppliers/${id}`,
+    component: Supplier,
+    isForAdmins: true,
+  },
   'supplier-update': {
-    path: '/suppliers/update',
+    path: '/suppliers/:id/update',
+    getPath: (id: string) => `/suppliers/${id}/update`,
     component: UpdateSupplier,
     isForAdmins: true,
   },
@@ -36,7 +38,9 @@ const routes: TRoutes = {
     isForAdmins: true,
   },
   'supplier-item-update': {
-    path: '/suppliers/items/update',
+    path: '/suppliers/:supplierId/items/:supplierItemId/update',
+    getPath: (supplierId: string, supplierItemId?: string) =>
+      `/suppliers/${supplierId}/items/${supplierItemId}/update`,
     component: UpdateSupplierItem,
     isForAdmins: true,
   },

@@ -12,7 +12,7 @@ import { wrapperWidthSpan as imageWrapperWidthSpan } from 'components/LazyLoad'
 import { userIsClientUser } from 'utils/role'
 
 import Name from './Name'
-import Description from './Description'
+import Specification from './Specification'
 import Price from './Price'
 import Available from './Available'
 import More from './More'
@@ -72,7 +72,7 @@ const Component: React.FC<Props> = ({
         }}
       >
         <Name name={item.name} />
-        <Description description={result.item.description} />
+        <Specification specification={result.item.specification} />
         <Price price={formatMoney(price)} />
         <Available available={result.available} />
         {isClientUser || sessionNotAvailable ? (

@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react'
 
 import { IonContent, IonItem, IonPage } from '@ionic/react'
-import { Header } from 'components'
+import { ContentHeader, Header } from 'components'
 
-import ContentHeader from '../ContentHeader'
 import SupplierItemForm from './SupplierItemForm'
 
 // import { ILocationState, ISupplierItemFormFields } from './types'

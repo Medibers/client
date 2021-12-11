@@ -1,17 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import { IonList } from '@ionic/react'
 
+import { indexIsLastInArray } from 'utils'
+
 import SupplierItemListItem from './SupplierItemListItem'
 
-import { indexIsLastInArray } from 'utils'
-import { ISupplierItem } from 'views/pages/Admin/types'
+import { SupplierContext } from './Supplier'
 
-interface ISupplierList {
-  items: ISupplierItem[]
-}
+const SupplierItemList: React.FC = () => {
+  const { items } = useContext(SupplierContext)
 
-const SupplierItemList: React.FC<ISupplierList> = ({ items }) => {
   return (
     <IonList lines="full" className="ion-no-padding">
       {items.map((item, i, a) => (

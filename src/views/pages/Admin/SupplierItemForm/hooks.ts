@@ -8,32 +8,7 @@ import { useDebounce } from 'views/pages/Admin/utils'
 
 export const useGetItems = (searchStr: string | null): [boolean, IItem[]] => {
   const [fetching, setFetching] = useState(true)
-  const [items, setItems] = useState<IItem[]>([
-    {
-      _id: '1',
-      name: 'Aaaa',
-      category: '',
-      description: [],
-      'icon-urls': [],
-      'country-origin': '',
-    },
-    {
-      _id: '2',
-      name: 'Abaa',
-      category: '',
-      description: [],
-      'icon-urls': [],
-      'country-origin': '',
-    },
-    {
-      _id: '3',
-      name: 'Acaa',
-      category: '',
-      description: [],
-      'icon-urls': [],
-      'country-origin': '',
-    },
-  ])
+  const [items, setItems] = useState<IItem[]>([])
 
   const debouncedSearchStr = useDebounce(searchStr || '') // Debounce this
 

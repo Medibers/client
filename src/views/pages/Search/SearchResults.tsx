@@ -7,6 +7,7 @@ import { ItemSearchResult as IItemSearchResult } from 'types'
 
 import { itemCategories } from './utils'
 
+import { setSearchResult } from 'store/utils'
 import { navigateTo } from 'app-history'
 import Routes from 'routes'
 
@@ -47,7 +48,10 @@ const SearchResults: React.FC<ISearchResults> = ({
     selectedItems.findIndex(item => item._id === result._id) > -1
 
   const onMore = (result: IItemSearchResult) => {
-    navigateTo(Routes.item.path, result)
+    setSearchResult(result)
+    if (Routes.item.getPath) {
+      navigateTo(Routes.item.getPath(result._id))
+    }
   }
 
   const resultsShown = computeResultsShown(results || [])

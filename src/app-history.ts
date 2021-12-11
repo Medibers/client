@@ -1,4 +1,5 @@
 import { LocationState, createBrowserHistory } from 'history'
+import { useRouteMatch } from 'react-router'
 
 const history = createBrowserHistory()
 
@@ -30,4 +31,9 @@ export const getLocationState = <T = LocationState>(): T =>
 export const getLocationQueryParameter = (key: string): string | null => {
   const { search } = window.location
   return new URLSearchParams(search).get(key)
+}
+
+export const useGetRouteParams = <T>(url: string): T => {
+  const match = useRouteMatch<T>(url)
+  return match ? match.params : ({} as T)
 }

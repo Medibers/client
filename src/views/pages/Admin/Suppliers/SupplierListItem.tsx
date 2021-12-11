@@ -9,7 +9,7 @@ import { ISupplier } from 'views/pages/Admin/types'
 import Routes from 'routes'
 
 import { getLocationState, navigateTo } from 'app-history'
-import { showMenu } from 'store/utils'
+import { setSupplier, showMenu } from 'store/utils'
 
 interface ISupplierListItem {
   supplier: ISupplier
@@ -21,7 +21,10 @@ const SupplierListItem: React.FC<ISupplierListItem> = ({
   isLast,
 }) => {
   const handleOverallClick = () => {
-    navigateTo(Routes.supplier.path, supplier)
+    if (Routes.supplier.getPath) {
+      setSupplier(supplier)
+      navigateTo(Routes.supplier.getPath(supplier._id))
+    }
   }
 
   const handleMoreClick = (event: React.MouseEvent) => {
@@ -40,8 +43,10 @@ const SupplierListItem: React.FC<ISupplierListItem> = ({
     {
       text: 'Edit Supplier',
       handler: () => {
-        const supplier = getLocationState<ISupplier>()
-        navigateTo(Routes['supplier-update'].path, supplier)
+        if (Routes['supplier-update'].getPath) {
+          setSupplier(supplier)
+          navigateTo(Routes['supplier-update'].getPath(supplier._id))
+        }
       },
     },
   ]

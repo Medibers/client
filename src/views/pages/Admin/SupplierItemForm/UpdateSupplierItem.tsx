@@ -1,34 +1,57 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 
 import { IonContent, IonItem, IonPage } from '@ionic/react'
-import { Header } from 'components'
+import { pencil } from 'ionicons/icons'
 
-import ContentHeader from '../ContentHeader'
+import { ContentHeader, Header } from 'components'
+
 import SupplierItemForm from './SupplierItemForm'
 
 import { ISupplierItem } from '../types'
 import { ISupplierItemFormFields } from './types'
-// import { ILocationState, ISupplierItemFormFields } from './types'
 
+import Routes from 'routes'
 import Requests, { endPoints } from 'requests'
-import { getLocationState, goBack } from 'app-history'
+import { goBack, navigateTo } from 'app-history'
 
-import { hideLoading, showLoading, showToast } from 'store/utils'
+import {
+  hideLoading,
+  setSearchResult,
+  showLoading,
+  showToast,
+} from 'store/utils'
 
-const UpdateSupplierItem: React.FC = () => {
-  const supplierItem = useMemo(() => getLocationState<ISupplierItem>(), [])
+import SupplierItemDataWrapper from 'components/DataWrapper/SupplierItem'
 
-  if (!supplierItem) return null
+interface IUpdateSupplierItem {
+  item: ISupplierItem
+}
 
+const getToolbarActions = (supplierItemId: string) => {
+  return [
+    {
+      icon: pencil,
+      handler: () => {
+        if (Routes['item-update'].getPath) {
+          navigateTo(Routes['item-update'].getPath(supplierItemId))
+        }
+      },
+    },
+  ]
+}
+
+const UpdateSupplierItem: React.FC<IUpdateSupplierItem> = ({
+  item: supplierItem,
+}) => {
   const onSubmit = (values: ISupplierItemFormFields) => {
     showLoading()
-    Requests.put(
-      endPoints.supplierItems(supplierItem.pharmacy._id) +
-        `/${supplierItem._id}`,
+    Requests.put<ISupplierItem[]>(
+      endPoints.supplierItems(supplierItem.pharmacy._id, supplierItem._id),
       values
     )
-      .then(() => {
+      .then(([updatedSupplierItem]) => {
         showToast('Item details updated')
+        setSearchResult(updatedSupplierItem)
         goBack()
       })
       .catch(error => {
@@ -40,7 +63,11 @@ const UpdateSupplierItem: React.FC = () => {
 
   return (
     <IonPage>
-      <Header title={supplierItem.item.name} size="small" />
+      <Header
+        title={supplierItem.item.name}
+        size="small"
+        actions={getToolbarActions(supplierItem._id)}
+      />
       <IonContent>
         <IonItem className="ion-no-margin" lines="none">
           <ContentHeader
@@ -53,4 +80,7 @@ const UpdateSupplierItem: React.FC = () => {
   )
 }
 
-export default UpdateSupplierItem
+export default SupplierItemDataWrapper(
+  UpdateSupplierItem,
+  'supplier-item-update'
+)

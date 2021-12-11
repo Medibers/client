@@ -3,13 +3,13 @@ import { FormProvider, useForm } from 'react-hook-form'
 
 import { IonButton, IonList } from '@ionic/react'
 
-import { IItem } from 'types'
+import { ItemSearchResult } from 'types'
 import { IItemFormFields, ILocationState } from './types'
 import { getItemFormDefaultValues } from './utils'
 
 import ItemCategory from './FormFields/ItemCategory'
 import ItemName from './FormFields/ItemName'
-import ItemDescription from './FormFields/ItemDescription'
+// import ItemDescription from './FormFields/ItemDescription'
 import ItemSpecifications from './FormFields/ItemSpecifications'
 import ItemUnit from './FormFields/ItemUnit'
 
@@ -18,19 +18,19 @@ import { useGetCategories, useGetUnits } from './hooks'
 import { getLocationState } from 'app-history'
 
 interface IItemForm {
-  item?: IItem
+  result?: ItemSearchResult
   disabled: boolean
   onSubmit: (values: IItemFormFields) => void
 }
 
-const ItemForm: React.FC<IItemForm> = ({ onSubmit, disabled, item }) => {
+const ItemForm: React.FC<IItemForm> = ({ onSubmit, disabled, result }) => {
   const state = useMemo<ILocationState>(
     () => getLocationState() as ILocationState,
     []
   )
 
   const methods = useForm<IItemFormFields>({
-    defaultValues: getItemFormDefaultValues(state),
+    defaultValues: getItemFormDefaultValues({ ...state, ...result }),
   })
 
   const categories = useGetCategories()
@@ -40,9 +40,8 @@ const ItemForm: React.FC<IItemForm> = ({ onSubmit, disabled, item }) => {
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <IonList className="ion-margin-vertical" lines="full">
-          <ItemCategory disabled={disabled} categories={categories} />
           <ItemName disabled={disabled} />
-          <ItemDescription disabled={disabled} />
+          <ItemCategory disabled={disabled} categories={categories} />
           <ItemSpecifications disabled={disabled} />
           <ItemUnit disabled={disabled} units={units} />
         </IonList>

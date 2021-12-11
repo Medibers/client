@@ -1,73 +1,72 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { IonContent, IonItem, IonLabel, IonList, IonPage } from '@ionic/react'
 import { pencil as edit } from 'ionicons/icons'
 
 import { ItemSearchResult } from 'types'
 
-import { Header } from 'components'
+import { ContentHeader, Header } from 'components'
 
 import { getItemState } from 'utils'
 import { formatMoney } from 'utils/currency'
 import { userIsAdmin } from 'utils/role'
 
 import Routes from 'routes'
-import { getLocationState, navigateTo } from 'app-history'
+import { navigateTo } from 'app-history'
+
+import SearchResultDataWrapper from 'components/DataWrapper/SearchResult'
 
 import Images from './Images'
 import ListedDetails from './ListedDetails'
-import CountryOrigin from './CountryOrigin'
-import Description from './Description'
+import { setSupplierItem } from 'store/utils'
 
-interface IItemProps {
-  location: {
-    state: ItemSearchResult
-  }
+interface IItem {
+  result: ItemSearchResult
 }
 
-const toolbarActions = userIsAdmin()
-  ? [
-      {
-        icon: edit,
-        handler: () => {
-          navigateTo(Routes['item-update'].path, getLocationState())
+const Item: React.FC<IItem> = ({ result }) => {
+  const { item, price, images, available } = result
+
+  const toolbarActions = useMemo(() => {
+    if (userIsAdmin()) {
+      return [
+        {
+          icon: edit,
+          handler: () => {
+            if (Routes['supplier-item-update'].getPath) {
+              setSupplierItem(result)
+              navigateTo(
+                Routes['supplier-item-update'].getPath(
+                  result.pharmacy._id,
+                  result._id
+                )
+              )
+            }
+          },
         },
-      },
-    ]
-  : undefined
+      ]
+    }
+  }, [result])
 
-class Component extends React.Component<IItemProps> {
-  title = this.props.location.state.item
-    ? this.props.location.state.item.name
-    : 'Unknown item'
-
-  render() {
-    const { item, price, images, available } = this.props.location.state || {}
-
-    return (
-      <IonPage>
-        <Header title={this.title} actions={toolbarActions} />
-        {item ? (
-          <IonContent className="ion-padding">
-            <IonList lines="none">
-              <Images urls={images} />
-              <IonItem className="ion-no-padding ion-margin-top">
-                <IonLabel>
-                  <h4>
-                    <b>{formatMoney(price)}</b>
-                  </h4>
-                  <h4>{getItemState(available)}</h4>
-                </IonLabel>
-              </IonItem>
-              <Description description={item.description} />
-              <ListedDetails details={item.specification} />
-              <ListedDetails details={item.more} />
-              <CountryOrigin country={item['country-origin']} />
-            </IonList>
-          </IonContent>
-        ) : null}
-      </IonPage>
-    )
-  }
+  return (
+    <IonPage>
+      <Header size="small" title={result.item.name} actions={toolbarActions} />
+      <IonContent className="ion-padding">
+        <ContentHeader message={`Supplied by ${result.pharmacy.name}`} />
+        <IonList lines="none">
+          <Images urls={images} />
+          <IonItem className="ion-no-padding ion-margin-top">
+            <IonLabel>
+              <h4>
+                <b>{formatMoney(price)}</b>
+              </h4>
+              <h4>{getItemState(available)}</h4>
+            </IonLabel>
+          </IonItem>
+          <ListedDetails details={item.specification} />
+        </IonList>
+      </IonContent>
+    </IonPage>
+  )
 }
 
-export default Component
+export default SearchResultDataWrapper(Item, 'item')

@@ -3,9 +3,8 @@ import React, { useState } from 'react'
 import { ISupplierFormFields } from './types'
 
 import { IonContent, IonPage } from '@ionic/react'
-import { Header } from 'components'
+import { ContentHeader, Header } from 'components'
 
-import ContentHeader from '../ContentHeader'
 import SupplierForm from './SupplierForm'
 
 import Requests, { endPoints } from 'requests'

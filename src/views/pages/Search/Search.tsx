@@ -61,7 +61,7 @@ class SearchPage extends React.Component {
 
     showLoading()
     const response = await Requests.get<Array<IItemSearchResult>>(
-      endPoints['item-search'],
+      endPoints['item-search'](),
       {
         params: { search, lat, lon },
       }

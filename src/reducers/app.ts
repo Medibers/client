@@ -1,5 +1,6 @@
 import produce from 'immer'
-import { Action, ItemRequest } from 'types'
+import { Action, ItemRequest, ItemSearchResult } from 'types'
+import { ISupplier, ISupplierItem } from 'views/pages/Admin/types'
 
 import * as constants from './constants'
 
@@ -8,6 +9,9 @@ export interface State {
   toast?: string
   menu?: { id?: string; event: Event }
   requests: Array<ItemRequest> | null
+  searchResult?: ItemSearchResult
+  supplier?: ISupplier
+  supplierItem?: ISupplierItem
 }
 
 const initialState: State = {
@@ -51,6 +55,18 @@ export default (state = initialState, action: Action) =>
         draft.requests[
           draft.requests.findIndex(({ _id }) => _id === action.payload._id)
         ] = action.payload
+        break
+      }
+      case constants.SET_SEARCH_RESULT: {
+        draft.searchResult = action.payload
+        break
+      }
+      case constants.SET_SUPPLIER: {
+        draft.supplier = action.payload
+        break
+      }
+      case constants.SET_SUPPLIER_ITEM: {
+        draft.supplierItem = action.payload
         break
       }
       default:

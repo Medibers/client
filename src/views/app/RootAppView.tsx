@@ -9,6 +9,7 @@ import { platformIsWebBrowser } from 'utils'
 
 import AppRoutes from './AppRoutes'
 import WebSplashScreen from './WebSplashScreen'
+import Wrapper from './Wrapper'
 
 import 'worker'
 import 'tasks/index'
@@ -42,21 +43,23 @@ const RootAppView: React.FC = () => {
 
   return (
     <IonApp>
-      {
-        <React.Fragment>
-          {renderSplashScreen ? (
-            <WebSplashScreen />
-          ) : (
-            <React.Fragment>
-              <Progress />
-              <Toast />
-            </React.Fragment>
-          )}
-          <div style={pageTransitionStyle(renderSplashScreen)}>
-            <AppRoutes />
-          </div>
-        </React.Fragment>
-      }
+      <Wrapper>
+        {
+          <React.Fragment>
+            {renderSplashScreen ? (
+              <WebSplashScreen />
+            ) : (
+              <React.Fragment>
+                <Progress />
+                <Toast />
+              </React.Fragment>
+            )}
+            <div style={pageTransitionStyle(renderSplashScreen)}>
+              <AppRoutes />
+            </div>
+          </React.Fragment>
+        }
+      </Wrapper>
     </IonApp>
   )
 }
