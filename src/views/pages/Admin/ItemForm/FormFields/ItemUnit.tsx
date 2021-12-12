@@ -21,7 +21,7 @@ const Unit: React.FC<IProps> = ({ units, disabled }) => {
 
   return (
     <React.Fragment>
-      <ListItem>
+      <ListItem isLast>
         <IonLabel position="stacked">
           Unit of Count <span className="ion-label-secondary">*</span>
         </IonLabel>

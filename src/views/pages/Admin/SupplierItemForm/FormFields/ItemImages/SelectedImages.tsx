@@ -1,15 +1,14 @@
 import React from 'react'
 import { IonButton, IonCol, IonGrid, IonIcon, IonRow } from '@ionic/react'
-import { urlIsDataURL } from '../../utils'
 import { close } from 'ionicons/icons'
 import { useFormContext } from 'react-hook-form'
+import { imageServerUrl } from 'utils'
+import { urlIsDataURL } from '../../utils'
 
 interface IProps {
   fieldName: string
   images: string[]
 }
-
-const FILE_SERVER_URL = process.env.REACT_APP_FILE_SERVER_URL + '/images'
 
 const SelectedImages: React.FC<IProps> = ({ fieldName, images }) => {
   const { setValue, getValues } = useFormContext()
@@ -37,7 +36,7 @@ const SelectedImages: React.FC<IProps> = ({ fieldName, images }) => {
               <DeleteButton onClick={() => onRemoveImage(imageUrl)} />
               <img
                 src={
-                  urlIsDataURL(imageUrl) ? imageUrl : FILE_SERVER_URL + imageUrl
+                  urlIsDataURL(imageUrl) ? imageUrl : imageServerUrl + imageUrl
                 }
                 alt=""
               />
