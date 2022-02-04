@@ -59,8 +59,13 @@ ion-select-popover ion-list {
   padding: 0 !important
 }
 
-.select-popover .popover-content {
+/* .select-popover .popover-content {
   overflow: unset !important
+} */
+
+.select-popover .popover-content ion-list {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .select-menu,
