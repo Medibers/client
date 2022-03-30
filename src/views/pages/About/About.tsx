@@ -102,7 +102,7 @@ class Component extends React.Component<Props> {
                   <IonIcon
                     slot="start"
                     className="ion-icon-secondary"
-                    icon="/assets/icons/help.svg"
+                    icon="/static/assets/icons/help.svg"
                   />
                   Frequently Asked Questions
                 </IonItem>
@@ -154,7 +154,7 @@ class Component extends React.Component<Props> {
                   <IonIcon
                     slot="start"
                     className="ion-icon-secondary"
-                    icon="/assets/icons/contact.svg"
+                    icon="/static/assets/icons/contact.svg"
                   />
                   Contact Customer Care
                 </IonItem>

@@ -13,7 +13,7 @@ async function readJSONFile(filePath) {
 
 async function initializeFCM() {
   const { 'fb-configuration': configuration, 'fcm-vapid-key': vapidKey } =
-    await readJSONFile('/firebase/vars.json')
+    await readJSONFile('/static/vars.json')
 
   firebase.initializeApp(configuration)
 
@@ -39,7 +39,7 @@ async function sendFCMTokenToServer(token) {
     'remote-server-url': remoteUrl,
     'server-auth-token-key': key,
     'push-notification-token-send-state-key': pushNotificationTokenSendStateKey,
-  } = await readJSONFile('/firebase/vars.json')
+  } = await readJSONFile('/static/vars.json')
 
   const url = platformIsLocal() ? localUrl : remoteUrl
   const sessionAvailable = localStorage.getItem(key) != undefined

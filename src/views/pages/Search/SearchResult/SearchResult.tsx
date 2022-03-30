@@ -81,7 +81,7 @@ const Component: React.FC<Props> = ({
       </IonGrid>
       <IonIcon
         className="ion-icon-primary"
-        icon={selected ? '/assets/icons/checked.svg' : 'no-icon'}
+        icon={selected ? '/static/assets/icons/checked.svg' : 'no-icon'}
       />
     </IonItem>
   )

@@ -7,7 +7,7 @@ import getPageText from 'text'
 
 const Text = getPageText('home')
 
-const categoryImageBaseUrl = '/assets/images/item-category'
+const categoryImageBaseUrl = '/static/assets/images/item-category'
 
 const map: {
   [key: string]: { imageUrl: string; label: string; description: string }

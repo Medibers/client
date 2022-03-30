@@ -13,8 +13,8 @@ if (platformIsWeb())
       fcm.onTokenRefresh(async () => {
         const {
           'push-notification-token-send-state-key':
-            pushNotificationTokenSendStateKey,
-        } = await readJSONFile('/firebase/vars.json')
+          pushNotificationTokenSendStateKey,
+        } = await readJSONFile('/static/vars.json')
 
         const token = await retrieveFCMToken(fcm)
 

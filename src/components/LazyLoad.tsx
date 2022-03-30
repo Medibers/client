@@ -3,7 +3,7 @@ import { IonIcon } from '@ionic/react'
 
 type Props = { src: string; alt?: string; item: string; onClick: () => void }
 
-const placeholder = '/assets/icons/no-icon.svg'
+const placeholder = '/static/assets/icons/no-icon.svg'
 
 const wrapperStyle = {
   display: 'flex',
@@ -109,7 +109,7 @@ const Component: React.FC<Props> = ({ item, src, onClick }) => {
             style={iconStyle}
             ref={setRef}
             className="ion-icon-primary"
-            icon="/assets/icons/checked.svg"
+            icon="/static/assets/icons/checked.svg"
           />
         ) : errored ? (
           <IonIcon

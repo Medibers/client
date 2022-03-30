@@ -55,12 +55,12 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+.env*
 
 # next.js build output
 .next
 
 # capacitor-android generated folders
 android
-build
+build*
 resources
