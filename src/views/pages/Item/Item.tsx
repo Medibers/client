@@ -4,7 +4,8 @@ import { pencil as edit } from 'ionicons/icons'
 
 import { ItemSearchResult } from 'types'
 
-import { ContentHeader, Header } from 'components'
+// import { ContentHeader, Header } from 'components'
+import { Header } from 'components'
 
 import { getItemState } from 'utils'
 import { formatMoney } from 'utils/currency'
@@ -51,7 +52,7 @@ const Item: React.FC<IItem> = ({ result }) => {
     <IonPage>
       <Header size="small" title={result.item.name} actions={toolbarActions} />
       <IonContent className="ion-padding">
-        <ContentHeader message={`Supplied by ${result.pharmacy.name}`} />
+        {/* <ContentHeader message={`Supplied by ${result.pharmacy.name}`} /> */}
         <IonList lines="none">
           <Images urls={images} />
           <IonItem className="ion-no-padding ion-margin-top">
