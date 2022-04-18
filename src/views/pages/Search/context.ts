@@ -5,7 +5,7 @@ interface ISearchContext {
   search?: string
   selectedCategory?: string
   results?: Array<IItemSearchResult>
-  selectedItems: Array<IItemSearchResult>
+  selectedItems: Array<string>
 }
 
 const Context = React.createContext<ISearchContext>({

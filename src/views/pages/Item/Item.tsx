@@ -1,8 +1,12 @@
 import React, { useMemo } from 'react'
 import { IonContent, IonItem, IonLabel, IonList, IonPage } from '@ionic/react'
-import { pencil as edit } from 'ionicons/icons'
+import {
+  cartOutline as addToCartIcon,
+  pencil as editIcon,
+  cart as removeFromCartIcon,
+} from 'ionicons/icons'
 
-import { ItemSearchResult } from 'types'
+import { ItemSearchResult as IItemSearchResult } from 'types'
 
 // import { ContentHeader, Header } from 'components'
 import { Header } from 'components'
@@ -13,25 +17,26 @@ import { userIsAdmin } from 'utils/role'
 
 import Routes from 'routes'
 import { navigateTo } from 'app-history'
+import { addToCart, removeFromCart, setSupplierItem } from 'store/utils'
 
 import SearchResultDataWrapper from 'components/DataWrapper/SearchResult'
 
 import Images from './Images'
 import ListedDetails from './ListedDetails'
-import { setSupplierItem } from 'store/utils'
 
 interface IItem {
-  result: ItemSearchResult
+  result: IItemSearchResult
+  selectedItems: Array<IItemSearchResult>
 }
 
-const Item: React.FC<IItem> = ({ result }) => {
+const Item: React.FC<IItem> = ({ result, selectedItems }) => {
   const { item, price, images, available } = result
 
   const toolbarActions = useMemo(() => {
     if (userIsAdmin()) {
       return [
         {
-          icon: edit,
+          icon: editIcon,
           handler: () => {
             if (Routes['supplier-item-update'].getPath) {
               setSupplierItem(result)
@@ -45,8 +50,23 @@ const Item: React.FC<IItem> = ({ result }) => {
           },
         },
       ]
+    } else {
+      const inCart = selectedItems.find(({ _id }) => _id === result._id)
+
+      return [
+        {
+          icon: inCart ? removeFromCartIcon : addToCartIcon,
+          handler: () => {
+            if (inCart) {
+              removeFromCart(result._id)
+            } else {
+              addToCart(result)
+            }
+          },
+        },
+      ]
     }
-  }, [result])
+  }, [result, selectedItems])
 
   return (
     <IonPage>

@@ -1,5 +1,8 @@
 import React from 'react'
 
+import { connect } from 'react-redux'
+import { State as ReducerState } from 'reducers'
+
 import { IonContent, IonPage } from '@ionic/react'
 import { Header, Popover } from 'components'
 
@@ -8,7 +11,13 @@ import { getDeliveryLocationForNextOrder } from 'location'
 
 import { ItemSearchResult as IItemSearchResult } from 'types'
 
-import { hideLoading, showLoading, showToast } from 'store/utils'
+import {
+  addToCart,
+  hideLoading,
+  removeFromCart,
+  showLoading,
+  showToast,
+} from 'store/utils'
 import { getLocationState } from 'app-history'
 import { userIsAdmin, userIsClientUser } from 'utils/role'
 
@@ -30,17 +39,19 @@ interface ILocationState {
 
 interface IState {
   results?: Array<IItemSearchResult>
-  selectedItems: Array<IItemSearchResult>
   selectedCategory: string
   search?: string
   popoverResult: IItemSearchResult | null
 }
 
-class SearchPage extends React.Component {
+interface IProps {
+  selectedItems: Array<string>
+}
+
+class SearchPage extends React.Component<IProps> {
   locationState = getLocationState() as ILocationState
 
   state: IState = {
-    selectedItems: this.locationState.items || [],
     selectedCategory: this.locationState.category || itemCategories[0].value,
     popoverResult: null,
   }
@@ -80,14 +91,12 @@ class SearchPage extends React.Component {
 
   onSelect = (result: IItemSearchResult) => {
     if (userIsClientUser() || !sessionAvailable()) {
-      const { selectedItems } = this.state
-      const index = selectedItems.findIndex(item => item._id === result._id)
-      if (index < 0) {
-        selectedItems.push(result)
+      const { selectedItems } = this.props
+      if (selectedItems.indexOf(result._id) < 0) {
+        addToCart(result)
       } else {
-        selectedItems.splice(index, 1)
+        removeFromCart(result._id)
       }
-      this.setState({ selectedItems })
     }
   }
 
@@ -105,8 +114,9 @@ class SearchPage extends React.Component {
 
   render() {
     const { selectedCategory, popoverResult } = this.state
+    const { selectedItems } = this.props
 
-    const context = this.state
+    const context = { ...this.state, selectedItems }
 
     return (
       <IonPage className="search">
@@ -139,4 +149,8 @@ class SearchPage extends React.Component {
   }
 }
 
-export default SearchPage
+const mapStateToProps = (state: ReducerState) => ({
+  selectedItems: state.App.cart.map(result => result._id),
+})
+
+export default connect(mapStateToProps)(SearchPage)

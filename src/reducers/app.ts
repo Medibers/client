@@ -1,4 +1,5 @@
 import produce from 'immer'
+import { getCart, setCart } from 'session'
 import { Action, ItemRequest, ItemSearchResult } from 'types'
 import { ISupplier, ISupplierItem } from 'views/pages/Admin/types'
 
@@ -12,11 +13,13 @@ export interface State {
   searchResult?: ItemSearchResult
   supplier?: ISupplier
   supplierItem?: ISupplierItem
+  cart: Array<ItemSearchResult>
 }
 
 const initialState: State = {
   loading: false,
   requests: null,
+  cart: getCart(),
 }
 
 export default (state = initialState, action: Action) =>
@@ -67,6 +70,21 @@ export default (state = initialState, action: Action) =>
       }
       case constants.SET_SUPPLIER_ITEM: {
         draft.supplierItem = action.payload
+        break
+      }
+      case constants.ADD_TO_CART: {
+        draft.cart.push(action.payload)
+        setCart(draft.cart)
+        break
+      }
+      case constants.REMOVE_FROM_CART: {
+        draft.cart = draft.cart.filter(item => item._id !== action.payload)
+        setCart(draft.cart)
+        break
+      }
+      case constants.CLEAR_CART: {
+        draft.cart = []
+        setCart(draft.cart)
         break
       }
       default:

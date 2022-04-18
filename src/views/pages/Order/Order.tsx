@@ -47,16 +47,14 @@ import DeliveryContact from './DeliveryContact'
 import { formatUGMSISDN } from 'utils/msisdn'
 import { IOrderDeliveryContact } from './types'
 
-import { hideLoading, showLoading, showToast } from 'store/utils'
+import { clearCart, hideLoading, showLoading, showToast } from 'store/utils'
 
 interface IOrderProps {
+  selectedItems: Array<IItemSearchResult>
   requests?: Array<IItemRequest>
   setItemRequests: (e: Array<IItemRequest> | null) => {}
 }
 
-interface ILocationState {
-  selectedItems: Array<IItemSearchResult>
-}
 interface IItemRequestDetailsRequest {
   fee: number
   distance: number
@@ -67,14 +65,6 @@ const primaryAction = 'Order now'
 
 const alertText = AlertText.confirmation()
 
-const getInitialSelectedItems = () => {
-  const { selectedItems = [] } = getLocationState<ILocationState>()
-  return selectedItems.map(e => {
-    if (e.quantity) return e
-    return { ...e, quantity: 1 }
-  })
-}
-
 const onSelectDestination = () => {
   let { lat, lon } = getDeliveryLocationForNextOrder()
   // .push(Routes.location.path, lat && lon ? { lat, lon } : undefined)
@@ -83,7 +73,7 @@ const onSelectDestination = () => {
 
 const Component: React.FC<IOrderProps> = props => {
   const [orderConfirmationShown, setOrderConfirmationShown] = useState(false)
-  const [selectedItems, setSelectedItems] = useState(getInitialSelectedItems())
+  const [selectedItems, setSelectedItems] = useState(props.selectedItems)
   const [cost, setCost] = useState(computeOrderCost(selectedItems))
   const [distance, setDistance] = useState<number | null>(null)
   const [deliveryFee, setDeliveryFee] = useState<number | null>(null)
@@ -100,20 +90,14 @@ const Component: React.FC<IOrderProps> = props => {
 
   const mapRef = useRef<google.maps.Map | null>(null)
 
-  const onGoToCart = () => {
-    redirectTo(Routes.search.path, {
-      items: selectedItems,
-    })
-  }
+  const onGoToCart = () => redirectTo(Routes.search.path)
 
   const onConfirmOrder = () => {
-    const { requests = [], setItemRequests } = props
+    const { requests = [], selectedItems, setItemRequests } = props
     const { lat, lon, address } = getDeliveryLocationForNextOrder()
 
-    const locationState = getLocationState<ILocationState>()
-
     const payload = {
-      'pharmacy-items': locationState.selectedItems.map(o => ({
+      'pharmacy-items': selectedItems.map(o => ({
         item: o._id,
         quantity: o.quantity,
         price: o.price,
@@ -141,6 +125,7 @@ const Component: React.FC<IOrderProps> = props => {
           const { requestInitiatedFromRequestsPage } =
             getLocationState<Record<string, unknown>>()
           setItemRequests((response as Array<IItemRequest>).concat(requests))
+          clearCart()
           if (requestInitiatedFromRequestsPage) {
             goBack()
           } else {
@@ -260,6 +245,10 @@ const Component: React.FC<IOrderProps> = props => {
 
 const mapStateToProps = (state: ReducerState) => ({
   requests: state.App.requests || undefined,
+  selectedItems: state.App.cart.map(e => {
+    if (e.quantity) return e
+    return { ...e, quantity: 1 }
+  }),
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) =>

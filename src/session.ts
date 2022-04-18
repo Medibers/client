@@ -1,3 +1,5 @@
+import { ItemSearchResult as IItemSearchResult } from 'types'
+
 const tokenKey = 'auth-token'
 const phoneKey = 'phone'
 const locationKey = 'location'
@@ -54,4 +56,16 @@ export const getActiveRequestsPresence = () => {
 
 export const clearSession = () => {
   localStorage.clear()
+  sessionStorage.clear()
+}
+
+/* Session storage data */
+
+export const getCart = () => {
+  const o = sessionStorage.getItem('cart')
+  return o ? JSON.parse(o) : []
+}
+
+export const setCart = (items: IItemSearchResult[]) => {
+  sessionStorage.setItem('cart', JSON.stringify(items))
 }

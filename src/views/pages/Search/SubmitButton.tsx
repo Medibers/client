@@ -2,8 +2,8 @@ import React, { useContext } from 'react'
 import { IonFab, IonFabButton, IonIcon } from '@ionic/react'
 import { send } from 'ionicons/icons'
 
-import { redirectTo } from 'app-history'
 import Routes from 'routes'
+import { navigateTo } from 'app-history'
 
 import Context from './context'
 
@@ -12,9 +12,7 @@ const SubmitButton = () => {
 
   if (!selectedItems.length) return null
 
-  const onSubmit = () => {
-    redirectTo(Routes.order.path, { selectedItems })
-  }
+  const onSubmit = () => navigateTo(Routes.order.path)
 
   return (
     <IonFab

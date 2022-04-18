@@ -1,6 +1,6 @@
 import React from 'react'
+import { arrowBack as back } from 'ionicons/icons'
 import {
-  IonBackButton,
   IonButton,
   IonButtons,
   IonHeader,
@@ -11,6 +11,7 @@ import {
 
 import { ToolbarAction } from 'types'
 
+import history from 'app-history'
 import { APP_NAME, platformIsWebBrowser } from 'utils'
 
 export type Props = {
@@ -30,15 +31,20 @@ const Component: React.FC<Props> = ({
   title,
   size,
   actions = [],
-  icon,
+  icon = back,
 }) => {
   const omitsBack = ob || platformIsWebBrowser
+
+  const onBack = history.goBack
+
   return (
     <IonHeader>
       <IonToolbar>
         {omitsBack ? null : (
           <IonButtons slot="start">
-            <IonBackButton icon={icon} color="primary" defaultHref="/" />
+            <IonButton color="primary" onClick={onBack}>
+              <IonIcon icon={icon} />
+            </IonButton>
           </IonButtons>
         )}
         <IonTitle size={size} color="primary">

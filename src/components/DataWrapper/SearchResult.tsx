@@ -13,28 +13,33 @@ import Routes from 'routes'
 
 interface IComponent {
   result: ItemSearchResult
+  selectedItems: Array<ItemSearchResult>
 }
 
 interface IRouteMatch {
   id: string
 }
 
-const mapStateToProps = (state: ReducerState) => ({
-  result: state.App.searchResult,
-})
-
 const SearchResultDataWrapper = (
   Component: React.FC<IComponent>,
   routeKey: string
-) =>
-  connect(mapStateToProps)((({ result: storeResult }) => {
+) => {
+  const mapStateToProps = (state: ReducerState) => ({
+    result: state.App.searchResult,
+    selectedItems: state.App.cart,
+  })
+
+  return connect(mapStateToProps)((({ result: storeResult, selectedItems }) => {
     const { id } = useGetRouteParams<IRouteMatch>(Routes[routeKey].path)
 
     const [, data] = useGetSearchResult(storeResult ? undefined : id)
 
     const result = storeResult || (data as ItemSearchResult)
 
-    return result ? <Component result={result} /> : null
+    return result ? (
+      <Component result={result} selectedItems={selectedItems || []} />
+    ) : null
   }) as React.FC<Partial<IComponent>>)
+}
 
 export default SearchResultDataWrapper

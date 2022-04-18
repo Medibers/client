@@ -5,11 +5,11 @@ import SearchResult from './SearchResult'
 
 import { ItemSearchResult as IItemSearchResult } from 'types'
 
-import { itemCategories } from './utils'
-
-import { setSearchResult } from 'store/utils'
-import { navigateTo } from 'app-history'
 import Routes from 'routes'
+import { navigateTo } from 'app-history'
+import { setSearchResult } from 'store/utils'
+
+import { itemCategories } from './utils'
 
 import Context from './context'
 
@@ -32,8 +32,6 @@ const SearchResults: React.FC<ISearchResults> = ({
   } = useContext(Context)
 
   const computeResultsShown = (allResults: Array<IItemSearchResult>) => {
-    // const { items = [] } = this.props
-    // const { selectedCategory, search = '', results = [] } = this.state
     return selectedCategory !== itemCategories[0].value
       ? allResults.filter(
           ({ item: { name, category } }) =>
@@ -45,7 +43,7 @@ const SearchResults: React.FC<ISearchResults> = ({
   }
 
   const isSelected = (result: IItemSearchResult) =>
-    selectedItems.findIndex(item => item._id === result._id) > -1
+    selectedItems.indexOf(result._id) > -1
 
   const onMore = (result: IItemSearchResult) => {
     setSearchResult(result)

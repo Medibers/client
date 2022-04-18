@@ -64,3 +64,6 @@ typings/
 android
 build*
 resources
+
+next*
+note*

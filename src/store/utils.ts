@@ -39,3 +39,15 @@ export const setSupplier = (payload: ISupplier) => {
 export const setSupplierItem = (payload: ISupplierItem) => {
   store.dispatch({ type: constants.SET_SUPPLIER_ITEM, payload })
 }
+
+export const addToCart = (payload: ItemSearchResult) => {
+  store.dispatch({ type: constants.ADD_TO_CART, payload })
+}
+
+export const removeFromCart = (id: string) => {
+  store.dispatch({ type: constants.REMOVE_FROM_CART, payload: id })
+}
+
+export const clearCart = () => {
+  store.dispatch({ type: constants.CLEAR_CART })
+}
