@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
-import { IonFab, IonFabButton, IonIcon } from '@ionic/react'
-import { add } from 'ionicons/icons'
+import { IonButton, IonFab } from '@ionic/react'
 
 import { navigateTo } from 'app-history'
 import Routes from 'routes'
@@ -21,9 +20,9 @@ const AddItemButton = () => {
       horizontal="end"
       slot="fixed"
     >
-      <IonFabButton className="ion-action-primary" onClick={onSubmit}>
-        <IonIcon icon={add} />
-      </IonFabButton>
+      <IonButton className="ion-action-primary" onClick={onSubmit}>
+        Register New Item
+      </IonButton>
     </IonFab>
   )
 }
