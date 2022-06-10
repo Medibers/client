@@ -6,6 +6,9 @@ import { State as ReducerState } from 'reducers'
 import { IonContent, IonPage } from '@ionic/react'
 import { Header, Popover } from 'components'
 
+import { IonRefresher, IonRefresherContent } from '@ionic/react'
+import { RefresherEventDetail } from '@ionic/core'
+
 import Requests, { endPoints } from 'requests'
 import { getDeliveryLocationForNextOrder } from 'location'
 
@@ -59,9 +62,7 @@ class SearchPage extends React.Component<IProps> {
   userIsAdmin = userIsAdmin()
 
   componentDidMount() {
-    this.fetchItems('*').then(results => {
-      this.setState({ results })
-    })
+    this.fetchItems('*')
   }
 
   fetchItems = async (search: string) => {
@@ -76,14 +77,21 @@ class SearchPage extends React.Component<IProps> {
       {
         params: { search, lat, lon },
       }
-    ).catch(err => {
-      showToast(err.error || err.toString())
-      console.error(err) // eslint-disable-line
-    })
+    )
+      .then(results => {
+        this.setState({ results })
+      })
+      .catch(err => {
+        showToast(err.error || err.toString())
+        console.error(err) // eslint-disable-line
+      })
     hideLoading()
 
     return response
   }
+
+  onRefresh = (event?: CustomEvent<RefresherEventDetail>) =>
+    this.fetchItems('*').finally(() => event && event.detail.complete())
 
   onSearch = ({ detail: { value } }: CustomEvent) => {
     this.setState({ search: value.toLowerCase() })
@@ -129,6 +137,9 @@ class SearchPage extends React.Component<IProps> {
           })}
         />
         <IonContent class="popover-search-results">
+          <IonRefresher slot="fixed" onIonRefresh={this.onRefresh}>
+            <IonRefresherContent />
+          </IonRefresher>
           <Context.Provider value={context}>
             <SearchResults
               onSelect={this.onSelect}
