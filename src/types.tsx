@@ -11,7 +11,7 @@ export interface ToolbarAction {
   text?: string
   icon?: string
   component?: () => JSX.Element
-  handler: (a1: MouseEvent) => void
+  handler?: (a1: MouseEvent) => void
 }
 
 export interface MenuAction {

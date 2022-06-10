@@ -1,5 +1,14 @@
 import React, { useMemo } from 'react'
-import { IonContent, IonItem, IonLabel, IonList, IonPage } from '@ionic/react'
+import {
+  IonButton,
+  IonContent,
+  IonFab,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+} from '@ionic/react'
 import {
   cartOutline as addToCartIcon,
   pencil as editIcon,
@@ -32,6 +41,11 @@ interface IItem {
 const Item: React.FC<IItem> = ({ result, selectedItems }) => {
   const { item, price, images, available } = result
 
+  const itemInCart = useMemo(
+    () => selectedItems.some(({ _id }) => _id === result._id),
+    [selectedItems, result._id]
+  )
+
   const toolbarActions = useMemo(() => {
     if (userIsAdmin()) {
       return [
@@ -50,23 +64,16 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
           },
         },
       ]
-    } else {
-      const inCart = selectedItems.find(({ _id }) => _id === result._id)
-
-      return [
-        {
-          icon: inCart ? removeFromCartIcon : addToCartIcon,
-          handler: () => {
-            if (inCart) {
-              removeFromCart(result._id)
-            } else {
-              addToCart(result)
-            }
-          },
-        },
-      ]
     }
-  }, [result, selectedItems])
+  }, [result])
+
+  const onCartButtonClick = () => {
+    if (itemInCart) {
+      removeFromCart(result._id)
+    } else {
+      addToCart(result)
+    }
+  }
 
   return (
     <IonPage>
@@ -85,6 +92,17 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
           </IonItem>
           <ListedDetails details={item.specification} />
         </IonList>
+        <IonFab
+          className="ion-margin"
+          vertical="bottom"
+          horizontal="end"
+          slot="fixed"
+        >
+          <IonButton className="ion-action-primary" onClick={onCartButtonClick}>
+            {itemInCart ? 'REMOVE FROM' : 'ADD TO'} CART&nbsp;&nbsp;
+            <IonIcon icon={itemInCart ? removeFromCartIcon : addToCartIcon} />
+          </IonButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   )
