@@ -1,0 +1,19 @@
+// .swiper-slide {
+//   position: absolute;
+//   top: 0;
+//   min-height: 200rem;
+// }
+
+.swiper-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  background-image: unset;
+  color: var(--ion-color-secondary);
+}

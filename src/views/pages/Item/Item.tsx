@@ -1,24 +1,18 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { IonContent, IonItem, IonLabel, IonList, IonPage } from '@ionic/react'
-import { pencil as editIcon } from 'ionicons/icons'
 
 import { ItemSearchResult as IItemSearchResult } from 'types'
 
-import { Header } from 'components'
+import { Header, ImageSlider } from 'components'
 
 import { getItemState } from 'utils'
 import { formatMoney } from 'utils/currency'
-import { userIsAdmin } from 'utils/role'
-
-import Routes from 'routes'
-import { navigateTo } from 'app-history'
-import { setSupplierItem } from 'store/utils'
 
 import SearchResultDataWrapper from 'components/DataWrapper/SearchResult'
 
-import Images from './Images'
 import ListedDetails from './ListedDetails'
 import AddToCartButton from './AddToCartButton'
+import EditButton from './EditButton'
 
 interface IItem {
   result: IItemSearchResult
@@ -28,45 +22,33 @@ interface IItem {
 const Item: React.FC<IItem> = ({ result, selectedItems }) => {
   const { item, price, images, available } = result
 
-  const toolbarActions = useMemo(() => {
-    if (userIsAdmin()) {
-      return [
-        {
-          icon: editIcon,
-          handler: () => {
-            if (Routes['supplier-item-update'].getPath) {
-              setSupplierItem(result)
-              navigateTo(
-                Routes['supplier-item-update'].getPath(
-                  result.pharmacy._id,
-                  result._id
-                )
-              )
-            }
-          },
-        },
-      ]
-    }
-  }, [result])
-
   return (
     <IonPage>
-      <Header size="small" title={result.item.name} actions={toolbarActions} />
+      <div className="position-relative" style={{ minHeight: '50vh' }}>
+        {/* Support the back button */}
+        <Header title="" backgroundTransparent />
+        <ImageSlider urls={images} />
+      </div>
       <IonContent className="ion-padding">
         {/* <ContentHeader message={`Supplied by ${result.pharmacy.name}`} /> */}
         <IonList lines="none">
-          <Images urls={images} />
-          <IonItem className="ion-no-padding ion-margin-top">
+          <IonItem className="ion-no-padding">
             <IonLabel>
-              <h4>
+              <h1>{result.item.name}</h1>
+            </IonLabel>
+          </IonItem>
+          <IonItem className="ion-no-padding">
+            <IonLabel>
+              <h2>
                 <b>{formatMoney(price)}</b>
-              </h4>
+              </h2>
               <h4>{getItemState(available)}</h4>
             </IonLabel>
           </IonItem>
           <ListedDetails details={item.specification} />
         </IonList>
         <AddToCartButton selectedItems={selectedItems} result={result} />
+        <EditButton result={result} />
       </IonContent>
     </IonPage>
   )

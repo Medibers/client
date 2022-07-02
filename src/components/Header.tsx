@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { arrowBack as back } from 'ionicons/icons'
 import {
   IonButton,
@@ -16,6 +16,7 @@ import { APP_NAME, platformIsWebBrowser } from 'utils'
 
 export type Props = {
   omitsBack?: boolean
+  backgroundTransparent?: boolean
   title?: string | JSX.Element
   size?: 'small' | 'large'
   actions?: Array<ToolbarAction>
@@ -28,6 +29,7 @@ const buttonStyle = {
 
 const Component: React.FC<Props> = ({
   omitsBack: ob,
+  backgroundTransparent,
   title,
   size,
   actions = [],
@@ -37,12 +39,31 @@ const Component: React.FC<Props> = ({
 
   const onBack = history.goBack
 
+  useEffect(() => {
+    if (backgroundTransparent) {
+      const headerStyle = document.createElement('style')
+      headerStyle.innerHTML = ':after { background: transparent !important; }'
+      // @ts-ignore
+      document.querySelector('#toolbar').append(headerStyle)
+
+      const toolbarStyle = document.createElement('style')
+      toolbarStyle.innerHTML =
+        '.toolbar-background { background: transparent !important; }'
+      // @ts-ignore
+      document.querySelector('#toolbar').shadowRoot.append(toolbarStyle)
+    }
+  }, [backgroundTransparent])
+
   return (
-    <IonHeader>
-      <IonToolbar>
+    <IonHeader id="header" color="primary">
+      <IonToolbar id="toolbar">
         {omitsBack ? null : (
           <IonButtons slot="start">
-            <IonButton color="primary" onClick={onBack}>
+            <IonButton
+              color="primary"
+              style={{ 'mix-blend-mode': 'difference' }}
+              onClick={onBack}
+            >
               <IonIcon icon={icon} />
             </IonButton>
           </IonButtons>
