@@ -1,23 +1,9 @@
 import React, { useMemo } from 'react'
-import {
-  IonButton,
-  IonContent,
-  IonFab,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonPage,
-} from '@ionic/react'
-import {
-  cartOutline as addToCartIcon,
-  pencil as editIcon,
-  cart as removeFromCartIcon,
-} from 'ionicons/icons'
+import { IonContent, IonItem, IonLabel, IonList, IonPage } from '@ionic/react'
+import { pencil as editIcon } from 'ionicons/icons'
 
 import { ItemSearchResult as IItemSearchResult } from 'types'
 
-// import { ContentHeader, Header } from 'components'
 import { Header } from 'components'
 
 import { getItemState } from 'utils'
@@ -26,12 +12,13 @@ import { userIsAdmin } from 'utils/role'
 
 import Routes from 'routes'
 import { navigateTo } from 'app-history'
-import { addToCart, removeFromCart, setSupplierItem } from 'store/utils'
+import { setSupplierItem } from 'store/utils'
 
 import SearchResultDataWrapper from 'components/DataWrapper/SearchResult'
 
 import Images from './Images'
 import ListedDetails from './ListedDetails'
+import AddToCartButton from './AddToCartButton'
 
 interface IItem {
   result: IItemSearchResult
@@ -40,11 +27,6 @@ interface IItem {
 
 const Item: React.FC<IItem> = ({ result, selectedItems }) => {
   const { item, price, images, available } = result
-
-  const itemInCart = useMemo(
-    () => selectedItems.some(({ _id }) => _id === result._id),
-    [selectedItems, result._id]
-  )
 
   const toolbarActions = useMemo(() => {
     if (userIsAdmin()) {
@@ -67,14 +49,6 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
     }
   }, [result])
 
-  const onCartButtonClick = () => {
-    if (itemInCart) {
-      removeFromCart(result._id)
-    } else {
-      addToCart(result)
-    }
-  }
-
   return (
     <IonPage>
       <Header size="small" title={result.item.name} actions={toolbarActions} />
@@ -92,17 +66,7 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
           </IonItem>
           <ListedDetails details={item.specification} />
         </IonList>
-        <IonFab
-          className="ion-margin"
-          vertical="bottom"
-          horizontal="end"
-          slot="fixed"
-        >
-          <IonButton className="ion-action-primary" onClick={onCartButtonClick}>
-            {itemInCart ? 'REMOVE FROM' : 'ADD TO'} CART&nbsp;&nbsp;
-            <IonIcon icon={itemInCart ? removeFromCartIcon : addToCartIcon} />
-          </IonButton>
-        </IonFab>
+        <AddToCartButton selectedItems={selectedItems} result={result} />
       </IonContent>
     </IonPage>
   )
