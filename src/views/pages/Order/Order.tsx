@@ -47,7 +47,13 @@ import DeliveryContact from './DeliveryContact'
 import { formatUGMSISDN } from 'utils/msisdn'
 import { IOrderDeliveryContact } from './types'
 
-import { clearCart, hideLoading, showLoading, showToast } from 'store/utils'
+import {
+  clearCart,
+  hideLoading,
+  setCart,
+  showLoading,
+  showToast,
+} from 'store/utils'
 
 interface IOrderProps {
   selectedItems: Array<IItemSearchResult>
@@ -73,8 +79,7 @@ const onSelectDestination = () => {
 
 const Component: React.FC<IOrderProps> = props => {
   const [orderConfirmationShown, setOrderConfirmationShown] = useState(false)
-  const [selectedItems, setSelectedItems] = useState(props.selectedItems)
-  const [cost, setCost] = useState(computeOrderCost(selectedItems))
+  const [cost, setCost] = useState(computeOrderCost(props.selectedItems))
   const [distance, setDistance] = useState<number | null>(null)
   const [deliveryFee, setDeliveryFee] = useState<number | null>(null)
   const [contacts, setContacts] = useState<Array<IOrderDeliveryContact>>([
@@ -142,14 +147,14 @@ const Component: React.FC<IOrderProps> = props => {
   }
 
   const onModifyItemQuantity = (searchResultId: string, quantity: number) => {
-    const newSelectedItems = selectedItems.map(e => {
-      if (e._id === searchResultId && quantity > 0) {
-        e.quantity = quantity
+    const newSelectedItems = props.selectedItems.map(item => {
+      if (item._id === searchResultId && quantity > 0) {
+        item.quantity = quantity
       }
-      return e
+      return item
     })
 
-    setSelectedItems(newSelectedItems)
+    setCart(newSelectedItems)
     setCost(computeOrderCost(newSelectedItems))
 
     history.location.state = { selectedItems: newSelectedItems }
@@ -198,7 +203,7 @@ const Component: React.FC<IOrderProps> = props => {
   const context = {
     cost,
     deliveryFee,
-    selectedItems,
+    selectedItems: props.selectedItems,
     locationNotAvailable,
     contacts,
     onModifyItemQuantity,

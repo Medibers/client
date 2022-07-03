@@ -51,3 +51,7 @@ export const removeFromCart = (id: string) => {
 export const clearCart = () => {
   store.dispatch({ type: constants.CLEAR_CART })
 }
+
+export const setCart = (payload: ItemSearchResult[]) => {
+  store.dispatch({ type: constants.SET_CART, payload })
+}

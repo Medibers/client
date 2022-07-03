@@ -87,6 +87,10 @@ export default (state = initialState, action: Action) =>
         setCart(draft.cart)
         break
       }
+      case constants.SET_CART: {
+        setCart(action.payload)
+        break
+      }
       default:
         break
     }

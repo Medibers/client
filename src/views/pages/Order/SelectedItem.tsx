@@ -26,11 +26,11 @@ const SelectedItem: React.FC<ISelectedItem> = ({
   const { onModifyItemQuantity } = useContext(Context)
   return (
     <IonItem lines="none" className="ion-no-padding mini-list-item">
-      <h4>{item.name}</h4>
+      <h4 className="wrap">{item.name}</h4>
       <h4
         slot="end"
         style={costTextStyle}
-        className="flex ion-align-items-center"
+        className="flex ion-align-items-center ion-margin-left"
       >
         {quantity}&nbsp;
         <IonIcon style={{ fontSize: 12 }} icon={close} />
@@ -38,6 +38,7 @@ const SelectedItem: React.FC<ISelectedItem> = ({
         {formatMoney(price)}
       </h4>
       <IonButton
+        size="large"
         onClick={() => onModifyItemQuantity(_id, quantity - 1)}
         slot="end"
         fill="clear"
@@ -46,6 +47,7 @@ const SelectedItem: React.FC<ISelectedItem> = ({
         <IonIcon className="ion-icon-secondary" icon={removeCircleOutline} />
       </IonButton>
       <IonButton
+        size="large"
         onClick={() => onModifyItemQuantity(_id, quantity + 1)}
         slot="end"
         fill="clear"

@@ -126,10 +126,10 @@ ion-title {
 
 .order .mini-list-item,
 .request-detail .mini-list-item {
-  --min-height: 25px;
-  height: 25px;
   position: 'relative';
-  --inner-padding-end: 0
+  --inner-padding-end: 0;
+  /* height: 32px; */
+  --min-height: 32px;
 }
 
 .mini-divider {

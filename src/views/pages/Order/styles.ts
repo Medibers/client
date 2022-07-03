@@ -1,12 +1,12 @@
 export const ionButtonStyle = {
-  width: '20px',
-  height: '20px',
-  marginInlineStart: '2px',
+  width: '27px',
+  height: '27px',
+  marginInlineStart: '5px',
   marginInlineEnd: 0,
-  '--padding-start': '2px',
+  '--padding-start': 0,
   '--padding-end': 0,
-  '--padding-top': '2px',
-  '--padding-bottom': '2px',
+  '--padding-top': 0,
+  '--padding-bottom': 0,
 }
 
 export const costTextStyle = {

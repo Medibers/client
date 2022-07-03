@@ -8,8 +8,6 @@ import Context from './context'
 
 import { formatMoney } from 'utils/currency'
 
-const ionItemStyle = { height: '20px' }
-
 const SelectedItems: React.FC = () => {
   const { cost: itemCost, deliveryFee, selectedItems } = useContext(Context)
 
@@ -28,12 +26,8 @@ const SelectedItems: React.FC = () => {
               quantity={quantity}
             />
           ))}
-          <IonItem
-            lines="none"
-            className="ion-no-padding mini-list-item"
-            style={ionItemStyle}
-          >
-            <IonLabel className="ion-no-margin ion-label-primary">
+          <IonItem lines="none" className="ion-no-padding mini-list-item">
+            <IonLabel className="ion-no-margin ion-label-primary wrap">
               <h4 className="italicize">
                 {deliveryFee && deliveryFee > 0
                   ? 'Delivery Fee'
@@ -47,7 +41,7 @@ const SelectedItems: React.FC = () => {
           <IonItem
             lines="none"
             className="ion-no-padding mini-list-item"
-            style={{ ...ionItemStyle, marginTop: '5px' }}
+            style={{ marginTop: '5px' }}
           >
             <IonLabel className="ion-no-margin ion-text-uppercase ion-label-primary">
               <h4>Total</h4>
