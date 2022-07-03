@@ -29,10 +29,6 @@ class Component extends React.Component<Props> {
     errored: boolean
   } = { sn: '', cc: CCs.ug.value, focussed: false, errored: false }
 
-  onSelectChange = (e: any) => {
-    this.setState({ cc: e.detail.value })
-  }
-
   onSubmit = () => {
     const { cc, sn } = this.state
     try {
@@ -49,11 +45,11 @@ class Component extends React.Component<Props> {
   }
 
   focusOnInput() {
-    const input: any = document.getElementsByClassName('phone-input')[0]
+    const input = document.querySelector<HTMLInputElement>('.phone-input')
     input && input.focus()
   }
 
-  onInputChange = (e: any) => {
+  onInputChange: React.ChangeEventHandler<HTMLInputElement> = e => {
     const value = e.target.value
     if (/^[0-9]{1,9}$/.test(value)) this.setState({ sn: value, errored: false })
   }

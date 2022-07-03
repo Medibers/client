@@ -2,7 +2,7 @@ import React from 'react'
 import { IonLoading } from '@ionic/react'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dispatch, bindActionCreators } from 'redux'
 
 import * as constants from 'reducers/constants'
 import { State as ReducerState } from 'reducers'
@@ -27,7 +27,7 @@ const mapStateToProps = (state: ReducerState) => ({
   open: state.App.loading,
 })
 
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       hideLoading: () => ({
