@@ -1,6 +1,5 @@
 import React from 'react'
-import { IonButton, IonFab, IonIcon } from '@ionic/react'
-import { pencil as edit } from 'ionicons/icons'
+import { IonButton, IonFab } from '@ionic/react'
 
 import { userIsAdmin } from 'utils/role'
 
@@ -34,8 +33,7 @@ const EditButton: React.FC<IEditButton> = ({ result }) => {
       slot="fixed"
     >
       <IonButton className="ion-action-primary" onClick={onClick}>
-        Edit&nbsp;&nbsp;
-        <IonIcon icon={edit} />
+        Edit
       </IonButton>
     </IonFab>
   )

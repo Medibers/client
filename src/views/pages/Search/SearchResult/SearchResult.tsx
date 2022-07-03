@@ -7,8 +7,6 @@ import { LazyLoad } from 'components'
 import { ItemSearchResult } from 'types'
 import { imageServerUrl } from 'utils'
 import { formatMoney } from 'utils/currency'
-
-import { wrapperWidthSpan as imageWrapperWidthSpan } from 'components/LazyLoad'
 import { userIsClientUser } from 'utils/role'
 
 import Name from './Name'
@@ -21,10 +19,30 @@ import { sessionAvailable } from 'session'
 export type Props = {
   selected: boolean
   onSelect: (a1: ItemSearchResult) => void
-  onImageClick: () => void
   onMore: (a1: ItemSearchResult) => void
   lines: boolean
   result: ItemSearchResult
+}
+
+const imageWrapperStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  height: 150,
+  width: 150,
+  padding: 10,
+  margin: '0 calc(var(--ion-margin) - 10px)',
+}
+
+const imageWrapperWidthSpan =
+  2 * imageWrapperStyle.padding +
+  2 * 6 + // 6 is calc(var(--ion-margin) - 10px)
+  imageWrapperStyle.width
+
+const imageStyle = {
+  borderWidth: 2,
+  borderStyle: 'solid',
+  borderColor: 'rgba(var(--ion-color-primary-rgb), .1)',
+  borderRadius: '50%',
 }
 
 const Component: React.FC<Props> = ({
@@ -32,7 +50,6 @@ const Component: React.FC<Props> = ({
   lines,
   selected,
   onSelect,
-  onImageClick,
   onMore,
 }) => {
   const { item, price, images } = result
@@ -65,7 +82,11 @@ const Component: React.FC<Props> = ({
       onClick={e => onClick(e, 'primary')}
       className="search-result ion-no-padding"
     >
-      <LazyLoad onClick={onImageClick} item={item.name} src={imageSrc} />
+      <LazyLoad
+        src={imageSrc}
+        wrapperStyle={imageWrapperStyle}
+        imageStyle={imageStyle}
+      />
       <IonGrid
         style={{
           width: `calc(100% - ${imageWrapperWidthSpan}px)`, // Compute what's left after image fills space

@@ -24,7 +24,7 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
 
   return (
     <IonPage>
-      <div className="position-relative" style={{ minHeight: '50vh' }}>
+      <div className="position-relative" style={{ minHeight: '55vh' }}>
         {/* Support the back button */}
         <Header title="" backgroundTransparent />
         <ImageSlider urls={images} />

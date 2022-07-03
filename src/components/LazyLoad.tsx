@@ -1,23 +1,22 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+/* eslint-disable no-undef */
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { IonIcon } from '@ionic/react'
 
-type Props = { src: string; alt?: string; item: string; onClick: () => void }
-
-const placeholder = '/static/assets/icons/no-icon.svg'
-
-const wrapperStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  height: 150,
-  width: 150,
-  padding: 10,
-  margin: '0 calc(var(--ion-margin) - 10px)',
+interface ILazyLoad {
+  src: string
+  alt?: string
+  onClick?: () => void
+  wrapperStyle?: React.CSSProperties
+  imageStyle?: React.CSSProperties
 }
 
-export const wrapperWidthSpan =
-  2 * wrapperStyle.padding +
-  2 * 6 + // 6 is calc(var(--ion-margin) - 10px)
-  wrapperStyle.width
+const placeholder = '/static/assets/icons/no-icon.svg'
 
 const iconStyle = {
   height: '100%',
@@ -25,32 +24,33 @@ const iconStyle = {
   margin: '-5px 25px',
 }
 
-const imageStyle: Object = {
+const defaultImageStyle: Object = {
   height: '100%',
   width: '100%',
-  borderWidth: 2,
-  borderStyle: 'solid',
-  borderColor: 'rgba(var(--ion-color-primary-rgb), .1)',
-  borderRadius: '50%',
-  objectFit: 'contain',
+  objectFit: 'cover',
 }
 
-const Component: React.FC<Props> = ({ item, src, onClick }) => {
+const Component: React.FC<ILazyLoad> = ({
+  src,
+  onClick,
+  wrapperStyle,
+  imageStyle,
+}) => {
   const selected = false
+
   const [imageSrc, setImageSrc]: [
     string | undefined,
     Dispatch<SetStateAction<string | undefined>>
   ] = useState()
-  const [imageRef, setImageRef]: [
-    Element | undefined,
-    Dispatch<SetStateAction<Element | undefined>>
-  ] = useState()
+
+  const imageRef = useRef<Element | null>(null)
+
   const [observerSet, setObserverSet] = useState(false)
   const [errored, setImageErrored] = useState(false)
   const [loaded, setImageLoaded] = useState(false)
 
-  const setRef = (node: any) => {
-    setImageRef(node)
+  const setRef: React.Ref<Element> = node => {
+    imageRef.current = node
   }
 
   const onError = function () {
@@ -64,7 +64,7 @@ const Component: React.FC<Props> = ({ item, src, onClick }) => {
     let observer: IntersectionObserver
     let didCancel = false
 
-    if (imageRef && observerSet === false) {
+    if (imageRef.current && observerSet === false) {
       if (IntersectionObserver) {
         observer = new IntersectionObserver(
           entries => {
@@ -83,22 +83,26 @@ const Component: React.FC<Props> = ({ item, src, onClick }) => {
             rootMargin: '75%',
           }
         )
-        observer.observe(imageRef)
+        observer.observe(imageRef.current)
       }
     }
+
+    const imageRefValue = imageRef.current as unknown as Element
 
     return () => {
       didCancel = true
       // Remove the listener on unmount
-      if (imageRef && observer && observer.unobserve) {
-        observer.unobserve(imageRef)
+      if (imageRef.current && observer && observer.unobserve) {
+        observer.unobserve(imageRefValue)
       }
     }
-  }, [imageRef, imageSrc, src, observerSet])
+  }, [imageSrc, src, observerSet])
 
-  const onClickLocal = (e: any) => {
-    e.stopPropagation()
-    onClick()
+  const onClickLocal: React.MouseEventHandler = e => {
+    if (onClick) {
+      e.stopPropagation()
+      onClick()
+    }
   }
 
   return (
@@ -107,14 +111,14 @@ const Component: React.FC<Props> = ({ item, src, onClick }) => {
         selected ? (
           <IonIcon
             style={iconStyle}
-            ref={setRef}
+            ref={setRef as React.Ref<HTMLIonIconElement>}
             className="ion-icon-primary"
             icon="/static/assets/icons/checked.svg"
           />
         ) : errored ? (
           <IonIcon
             style={iconStyle}
-            ref={setRef}
+            ref={setRef as React.Ref<HTMLIonIconElement>}
             className="ion-icon-primary"
             icon={placeholder}
           />
@@ -127,9 +131,11 @@ const Component: React.FC<Props> = ({ item, src, onClick }) => {
             onError={onError}
             alt=""
             style={{
+              ...defaultImageStyle,
               ...imageStyle,
+              objectFit: 'cover',
               opacity: loaded ? 1 : 0,
-              transition: 'opacity 1s',
+              transition: 'opacity 0.5s',
             }}
           />
         )

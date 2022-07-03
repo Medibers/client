@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { State as ReducerState } from 'reducers'
 
 import { IonContent, IonPage } from '@ionic/react'
-import { Header, Popover } from 'components'
+import { Header } from 'components'
 
 import { IonRefresher, IonRefresherContent } from '@ionic/react'
 import { RefresherEventDetail } from '@ionic/core'
@@ -28,7 +28,6 @@ import { getSearchToolbarActions, getTitle } from './toolbar-actions'
 import { itemCategories } from './utils'
 
 import SearchResults from './SearchResults'
-import PopoverItemDetails from './PopoverItemDetails'
 import AddItemButton from './AddItemButton'
 import SubmitButton from './SubmitButton'
 
@@ -44,7 +43,6 @@ interface IState {
   results?: Array<IItemSearchResult>
   selectedCategory: string
   search?: string
-  popoverResult: IItemSearchResult | null
 }
 
 interface IProps {
@@ -56,7 +54,6 @@ class SearchPage extends React.Component<IProps> {
 
   state: IState = {
     selectedCategory: this.locationState.category || itemCategories[0].value,
-    popoverResult: null,
   }
 
   userIsAdmin = userIsAdmin()
@@ -112,16 +109,8 @@ class SearchPage extends React.Component<IProps> {
     this.setState({ selectedCategory: category })
   }
 
-  onImageClick = (result: IItemSearchResult) => {
-    this.setState({ popoverResult: result })
-  }
-
-  onDismissItemPopover = () => {
-    this.setState({ popoverResult: null })
-  }
-
   render() {
-    const { selectedCategory, popoverResult } = this.state
+    const { selectedCategory } = this.state
     const { selectedItems } = this.props
 
     const context = { ...this.state, selectedItems }
@@ -141,20 +130,10 @@ class SearchPage extends React.Component<IProps> {
             <IonRefresherContent />
           </IonRefresher>
           <Context.Provider value={context}>
-            <SearchResults
-              onSelect={this.onSelect}
-              onImageClick={this.onImageClick}
-            />
+            <SearchResults onSelect={this.onSelect} />
             {this.userIsAdmin ? <AddItemButton /> : <SubmitButton />}
           </Context.Provider>
         </IonContent>
-        <Popover
-          open={Boolean(popoverResult)}
-          onDismiss={this.onDismissItemPopover}
-          cssClass="popover-item-detail"
-        >
-          <PopoverItemDetails result={popoverResult} />
-        </Popover>
       </IonPage>
     )
   }

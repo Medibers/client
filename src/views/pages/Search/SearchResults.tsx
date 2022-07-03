@@ -17,13 +17,9 @@ const noItemsPlaceholder = 'No items found, please try a different search'
 
 interface ISearchResults {
   onSelect: (result: IItemSearchResult) => void
-  onImageClick: (result: IItemSearchResult) => void
 }
 
-const SearchResults: React.FC<ISearchResults> = ({
-  onSelect,
-  onImageClick,
-}) => {
+const SearchResults: React.FC<ISearchResults> = ({ onSelect }) => {
   const {
     results,
     search = '',
@@ -64,7 +60,6 @@ const SearchResults: React.FC<ISearchResults> = ({
             lines={i !== a.length - 1}
             selected={isSelected(result)}
             onSelect={onSelect}
-            onImageClick={() => onImageClick(result)}
             onMore={onMore}
           />
         ))
