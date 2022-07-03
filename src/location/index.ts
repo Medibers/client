@@ -12,7 +12,6 @@ import {
   setSessionLocation,
 } from 'session'
 
-import { platformIsWeb } from 'utils'
 import { ILocationPoint } from './types'
 
 export const updateCurrentPosition = async () => {
@@ -48,11 +47,6 @@ export const formatDistance = (mDistance: number) => {
   if (mDistance < 50000) return `${mDistance / 1000}km`
   return '> 50km'
 }
-
-export const getMapKey: () => string = () =>
-  (platformIsWeb
-    ? process.env.REACT_APP_MAP_KEY_WEB
-    : process.env.REACT_APP_MAP_KEY_MOBILE) || ''
 
 export const CentralLocation = {
   lat: 0.3476,

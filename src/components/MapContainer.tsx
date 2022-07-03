@@ -36,12 +36,14 @@ const Component: React.FC<IMapContainerProps> = ({
     getSessionLocation() ||
     CentralLocation
 
+  const mapIsZoomableOrraggable = Boolean(passedMapCenter) === false
+
   const mapDefaults = {
     center: {
       lat: mapCenter.lat,
       lng: mapCenter.lon,
     },
-    zoom: 12,
+    zoom: mapIsZoomableOrraggable ? 15 : 17,
   }
 
   const onChange = ({ lat, lng: lon }: ILocationPoint) => {
@@ -55,11 +57,11 @@ const Component: React.FC<IMapContainerProps> = ({
         {
           center: mapDefaults.center,
           zoom: mapDefaults.zoom,
-          zoomControl: false,
+          zoomControl: mapIsZoomableOrraggable,
           mapTypeControl: false,
           streetViewControl: false,
           fullscreenControl: false,
-          draggable: Boolean(passedMapCenter) === false,
+          draggable: mapIsZoomableOrraggable,
         }
       )
       map.addListener('center_changed', () => {
