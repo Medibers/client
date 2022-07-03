@@ -5,7 +5,7 @@ const Name: React.FC<{ name: string }> = ({ name }) => {
   return (
     <IonRow>
       <IonCol className="ion-no-padding">
-        <IonLabel>
+        <IonLabel className="wrap">
           <h2 className="ion-label-primary">{name}</h2>
         </IonLabel>
       </IonCol>
