@@ -42,8 +42,9 @@ const AddToCartButton: React.FC<IAddToCartButton> = ({
       slot="fixed"
     >
       <IonButton className="ion-action-primary" onClick={onCartButtonClick}>
-        {itemInCart ? 'REMOVE FROM' : 'ADD TO'} CART&nbsp;&nbsp;
         <IonIcon icon={itemInCart ? removeFromCartIcon : addToCartIcon} />
+        &nbsp;&nbsp;
+        {itemInCart ? 'Remove from' : 'Add to'} Cart
       </IonButton>
     </IonFab>
   )
