@@ -24,31 +24,33 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
 
   return (
     <IonPage>
-      <div className="position-relative" style={{ minHeight: '55vh' }}>
-        {/* Support the back button */}
-        <Header title="" backgroundTransparent />
-        <ImageSlider urls={images} />
-      </div>
-      <IonContent className="ion-padding">
-        <AddToCartButton selectedItems={selectedItems} result={result} />
-        <EditButton result={result} />
-        {/* <ContentHeader message={`Supplied by ${result.pharmacy.name}`} /> */}
-        <IonList lines="none">
-          <IonItem className="ion-no-padding">
-            <IonLabel className="wrap">
-              <h1>{result.item.name}</h1>
-            </IonLabel>
-          </IonItem>
-          <IonItem className="ion-no-padding">
-            <IonLabel className="no-wrap">
-              <h2>
-                <b>{formatMoney(price)}</b>
-              </h2>
-              <h4>{getItemState(available)}</h4>
-            </IonLabel>
-          </IonItem>
-          <ListedDetails details={item.specification} />
-        </IonList>
+      <IonContent>
+        <div className="position-relative" style={{ minHeight: '55vh' }}>
+          {/* Support the back button */}
+          <Header title="" backgroundTransparent />
+          <ImageSlider urls={images} />
+        </div>
+        <div className="ion-padding">
+          <AddToCartButton selectedItems={selectedItems} result={result} />
+          <EditButton result={result} />
+          {/* <ContentHeader message={`Supplied by ${result.pharmacy.name}`} /> */}
+          <IonList lines="none">
+            <IonItem className="ion-no-padding">
+              <IonLabel className="wrap">
+                <h1>{result.item.name}</h1>
+              </IonLabel>
+            </IonItem>
+            <IonItem className="ion-no-padding">
+              <IonLabel className="no-wrap">
+                <h2>
+                  <b>{formatMoney(price)}</b>
+                </h2>
+                <h4>{getItemState(available)}</h4>
+              </IonLabel>
+            </IonItem>
+            <ListedDetails details={item.specification} />
+          </IonList>
+        </div>
       </IonContent>
     </IonPage>
   )
