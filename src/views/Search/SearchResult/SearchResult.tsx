@@ -8,13 +8,15 @@ import { ItemSearchResult } from 'types'
 import { imageServerUrl } from 'utils'
 import { formatMoney } from 'utils/currency'
 import { userIsClientUser } from 'utils/role'
+import { sessionAvailable } from 'session'
 
 import Name from './Name'
 import Specification from './Specification'
 import Price from './Price'
 import Available from './Available'
 import More from './More'
-import { sessionAvailable } from 'session'
+
+import './SearchResult.css'
 
 export type Props = {
   selected: boolean
