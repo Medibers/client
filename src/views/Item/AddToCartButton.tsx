@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { IonButton, IonFab, IonIcon } from '@ionic/react'
+import { IonButton, IonIcon } from '@ionic/react'
 import {
   cartOutline as addToCartIcon,
   cart as removeFromCartIcon,
@@ -35,18 +35,11 @@ const AddToCartButton: React.FC<IAddToCartButton> = ({
   }
 
   return (
-    <IonFab
-      className="ion-margin"
-      vertical="bottom"
-      horizontal="end"
-      slot="fixed"
-    >
-      <IonButton className="ion-action-primary" onClick={onCartButtonClick}>
-        <IonIcon icon={itemInCart ? removeFromCartIcon : addToCartIcon} />
-        &nbsp;&nbsp;
-        {itemInCart ? 'Remove from' : 'Add to'} Cart
-      </IonButton>
-    </IonFab>
+    <IonButton className="ion-action-primary wrap" onClick={onCartButtonClick}>
+      <IonIcon icon={itemInCart ? removeFromCartIcon : addToCartIcon} />
+      &nbsp;&nbsp;
+      {itemInCart ? 'Remove from' : 'Add to'} Cart
+    </IonButton>
   )
 }
 

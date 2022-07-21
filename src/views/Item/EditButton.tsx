@@ -1,5 +1,5 @@
 import React from 'react'
-import { IonButton, IonFab } from '@ionic/react'
+import { IonButton } from '@ionic/react'
 
 import { userIsAdmin } from 'utils/role'
 
@@ -26,16 +26,9 @@ const EditButton: React.FC<IEditButton> = ({ result }) => {
   }
 
   return (
-    <IonFab
-      className="ion-margin"
-      vertical="bottom"
-      horizontal="end"
-      slot="fixed"
-    >
-      <IonButton className="ion-action-primary" onClick={onClick}>
-        Edit
-      </IonButton>
-    </IonFab>
+    <IonButton className="ion-action-primary" onClick={onClick}>
+      Edit
+    </IonButton>
   )
 }
 

@@ -30,15 +30,17 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
         <ImageSlider urls={images} />
       </div>
       <IonContent className="ion-padding">
+        <AddToCartButton selectedItems={selectedItems} result={result} />
+        <EditButton result={result} />
         {/* <ContentHeader message={`Supplied by ${result.pharmacy.name}`} /> */}
         <IonList lines="none">
           <IonItem className="ion-no-padding">
-            <IonLabel>
+            <IonLabel className="wrap">
               <h1>{result.item.name}</h1>
             </IonLabel>
           </IonItem>
           <IonItem className="ion-no-padding">
-            <IonLabel>
+            <IonLabel className="no-wrap">
               <h2>
                 <b>{formatMoney(price)}</b>
               </h2>
@@ -47,8 +49,6 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
           </IonItem>
           <ListedDetails details={item.specification} />
         </IonList>
-        <AddToCartButton selectedItems={selectedItems} result={result} />
-        <EditButton result={result} />
       </IonContent>
     </IonPage>
   )
