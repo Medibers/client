@@ -23,7 +23,7 @@ import eventsInstance, {
   requestCreate as requestCreateAction,
   requestUpdate as requestUpdateAction,
   syncData as syncDataAction,
-} from '../../../events'
+} from '../../events'
 
 import { userIsAdmin, userIsNotClientUser } from 'utils/role'
 import { getActiveRequests, getArchivedRequests } from 'utils'
@@ -32,7 +32,7 @@ import { setActiveRequestsPresence } from 'session'
 import OrderButton from './OrderButton'
 
 import getRequestsToolbarActions, { menuId } from './toolbar-actions'
-import getRequestsMenuActions from 'views/pages/menu-actions'
+import getRequestsMenuActions from 'views/menu-actions'
 
 import { fetchCouriers, fetchRequests, updateBackend } from './utils'
 import ItemRequestList from './ItemRequestList'

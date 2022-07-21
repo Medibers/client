@@ -6,7 +6,7 @@ import Requests, { endPoints } from '.'
 
 import { setSearchResult, setSupplier, setSupplierItem } from 'store/utils'
 import { ItemSearchResult } from 'types'
-import { ISupplier, ISupplierItem } from 'views/pages/Admin/types'
+import { ISupplier, ISupplierItem } from 'views/Admin/types'
 
 export const useGetSearchResult = (
   id?: string

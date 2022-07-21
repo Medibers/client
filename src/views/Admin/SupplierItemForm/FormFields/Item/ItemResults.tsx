@@ -1,7 +1,7 @@
 import React from 'react'
 import { IonItem, IonList } from '@ionic/react'
 
-import { IItem } from 'views/pages/Admin/types'
+import { IItem } from 'views/Admin/types'
 
 const searchResultsDivStyle: Object = {
   minWidth: 200,

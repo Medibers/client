@@ -4,7 +4,7 @@ import { IonButton, IonIcon, IonLabel } from '@ionic/react'
 import { close } from 'ionicons/icons'
 import { ListItem } from 'components'
 
-import { ISupplierItem } from 'views/pages/Admin/types'
+import { ISupplierItem } from 'views/Admin/types'
 
 import Routes from 'routes'
 

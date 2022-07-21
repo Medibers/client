@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 
 import Requests, { endPoints } from 'requests'
 
-import { IItem } from 'views/pages/Admin/types'
+import { IItem } from 'views/Admin/types'
 
-import { useDebounce } from 'views/pages/Admin/utils'
+import { useDebounce } from 'views/Admin/utils'
 
 export const useGetItems = (searchStr: string | null): [boolean, IItem[]] => {
   const [fetching, setFetching] = useState(true)

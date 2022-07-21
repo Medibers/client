@@ -6,7 +6,7 @@ import { ContentHeader, Header } from 'components'
 
 import SupplierList from './SupplierList'
 
-import { useGetSuppliers } from 'views/pages/Admin/hooks'
+import { useGetSuppliers } from 'views/Admin/hooks'
 
 import Routes from 'routes'
 import { navigateTo } from 'app-history'

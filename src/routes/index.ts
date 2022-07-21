@@ -19,7 +19,7 @@ import {
   Signup2,
   TCs,
   UpdateItem,
-} from 'views/pages'
+} from 'views'
 
 import { TRoutes } from './types'
 

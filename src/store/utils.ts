@@ -2,7 +2,7 @@ import store from './store'
 
 import * as constants from 'reducers/constants'
 import { ItemSearchResult } from 'types'
-import { ISupplier, ISupplierItem } from 'views/pages/Admin/types'
+import { ISupplier, ISupplierItem } from 'views/Admin/types'
 
 export const showLoading = () => {
   store.dispatch({ type: constants.SHOW_LOADING })

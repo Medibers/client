@@ -9,7 +9,7 @@ import { useGetRouteParams } from 'app-history'
 import { useGetSupplier } from 'requests'
 
 import Routes from 'routes'
-import { ISupplier } from 'views/pages/Admin/types'
+import { ISupplier } from 'views/Admin/types'
 
 interface IComponent {
   supplier: ISupplier

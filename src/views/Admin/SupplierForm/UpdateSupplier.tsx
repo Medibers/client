@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { ISupplier } from 'views/pages/Admin/types'
+import { ISupplier } from 'views/Admin/types'
 import { ISupplierFormFields } from './types'
 
 import { IonContent, IonPage } from '@ionic/react'

@@ -4,7 +4,7 @@ import { IonButton, IonIcon, IonLabel } from '@ionic/react'
 import { ellipsisHorizontal } from 'ionicons/icons'
 import { ListItem, Menu } from 'components'
 
-import { ISupplier } from 'views/pages/Admin/types'
+import { ISupplier } from 'views/Admin/types'
 
 import Routes from 'routes'
 

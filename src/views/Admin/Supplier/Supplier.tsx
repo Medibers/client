@@ -17,8 +17,8 @@ import Requests, { endPoints } from 'requests'
 import Routes from 'routes'
 import { navigateTo } from 'app-history'
 
-import { useGetSupplierItems } from 'views/pages/Admin/hooks'
-import { ISupplier, ISupplierItem } from 'views/pages/Admin/types'
+import { useGetSupplierItems } from 'views/Admin/hooks'
+import { ISupplier, ISupplierItem } from 'views/Admin/types'
 import SupplierDataWrapper from 'components/DataWrapper/Supplier'
 
 const getCountText = (count: number, supplier: string) => {

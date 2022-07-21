@@ -1,7 +1,7 @@
 import produce from 'immer'
 import { getCart, setCart } from 'session'
 import { Action, ItemRequest, ItemSearchResult } from 'types'
-import { ISupplier, ISupplierItem } from 'views/pages/Admin/types'
+import { ISupplier, ISupplierItem } from 'views/Admin/types'
 
 import * as constants from './constants'
 

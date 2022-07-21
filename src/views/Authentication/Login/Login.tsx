@@ -28,7 +28,7 @@ import { CCs } from 'utils/msisdn'
 import Routes, { getDefaultRoute } from 'routes'
 import { getLocationQueryParameter, redirectTo } from 'app-history'
 
-import getMenuActions from 'views/pages/menu-actions'
+import getMenuActions from 'views/menu-actions'
 
 import HeadComponent from '../HeadComponent'
 import CreateAccountButton from './CreateAccountButton'

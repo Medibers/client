@@ -5,7 +5,7 @@ import { IonLabel } from '@ionic/react'
 import { ListItem } from 'components'
 import { FormFieldError, SelectField } from 'components/FormFields'
 
-import { mapEntitiesToSelectOptions } from 'views/pages/Admin/utils'
+import { mapEntitiesToSelectOptions } from 'views/Admin/utils'
 
 import { IUnit } from '../types'
 

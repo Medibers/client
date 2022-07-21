@@ -3,7 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 
 import { IonButton, IonList } from '@ionic/react'
 
-import { ISupplier } from 'views/pages/Admin/types'
+import { ISupplier } from 'views/Admin/types'
 import { ISupplierFormFields } from './types'
 import { getItemFormDefaultValues } from './utils'
 

@@ -13,7 +13,7 @@ import { Header, Menu } from 'components'
 import { userIsClientUser } from 'utils/role'
 
 import getPageText from 'text'
-import getMenuActions from 'views/pages/menu-actions'
+import getMenuActions from 'views/menu-actions'
 
 import Categories from './Categories'
 import DeliveryLocation from './DeliveryLocation'

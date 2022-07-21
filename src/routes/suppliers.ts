@@ -5,7 +5,7 @@ import {
   Suppliers,
   UpdateSupplier,
   UpdateSupplierItem,
-} from 'views/pages'
+} from 'views'
 
 import { TRoutes } from './types'
 

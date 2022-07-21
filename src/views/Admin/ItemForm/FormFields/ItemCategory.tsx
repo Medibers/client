@@ -6,7 +6,7 @@ import { ListItem } from 'components'
 import { FormFieldError, SelectField } from 'components/FormFields'
 
 import { ICategory } from '../types'
-import { mapEntitiesToSelectOptions } from 'views/pages/Admin/utils'
+import { mapEntitiesToSelectOptions } from 'views/Admin/utils'
 
 interface IProps {
   disabled: boolean

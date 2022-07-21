@@ -9,7 +9,7 @@ import { useGetRouteParams } from 'app-history'
 import { useGetSupplierItem } from 'requests'
 
 import Routes from 'routes'
-import { ISupplierItem } from 'views/pages/Admin/types'
+import { ISupplierItem } from 'views/Admin/types'
 
 interface IComponent {
   item: ISupplierItem
