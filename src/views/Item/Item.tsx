@@ -14,7 +14,7 @@ import ListedDetails from './ListedDetails'
 import AddToCartButton from './AddToCartButton'
 import EditButton from './EditButton'
 
-import './Item.css'
+import './Item.scss'
 
 interface IItem {
   result: IItemSearchResult

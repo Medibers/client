@@ -1,0 +1,14 @@
+.item-details {
+  > div:first-child {
+    min-height: 55vh
+  }
+
+  ion-item-divider {
+    min-height: 1.5rem;
+    margin-bottom: 0.6rem
+  }
+
+  h2 {
+    font-weight: 500
+  }
+}

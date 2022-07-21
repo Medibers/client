@@ -16,7 +16,7 @@ import Price from './Price'
 import Available from './Available'
 import More from './More'
 
-import './SearchResult.css'
+import './SearchResult.scss'
 
 export type Props = {
   selected: boolean
