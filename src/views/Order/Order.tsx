@@ -225,6 +225,7 @@ const Component: React.FC<IOrderProps> = props => {
                 onClick={onPrimaryAction}
                 disabled={locationNotAvailable}
                 className="ion-margin-top ion-action-primary"
+                size="default"
               >
                 {primaryAction}
               </IonButton>
