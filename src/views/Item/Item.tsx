@@ -14,6 +14,8 @@ import ListedDetails from './ListedDetails'
 import AddToCartButton from './AddToCartButton'
 import EditButton from './EditButton'
 
+import './Item.css'
+
 interface IItem {
   result: IItemSearchResult
   selectedItems: Array<IItemSearchResult>
@@ -24,8 +26,8 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
 
   return (
     <IonPage>
-      <IonContent>
-        <div className="position-relative" style={{ minHeight: '55vh' }}>
+      <IonContent className="item-details">
+        <div className="position-relative">
           {/* Support the back button */}
           <Header title="" backgroundTransparent />
           <ImageSlider urls={images} />
@@ -52,7 +54,7 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
               style={{ '--min-height': 'unset' }}
             >
               <IonLabel className="no-wrap">
-                <h2 style={{ fontWeight: 500 }}>{formatMoney(price)}</h2>
+                <h2>{formatMoney(price)}</h2>
               </IonLabel>
             </IonItem>
             {available && (
