@@ -1,3 +1,4 @@
+import { IUnit } from 'types'
 import { ISupplierFormFields } from './SupplierForm/types'
 
 export interface ISupplier extends ISupplierFormFields {
@@ -21,5 +22,5 @@ export interface ISupplierItem {
   price: number
   images: string[]
   available: boolean
-  unit: { _id: string }
+  unit: IUnit
 }

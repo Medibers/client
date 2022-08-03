@@ -40,7 +40,13 @@ export interface ItemSearchResult {
   available: boolean
   distance?: string
   distanceRaw?: number
-  unit: { _id: string }
+  unit: IUnit
+}
+
+export interface IUnit {
+  _id: string
+  singular: string
+  plural: string
 }
 
 export interface PharmacyItem {

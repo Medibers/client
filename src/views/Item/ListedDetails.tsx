@@ -6,7 +6,9 @@ import { ListItem } from 'components'
 const ListedDetails: React.FC<{ details?: string[] }> = ({ details }) => {
   return details && details.length ? (
     <React.Fragment>
-      <IonItemDivider />
+      <IonItemDivider className="ion-no-padding ion-no-margin">
+        <IonLabel>More details</IonLabel>
+      </IonItemDivider>
       <ListItem className="ion-no-padding" lines="none">
         <IonLabel className="ion-no-margin wrap">
           {details.map(o => (

@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useMutation } from 'react-query'
 
 import Requests, { endPoints } from '.'
 
 import { setSearchResult, setSupplier, setSupplierItem } from 'store/utils'
-import { ItemSearchResult } from 'types'
+import { IUnit, ItemSearchResult } from 'types'
 import { ISupplier, ISupplierItem } from 'views/Admin/types'
 
 export const useGetSearchResult = (
@@ -62,4 +62,19 @@ export const useGetSupplierItem = (
   }, [supplierItemId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return [isLoading, data ? data[0] : undefined]
+}
+
+export const useGetUnits = (): [boolean, IUnit[]] => {
+  const [fetching, setFetching] = useState(true)
+  const [units, setUnits] = useState<IUnit[]>([])
+
+  useEffect(() => {
+    Requests.get<IUnit[]>(endPoints.items + '/units')
+      .then(setUnits)
+      .finally(() => {
+        setFetching(false)
+      })
+  }, [])
+
+  return [fetching, units]
 }

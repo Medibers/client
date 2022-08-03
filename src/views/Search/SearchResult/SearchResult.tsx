@@ -18,7 +18,7 @@ import More from './More'
 
 import './SearchResult.scss'
 
-export type Props = {
+interface ISearchResult {
   selected: boolean
   onSelect: (a1: ItemSearchResult) => void
   onMore: (a1: ItemSearchResult) => void
@@ -47,7 +47,7 @@ const imageStyle = {
   borderRadius: '50%',
 }
 
-const Component: React.FC<Props> = ({
+const SearchResult: React.FC<ISearchResult> = ({
   result,
   lines,
   selected,
@@ -110,4 +110,4 @@ const Component: React.FC<Props> = ({
   )
 }
 
-export default Component
+export default SearchResult

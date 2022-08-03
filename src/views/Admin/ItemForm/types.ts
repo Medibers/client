@@ -16,12 +16,6 @@ export interface ICategory {
   name: string
 }
 
-export interface IUnit {
-  _id: string
-  singular: string
-  plural: string
-}
-
 export interface ILocationState extends IItemSearchResult {
   selectedCategory?: string
 }

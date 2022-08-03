@@ -22,7 +22,7 @@ interface IItem {
 }
 
 const Item: React.FC<IItem> = ({ result, selectedItems }) => {
-  const { item, price, images, available } = result
+  const { item, price, images, available, unit } = result
 
   return (
     <IonPage>
@@ -54,7 +54,9 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
               style={{ '--min-height': 'unset' }}
             >
               <IonLabel className="no-wrap">
-                <h2>{formatMoney(price)}</h2>
+                <h2>
+                  {formatMoney(price)} per {unit.singular || 'unit'}
+                </h2>
               </IonLabel>
             </IonItem>
             {available && (

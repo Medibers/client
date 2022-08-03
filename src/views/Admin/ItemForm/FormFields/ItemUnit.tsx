@@ -7,7 +7,7 @@ import { FormFieldError, SelectField } from 'components/FormFields'
 
 import { mapEntitiesToSelectOptions } from 'views/Admin/utils'
 
-import { IUnit } from '../types'
+import { IUnit } from 'types'
 
 interface IProps {
   disabled: boolean

@@ -4,6 +4,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { IonButton, IonList } from '@ionic/react'
 
 import { ItemSearchResult } from 'types'
+import { useGetUnits } from 'requests/hooks'
+
 import { IItemFormFields, ILocationState } from './types'
 import { getItemFormDefaultValues } from './utils'
 
@@ -13,7 +15,7 @@ import ItemName from './FormFields/ItemName'
 import ItemSpecifications from './FormFields/ItemSpecifications'
 import ItemUnit from './FormFields/ItemUnit'
 
-import { useGetCategories, useGetUnits } from './hooks'
+import { useGetCategories } from './hooks'
 
 import { getLocationState } from 'app-history'
 
