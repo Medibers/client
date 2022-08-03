@@ -38,15 +38,15 @@ export class AccountPage extends React.Component {
   }
 
   componentDidMount() {
-    showLoading()
-    Requests.get(endPoints['credits'])
-      .then(response => {
-        this.setState({ credits: response })
-      })
-      .catch(err => {
-        showToast(err.error || err.toString())
-      })
-      .finally(hideLoading)
+    // showLoading()
+    // Requests.get(endPoints['credits'])
+    //   .then(response => {
+    //     this.setState({ credits: response })
+    //   })
+    //   .catch(err => {
+    //     showToast(err.error || err.toString())
+    //   })
+    //   .finally(hideLoading)
   }
 
   showMSISDNPopover = () => {

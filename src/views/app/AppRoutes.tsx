@@ -28,6 +28,8 @@ const handlePublicRoutes = (
 const userIsAuthorizedForProtectedRoute = (routeIsForAdmin: boolean) =>
   routeIsForAdmin ? userIsAdmin() : sessionAvailable()
 
+const ignoredPaths = [Routes.login.path, Routes.account.path]
+
 // Redirect to /login if session not available
 const handleProtectedRoutes = (
   Component: Function,
@@ -38,8 +40,9 @@ const handleProtectedRoutes = (
     location: { pathname, search, state },
   } = props
 
-  const searchStr =
-    pathname === Routes.login.path ? search : search + '?to=' + pathname
+  const searchStr = ignoredPaths.includes(pathname)
+    ? search
+    : search + '?to=' + pathname
 
   return userIsAuthorizedForProtectedRoute(isForAdmin) ? (
     <Component {...props} />

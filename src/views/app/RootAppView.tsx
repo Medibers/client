@@ -30,12 +30,12 @@ const RootAppView: React.FC = () => {
   const [renderSplashScreen, setRenderSplashScreen] =
     useState(platformIsWebBrowser)
 
-  const hideSpashScreen = () => {
+  const hideSplashScreen = () => {
     setRenderSplashScreen(false)
   }
 
   useEffect(() => {
-    platformIsWebBrowser && setTimeout(hideSpashScreen, splashTimeout)
+    platformIsWebBrowser && setTimeout(hideSplashScreen, splashTimeout)
     if (sessionAvailable()) {
       return watchUserLocation().unsubscribe
     }
