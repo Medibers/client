@@ -25,10 +25,10 @@ import { CCs } from 'utils/msisdn'
 
 export type Props = {
   history: History
-  showLoading: Function
-  hideLoading: Function
-  showToast: Function
-  hideToast: Function
+  showLoading: () => void
+  hideLoading: () => void
+  showToast: (message: string) => void
+  hideToast: () => void
 }
 
 const header = "Let's start"
@@ -39,7 +39,7 @@ class Component extends React.Component<Props> {
 
   onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    this.setState({ ...this.state, [name]: value })
+    this.setState({ ...this.state, [name]: value.trim() })
   }
 
   onSubmit = (event?: FormEvent) => {
@@ -52,7 +52,7 @@ class Component extends React.Component<Props> {
     if (partPhone) {
       hideToast()
       showLoading()
-      const phone = `${CCs.ug.value}${(partPhone || '').trim()}`
+      const phone = `${CCs.ug.value}${partPhone || ''}`
       Requests.post<{ token: string; phone: string }>(endPoints.signup1, {
         phone,
       })
@@ -66,7 +66,7 @@ class Component extends React.Component<Props> {
           showToast(err.error || err.toString())
           throw err
         })
-        .finally(() => hideLoading())
+        .finally(hideLoading)
     }
   }
 

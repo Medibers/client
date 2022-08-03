@@ -68,12 +68,12 @@ class Component extends React.Component<ILoginProps> {
           phone,
           secret: password,
         }
-      ).catch(err => {
-        showToast(err.error || err.toString())
-        throw err
-      })
-
-      hideLoading()
+      )
+        .catch(err => {
+          showToast(err.error || err.toString())
+          throw err
+        })
+        .finally(hideLoading)
 
       setSessionToken(token)
       setSessionPhone(phone)

@@ -35,18 +35,26 @@ interface ILocationState {
 
 export type Props = {
   history: History<ILocationState>
-  showLoading: Function
-  hideLoading: Function
-  showToast: Function
-  hideToast: Function
+  showLoading: () => void
+  hideLoading: () => void
+  showToast: (message: string) => void
+  hideToast: () => void
 }
 
 const header = 'Almost there'
 const subHeader =
   'Enter the verification code you received, a password you use to login and your name'
 
+interface IState {
+  code: string | null
+  password: string | null
+  name: string | null
+  email: string | null
+  inputFocussed: string | null
+}
+
 class Component extends React.Component<Props> {
-  state = {
+  state: IState = {
     code: null,
     password: null,
     name: null,
@@ -56,7 +64,7 @@ class Component extends React.Component<Props> {
 
   onChange = (event: CustomEvent<unknown>) => {
     const { name, value } = event.target as HTMLInputElement
-    this.setState({ [name]: value })
+    this.setState({ [name]: value.trim() })
   }
 
   onSubmit = (event?: FormEvent) => {
@@ -82,10 +90,10 @@ class Component extends React.Component<Props> {
       showLoading()
       Requests.post<{ token: string }>(endPoints.signup2, {
         token,
-        code: (code || '').trim(),
-        secret: (password || '').trim(),
-        name: (name || '').trim(),
-        email: (email || '').trim() || null,
+        code: code || '',
+        secret: password || '',
+        name: name || '',
+        email: email,
       })
         .then(response => {
           setSessionToken(response.token)
@@ -96,7 +104,7 @@ class Component extends React.Component<Props> {
           showToast(err.error || err.toString())
           throw err
         })
-        .finally(() => hideLoading())
+        .finally(hideLoading)
     }
   }
 
