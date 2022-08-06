@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { QueryClient } from 'react-query'
 import { getSessionToken, sessionAvailable } from 'session'
@@ -7,10 +9,9 @@ const defaultHeaders = {
 }
 
 const headers = sessionAvailable()
-  ? {
-      ...defaultHeaders,
-      Authorization: `Bearer ${getSessionToken()}`,
-    }
+  ? Object.assign(defaultHeaders, {
+    Authorization: `Bearer ${getSessionToken()}`,
+  })
   : defaultHeaders
 
 let baseURL =
@@ -88,7 +89,7 @@ export const endPoints = {
   credits: '/credits',
   'credit-offers': '/credits/offers',
   'mtn-msisdn': '/user/mtn-msisdn',
-  couriers: '/courier',
+  couriers: '/couriers',
   'push-notification-token': '/push-notification-token',
   'support-contacts': '/support/contacts',
   faqs: '/docs/faqs.json',

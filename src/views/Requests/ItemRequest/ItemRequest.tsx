@@ -89,7 +89,7 @@ const ItemRequest: React.FC<IItemRequestProps> = ({ item, selected }) => {
           slot="start"
           onClick={event =>
             onClick(
-              event,
+              event as React.MouseEvent,
               userIsNotClientUser() ? 'select-item' : 'show-detail'
             )
           }

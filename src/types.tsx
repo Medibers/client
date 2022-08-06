@@ -71,7 +71,7 @@ export interface ItemRequest<TState = TItemRequestState> {
   notes: string
   state: TState
   createdAt: number
-  courier?: Courier
+  courier?: Pick<ICourier, '_id' | 'name' | 'phones'>
   contacts: Array<IOrderDeliveryContact>
   lat: number
   lon: number
@@ -85,7 +85,7 @@ export interface ItemRequest<TState = TItemRequestState> {
   }
 }
 
-export interface Courier {
+export interface ICourier {
   _id: string
   alias: string
   name: string

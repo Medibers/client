@@ -1,6 +1,6 @@
 import { TItemRequestState } from 'types'
 
-import { Courier as ICourier, ItemRequest as IItemRequest } from 'types'
+import { ICourier, ItemRequest as IItemRequest } from 'types'
 
 import Requests, { endPoints } from 'requests'
 
