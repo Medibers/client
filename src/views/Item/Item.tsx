@@ -53,7 +53,7 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
               className="ion-no-padding"
               style={{ '--min-height': 'unset' }}
             >
-              <IonLabel className="no-wrap">
+              <IonLabel className="wrap">
                 <h2>
                   {formatMoney(price)} per {unit.singular || 'unit'}
                 </h2>
