@@ -15,6 +15,7 @@ import AddToCartButton from './AddToCartButton'
 import EditButton from './EditButton'
 
 import './Item.scss'
+import { EItemCategory } from 'utils/item-category-map'
 
 interface IItem {
   result: IItemSearchResult
@@ -23,6 +24,9 @@ interface IItem {
 
 const Item: React.FC<IItem> = ({ result, selectedItems }) => {
   const { item, price, images, available, unit } = result
+
+  const showSupplier = item.category === EItemCategory.HEALTH_SERVICES
+  const showUnit = item.category !== EItemCategory.HEALTH_SERVICES
 
   return (
     <IonPage>
@@ -42,11 +46,11 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
             >
               <IonLabel className="ion-no-margin wrap">
                 <h1>{result.item.name}</h1>
-                <h4>
-                  <i className="ion-label-secondary">
-                    {getItemState(available)}
-                  </i>
-                </h4>
+                {showSupplier && (
+                  <h4>
+                    <i>Provided by {result.pharmacy.name}</i>
+                  </h4>
+                )}
               </IonLabel>
             </IonItem>
             <IonItem
@@ -54,8 +58,18 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
               style={{ '--min-height': 'unset' }}
             >
               <IonLabel className="wrap">
+                <h4>
+                  <i className="ion-label-secondary">
+                    {getItemState(available)}
+                  </i>
+                </h4>
                 <h2>
-                  {formatMoney(price)} per {unit.singular || 'unit'}
+                  {formatMoney(price)}&nbsp;
+                  {showUnit && (
+                    <React.Fragment>
+                      per {unit.singular || 'unit'}
+                    </React.Fragment>
+                  )}
                 </h2>
               </IonLabel>
             </IonItem>

@@ -9,7 +9,7 @@ const ListedDetails: React.FC<{ details?: string[] }> = ({ details }) => {
       <IonItemDivider className="ion-no-padding ion-no-margin">
         <IonLabel>More details</IonLabel>
       </IonItemDivider>
-      <ListItem className="ion-no-padding" lines="none">
+      <ListItem className="ion-no-padding detail" lines="none">
         <IonLabel className="ion-no-margin wrap">
           {details.map(o => (
             <h4 key={o}>{o}</h4>
