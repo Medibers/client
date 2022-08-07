@@ -9,7 +9,7 @@ import { IItem, ItemSearchResult as IItemSearchResult } from 'types'
 import { IItemFormFields } from './types'
 
 import Requests, { endPoints } from 'requests'
-import { setSearchResult, showToast } from 'store/utils'
+import { setSupplierItem, showToast } from 'store/utils'
 
 import { goBack } from 'app-history'
 
@@ -27,7 +27,7 @@ const UpdateItem: React.FC<IUpdateItem> = ({ result }) => {
     Requests.put<IItem[]>(endPoints.items + `/${result.item._id}`, values)
       .then(([updatedItem]) => {
         showToast('Item updated')
-        setSearchResult({ ...result, item: updatedItem })
+        setSupplierItem({ ...result, item: updatedItem })
         goBack()
       })
       .catch(error => {
