@@ -8,7 +8,7 @@ const Specification: React.FC<{ disabled: boolean }> = ({ disabled }) => {
   return (
     <ListItem>
       <IonLabel position="stacked">Specification</IonLabel>
-      <TextareaField disabled={disabled} name="specification" />
+      <TextareaField autoGrow disabled={disabled} name="specification" />
     </ListItem>
   )
 }

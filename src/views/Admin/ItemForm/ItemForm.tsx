@@ -12,12 +12,14 @@ import { getItemFormDefaultValues } from './utils'
 import ItemCategory from './FormFields/ItemCategory'
 import ItemName from './FormFields/ItemName'
 // import ItemDescription from './FormFields/ItemDescription'
-import ItemSpecifications from './FormFields/ItemSpecifications'
+import ItemSpecification from './FormFields/ItemSpecification'
 import ItemUnit from './FormFields/ItemUnit'
 
 import { useGetCategories } from './hooks'
 
 import { getLocationState } from 'app-history'
+
+import './ItemForm.scss'
 
 interface IItemForm {
   result?: ItemSearchResult
@@ -40,11 +42,11 @@ const ItemForm: React.FC<IItemForm> = ({ onSubmit, disabled, result }) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="item-form">
         <IonList className="ion-margin-vertical" lines="full">
           <ItemName disabled={disabled} />
           <ItemCategory disabled={disabled} categories={categories} />
-          <ItemSpecifications disabled={disabled} />
+          <ItemSpecification disabled={disabled} />
           <ItemUnit disabled={disabled} units={units} />
         </IonList>
         <IonButton

@@ -71,7 +71,7 @@ const UpdateSupplierItem: React.FC<IUpdateSupplierItem> = ({
       <IonContent>
         <IonItem className="ion-no-margin" lines="none">
           <ContentHeader
-            message={`Supplied by ${supplierItem.pharmacy.name}`}
+            message={`Provided by ${supplierItem.pharmacy.name}`}
           />
         </IonItem>
         <SupplierItemForm item={supplierItem} onSubmit={onSubmit} />

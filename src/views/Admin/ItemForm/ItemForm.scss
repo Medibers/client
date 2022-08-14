@@ -1,0 +1,9 @@
+.item-form {
+  .textarea-wrapper, textarea {
+    min-height: 60px !important;
+  }
+
+  .textarea-wrapper {
+    height: unset
+  }
+}
