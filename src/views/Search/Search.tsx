@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { connect } from 'react-redux'
 import { State as ReducerState } from 'reducers'
@@ -45,24 +45,26 @@ interface IState {
   search?: string
 }
 
-interface IProps {
+interface ISearchPage {
   selectedItems: Array<string>
 }
 
-class SearchPage extends React.Component<IProps> {
-  locationState = getLocationState() as ILocationState
+const SearchPage: React.FC<ISearchPage> = ({ selectedItems }) => {
+  const locationState = getLocationState() as ILocationState
 
-  state: IState = {
-    selectedCategory: this.locationState.category || itemCategories[0].value,
+  const [state, setState] = useState<IState>(() => ({
+    selectedCategory: locationState.category || itemCategories[0].value,
+  }))
+
+  const updateState = (newState: Partial<IState>) => {
+    setState(oldState => ({ ...oldState, ...newState }))
   }
 
-  userIsAdmin = userIsAdmin()
+  useEffect(() => {
+    fetchItems('*')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  componentDidMount() {
-    this.fetchItems('*')
-  }
-
-  fetchItems = async (search: string) => {
+  const fetchItems = async (search: string) => {
     if (search === '') return
     if (search === null) return
 
@@ -76,7 +78,7 @@ class SearchPage extends React.Component<IProps> {
       }
     )
       .then(results => {
-        this.setState({ results })
+        updateState({ results })
       })
       .catch(err => {
         showToast(err.error || err.toString())
@@ -87,16 +89,15 @@ class SearchPage extends React.Component<IProps> {
     return response
   }
 
-  onRefresh = (event?: CustomEvent<RefresherEventDetail>) =>
-    this.fetchItems('*').finally(() => event && event.detail.complete())
+  const onRefresh = (event?: CustomEvent<RefresherEventDetail>) =>
+    fetchItems('*').finally(() => event && event.detail.complete())
 
-  onSearch = ({ detail: { value } }: CustomEvent) => {
-    this.setState({ search: value.toLowerCase() })
+  const onSearch = ({ detail: { value } }: CustomEvent) => {
+    updateState({ search: value.toLowerCase() })
   }
 
-  onSelect = (result: IItemSearchResult) => {
+  const onSelect = (result: IItemSearchResult) => {
     if (userIsClientUser() || !sessionAvailable()) {
-      const { selectedItems } = this.props
       if (selectedItems.indexOf(result._id) < 0) {
         addToCart(result)
       } else {
@@ -105,38 +106,33 @@ class SearchPage extends React.Component<IProps> {
     }
   }
 
-  onCategorySelected = (category: string) => {
-    this.setState({ selectedCategory: category })
+  const onCategorySelected = (category: string) => {
+    updateState({ selectedCategory: category })
   }
 
-  render() {
-    const { selectedCategory } = this.state
-    const { selectedItems } = this.props
+  const context = { ...state, selectedItems }
 
-    const context = { ...this.state, selectedItems }
-
-    return (
-      <IonPage className="search">
-        <Header
-          title={getTitle(this.onSearch)}
-          actions={getSearchToolbarActions({
-            selectedCategory,
-            itemCategories,
-            onCategorySelected: this.onCategorySelected,
-          })}
-        />
-        <IonContent class="popover-search-results">
-          <IonRefresher slot="fixed" onIonRefresh={this.onRefresh}>
-            <IonRefresherContent />
-          </IonRefresher>
-          <Context.Provider value={context}>
-            <SearchResults onSelect={this.onSelect} />
-            {this.userIsAdmin ? <AddItemButton /> : <SubmitButton />}
-          </Context.Provider>
-        </IonContent>
-      </IonPage>
-    )
-  }
+  return (
+    <IonPage className="search">
+      <Header
+        title={getTitle(onSearch)}
+        actions={getSearchToolbarActions({
+          selectedCategory: state.selectedCategory,
+          itemCategories,
+          onCategorySelected: onCategorySelected,
+        })}
+      />
+      <IonContent class="popover-search-results">
+        <IonRefresher slot="fixed" onIonRefresh={onRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
+        <Context.Provider value={context}>
+          <SearchResults onSelect={onSelect} />
+          {userIsAdmin() ? <AddItemButton /> : <SubmitButton />}
+        </Context.Provider>
+      </IonContent>
+    </IonPage>
+  )
 }
 
 const mapStateToProps = (state: ReducerState) => ({
