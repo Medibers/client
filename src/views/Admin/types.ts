@@ -1,4 +1,4 @@
-import { IUnit } from 'types'
+import { ICategory, IUnit } from 'types'
 import { ISupplierFormFields } from './SupplierForm/types'
 
 export interface ISupplier extends ISupplierFormFields {
@@ -9,6 +9,7 @@ export interface IItem {
   _id: string
   name: string
   category: string
+  categoryObject: ICategory
   specification: Array<string>
 }
 

@@ -18,8 +18,8 @@ export default () => {
   if (userIsAdmin()) {
     return [
       {
-        text: 'Suppliers',
-        handler: () => navigateTo(Routes.suppliers.path),
+        text: 'Dashboard',
+        handler: () => navigateTo(Routes.admin.path),
       },
       ...menuActions,
     ]

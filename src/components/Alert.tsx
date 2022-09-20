@@ -2,17 +2,17 @@ import React from 'react'
 
 import { AlertButton, IonAlert } from '@ionic/react'
 
-type Props = {
+interface IAlert {
   open: boolean
-  header: string
-  message: string
+  header?: string
+  message?: string
   buttonText?: string
   buttons?: AlertButton[]
   onConfirm?: () => void
   onDismiss: () => void
 }
 
-const Component: React.FC<Props> = ({
+const Alert: React.FC<IAlert> = ({
   open,
   header,
   message,
@@ -40,4 +40,4 @@ const Component: React.FC<Props> = ({
   />
 )
 
-export default Component
+export default Alert

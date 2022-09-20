@@ -24,6 +24,7 @@ export interface IItem {
   _id: string
   name: string
   category: string
+  categoryObject: ICategory
   specification: Array<string>
 }
 
@@ -112,4 +113,13 @@ export interface PaymentChannel {
   icon?: string
   requiresNumber?: true
   unavailable?: true
+}
+
+export interface ICategory {
+  _id: string
+  name: string
+  image: string
+  position: number
+  service?: boolean
+  alias?: string
 }

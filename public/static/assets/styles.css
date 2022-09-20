@@ -35,13 +35,30 @@
 .item-category {
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 10px 5px rgba(var(--ion-color-primary-rgb), .2) !important;
+  box-shadow: 0 0 10px 6px rgba(var(--ion-color-primary-rgb), .2) !important;
   border-radius: 0 !important;
   cursor: pointer;
   text-align: center
 }
 
-.item-category:hover {
+.item-category > div {
+  padding: 10px 4px;
+}
+
+.item-category-grid, .item-category-wrapper {
+  padding: 8px;
+}
+
+.admin-dashboard-category {
+  /* position: relative;
+  overflow: hidden; */
+  /* box-shadow: 0 0 10px 5px rgba(var(--ion-color-primary-rgb), .2) !important;
+  border-radius: 0 !important; */
+  cursor: pointer;
+  /* text-align: center */
+}
+
+.item-category:hover, .admin-dashboard-category:hover {
   background-color: rgba(var(--ion-color-primary-rgb), .05) !important
 }
 

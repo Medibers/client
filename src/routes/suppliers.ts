@@ -11,36 +11,36 @@ import { TRoutes } from './types'
 
 const routes: TRoutes = {
   suppliers: {
-    path: '/suppliers',
+    path: '/admin/suppliers',
     component: Suppliers,
     isForAdmins: true,
   },
   'supplier-add': {
-    path: '/suppliers/add',
+    path: '/admin/suppliers/add',
     component: AddSupplier,
     isForAdmins: true,
   },
   supplier: {
-    path: '/suppliers/:id',
-    getPath: (id: string) => `/suppliers/${id}`,
+    path: '/admin/suppliers/:id',
+    getPath: (id: string) => `/admin/suppliers/${id}`,
     component: Supplier,
     isForAdmins: true,
   },
   'supplier-update': {
-    path: '/suppliers/:id/update',
-    getPath: (id: string) => `/suppliers/${id}/update`,
+    path: '/admin/suppliers/:id/update',
+    getPath: (id: string) => `/admin/suppliers/${id}/update`,
     component: UpdateSupplier,
     isForAdmins: true,
   },
   'supplier-item-add': {
-    path: '/suppliers/items/add',
+    path: '/admin/suppliers/items/add',
     component: AddSupplierItem,
     isForAdmins: true,
   },
   'supplier-item-update': {
-    path: '/suppliers/:supplierId/items/:supplierItemId/update',
+    path: '/admin/suppliers/:supplierId/items/:supplierItemId/update',
     getPath: (supplierId: string, supplierItemId?: string) =>
-      `/suppliers/${supplierId}/items/${supplierItemId}/update`,
+      `/admin/suppliers/${supplierId}/items/${supplierItemId}/update`,
     component: UpdateSupplierItem,
     isForAdmins: true,
   },

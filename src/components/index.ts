@@ -8,6 +8,7 @@ import Popover from './Popover'
 import Alert from './Alert'
 import Divider from './Divider'
 import Menu from './Menu'
+import NotAuthorized from './NotAuthorized'
 import ImageSlider from './ImageSlider/ImageSlider'
 import ListItem from './ListItem'
 import Refresher from './Refresher'
@@ -28,6 +29,7 @@ export {
   Alert,
   Divider,
   Menu,
+  NotAuthorized,
   ImageSlider,
   ListItem,
   Refresher,

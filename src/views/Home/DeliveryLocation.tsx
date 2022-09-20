@@ -16,12 +16,7 @@ const onChangeDeliveryLocation = () => {
 }
 
 const DeliveryLocation = () => (
-  <IonItem
-    className="ion-margin-bottom"
-    lines="none"
-    onClick={onChangeDeliveryLocation}
-    button
-  >
+  <IonItem lines="none" onClick={onChangeDeliveryLocation} button>
     <IonIcon
       slot="start"
       icon={locationIcon}

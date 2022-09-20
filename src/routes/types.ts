@@ -5,6 +5,7 @@ interface IRoute {
   isPublic?: boolean
   isForAdmins?: true
   redirectWhenSessionAvailable?: true
+  exact?: boolean
 }
 
 export type TRoutes = Record<string, IRoute>

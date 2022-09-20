@@ -5,6 +5,7 @@ import {
   About,
   Account,
   AddItem,
+  Admin,
   CompletedOrder,
   Home,
   Item,
@@ -108,6 +109,12 @@ const Routes: TRoutes = {
     isPublic: true,
     redirectWhenSessionAvailable: true,
   },
+  admin: {
+    path: '/admin',
+    component: Admin,
+    isForAdmins: true,
+    exact: false,
+  },
   ...supplierRoutes,
   home: {
     path: '/',
@@ -129,3 +136,19 @@ export const getDefaultRoute = (token = getSessionToken()) => {
   const role = decrypt(token).role as number
   return RoutesIndexedOnRoles[role - 1] || Routes.home.path
 }
+
+export const ADMIN_URL = '/admin'
+
+export const SUPPLIERS_URL = ADMIN_URL + '/suppliers'
+export const ADD_SUPPLIER_URL = SUPPLIERS_URL + '/add'
+export const SUPPLIER_URL = SUPPLIERS_URL + '/:id'
+export const UPDATE_SUPPLIER_URL = SUPPLIER_URL + '/update'
+export const ADD_SUPPLIER_ITEM_URL = SUPPLIERS_URL + '/items/add'
+export const UPDATE_SUPPLIER_ITEM_URL =
+  SUPPLIERS_URL + '/:supplierId/items/:supplierItemId/update'
+
+export const CATEGORIES_URL = ADMIN_URL + '/categories'
+export const ADD_CATEGORY_URL = CATEGORIES_URL + '/add'
+export const CATEGORY_URL = CATEGORIES_URL + '/:id'
+
+export const getCategoryUrl = (id: string) => CATEGORY_URL.replace(':id', id)

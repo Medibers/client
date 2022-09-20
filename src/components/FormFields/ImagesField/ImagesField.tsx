@@ -5,19 +5,27 @@ import { IonLabel } from '@ionic/react'
 import { ListItem } from 'components'
 import { FormFieldError } from 'components/FormFields'
 
-import { getUploadedImageUrls } from '../../utils'
+import { getUploadedImageUrls } from '../../../views/Admin/SupplierItemForm/utils'
 import { checkFiles, minHeight, minWidth } from './utils'
 
 import SelectedImages from './SelectedImages'
 
-import './ItemImages.css'
+import './ImagesField.css'
 
-const fieldName = 'images'
+interface IImagesField {
+  disabled?: boolean
+  label?: string
+  name: string
+}
 
-const Images: React.FC = () => {
+const ImagesField: React.FC<IImagesField> = ({
+  disabled,
+  label = 'Pictures',
+  name,
+}) => {
   const { control, errors, setError, watch } = useFormContext()
 
-  const selectedImages: string[] = getUploadedImageUrls(watch(fieldName))
+  const selectedImages: string[] = getUploadedImageUrls(watch(name))
 
   const inputRef = useRef<HTMLInputElement>()
 
@@ -32,7 +40,7 @@ const Images: React.FC = () => {
     const invalidFilesPresent = Boolean(invalidFiles)
 
     if (invalidFilesPresent) {
-      setError(fieldName, {
+      setError(name, {
         message: `Some pictures were not added. Ensure each picture is at least ${minHeight}px by ${minWidth}px but smaller than 1MB`,
       })
     }
@@ -48,14 +56,15 @@ const Images: React.FC = () => {
     <React.Fragment>
       <ListItem isLast>
         <IonLabel position="stacked">
-          Pictures <span className="ion-label-secondary">*</span>
+          {label} <span className="ion-label-secondary">*</span>
         </IonLabel>
         <Controller
           control={control}
-          name={fieldName}
+          name={name}
           render={({ onChange }) => (
             <input
               type="file"
+              disabled={disabled}
               multiple
               accept="image/png,image/jpg,image/jpeg"
               onChange={event => onFileChange(event, onChange)}
@@ -70,14 +79,14 @@ const Images: React.FC = () => {
       </ListItem>
       <FormFieldError
         error={
-          errors[fieldName]
-            ? errors[fieldName].message || 'Please upload a picture of the item'
+          errors[name]
+            ? errors[name].message || 'Please upload a picture of the item'
             : ''
         }
       />
-      <SelectedImages fieldName={fieldName} images={selectedImages} />
+      <SelectedImages fieldName={name} images={selectedImages} />
     </React.Fragment>
   )
 }
 
-export default Images
+export default ImagesField

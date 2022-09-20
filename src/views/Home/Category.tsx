@@ -3,7 +3,7 @@ import { IonLabel, IonRippleEffect } from '@ionic/react'
 
 const categoryImageStyle: Record<string, string> = {
   width: '100%',
-  height: '250px',
+  height: '85px', // '250px',
   objectFit: 'cover',
 }
 
@@ -18,6 +18,7 @@ const Category: React.FC<{
   }
 
   const [loaded, setLoaded] = useState(false)
+
   const onLoad = () => setLoaded(true)
 
   return (
@@ -36,11 +37,9 @@ const Category: React.FC<{
         onError={onError}
         alt=""
       />
-      <div className="ion-padding">
+      <div>
         <IonLabel>
-          <h3 className="ion-label-primary" style={{ fontSize: '105%' }}>
-            {label}
-          </h3>
+          <h3 className="ion-label-primary">{label}</h3>
         </IonLabel>
       </div>
       <IonRippleEffect />

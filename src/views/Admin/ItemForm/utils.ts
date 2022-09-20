@@ -17,7 +17,7 @@ export const getItemFormDefaultValues = (
   }
 
   if (state && state.item) {
-    values.category = state.item.category
+    values.category = state.item.categoryObject._id
     values.name = state.item.name
     values.specification = (state.item.specification || []).join('\n')
     values.unit = state.unit._id
