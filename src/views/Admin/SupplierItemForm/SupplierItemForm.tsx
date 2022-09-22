@@ -7,18 +7,23 @@ import { ISupplierItem } from '../types'
 import { ISupplierItemFormFields } from './types'
 import { getItemFormDefaultValues } from './utils'
 
+import ItemImages from 'components/FormFields/ImagesField'
 import Item from './FormFields/Item'
 import ItemPrice from './FormFields/ItemPrice'
-import ItemImages from './FormFields/ItemImages'
 
 const listStyle = { contain: 'unset' }
 
 interface IItemForm {
+  disabled?: boolean
   item?: ISupplierItem
   onSubmit: (values: ISupplierItemFormFields) => void
 }
 
-const SupplierItemForm: React.FC<IItemForm> = ({ onSubmit, item }) => {
+const SupplierItemForm: React.FC<IItemForm> = ({
+  onSubmit,
+  disabled,
+  item,
+}) => {
   const methods = useForm<ISupplierItemFormFields>({
     defaultValues: getItemFormDefaultValues(item),
   })
@@ -31,8 +36,8 @@ const SupplierItemForm: React.FC<IItemForm> = ({ onSubmit, item }) => {
       >
         <IonList lines="full" style={listStyle}>
           {item ? null : <Item />}
-          <ItemPrice />
-          <ItemImages />
+          <ItemPrice disabled={disabled} />
+          <ItemImages disabled={disabled} name="images" />
         </IonList>
         <IonButton
           className="ion-action-primary ion-margin-start"

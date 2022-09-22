@@ -7,7 +7,7 @@
 }
 
 .input-file::before {
-  content: 'Tap to select one or more pictures of the item';
+  content: 'Tap to select one or more pictures';
   display: inline-block;
   width: 99.5%;
   margin-top: 15px;

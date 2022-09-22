@@ -1,6 +1,6 @@
 import produce from 'immer'
 import { getCart, setCart } from 'session'
-import { Action, ItemRequest, ItemSearchResult } from 'types'
+import { Action, ICategory, ItemRequest, ItemSearchResult } from 'types'
 import { ISupplier, ISupplierItem } from 'views/Admin/types'
 
 import * as constants from './constants'
@@ -14,6 +14,7 @@ export interface State {
   supplier?: ISupplier
   supplierItem?: ISupplierItem
   cart: Array<ItemSearchResult>
+  categories?: Array<ICategory>
 }
 
 const initialState: State = {
@@ -89,6 +90,18 @@ export default (state = initialState, action: Action) =>
       }
       case constants.SET_CART: {
         setCart(action.payload)
+        break
+      }
+      case constants.SET_CATEGORIES: {
+        draft.categories = action.payload
+        break
+      }
+      case constants.SET_CATEGORY: {
+        const index = (draft.categories as ICategory[]).findIndex(
+          ({ _id }) => _id === action.payload._id
+        )
+        // @ts-ignore
+        draft.categories[index] = action.payload
         break
       }
       default:

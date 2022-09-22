@@ -1,7 +1,7 @@
 import store from './store'
 
 import * as constants from 'reducers/constants'
-import { ItemSearchResult } from 'types'
+import { ICategory, ItemSearchResult } from 'types'
 import { ISupplier, ISupplierItem } from 'views/Admin/types'
 
 export const showLoading = () => {
@@ -54,4 +54,12 @@ export const clearCart = () => {
 
 export const setCart = (payload: ItemSearchResult[]) => {
   store.dispatch({ type: constants.SET_CART, payload })
+}
+
+export const setCategories = (payload?: ICategory[]) => {
+  store.dispatch({ type: constants.SET_CATEGORIES, payload })
+}
+
+export const setCategory = (payload: ICategory) => {
+  store.dispatch({ type: constants.SET_CATEGORY, payload })
 }

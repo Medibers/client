@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import React from 'react'
 import { IonContent, IonItem, IonLabel, IonList, IonPage } from '@ionic/react'
 
@@ -15,7 +17,6 @@ import AddToCartButton from './AddToCartButton'
 import EditButton from './EditButton'
 
 import './Item.scss'
-import { EItemCategory } from 'utils/item-category-map'
 
 interface IItem {
   result: IItemSearchResult
@@ -25,8 +26,8 @@ interface IItem {
 const Item: React.FC<IItem> = ({ result, selectedItems }) => {
   const { item, price, images, available, unit } = result
 
-  const showSupplier = item.category === EItemCategory.HEALTH_SERVICES
-  const showUnit = item.category !== EItemCategory.HEALTH_SERVICES
+  const showSupplier = item.categoryObject.service
+  const showUnit = !item.categoryObject.service
 
   return (
     <IonPage>

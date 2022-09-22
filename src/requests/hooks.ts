@@ -4,8 +4,13 @@ import { useMutation } from 'react-query'
 
 import Requests, { endPoints } from '.'
 
-import { setSearchResult, setSupplier, setSupplierItem } from 'store/utils'
-import { IUnit, ItemSearchResult } from 'types'
+import {
+  setCategories,
+  setSearchResult,
+  setSupplier,
+  setSupplierItem,
+} from 'store/utils'
+import { ICategory, IUnit, ItemSearchResult } from 'types'
 import { ISupplier, ISupplierItem } from 'views/Admin/types'
 
 export const useGetSearchResult = (
@@ -77,4 +82,40 @@ export const useGetUnits = (): [boolean, IUnit[]] => {
   }, [])
 
   return [fetching, units]
+}
+
+export const useCategories = (
+  fetch?: boolean
+): [boolean, boolean, ICategory[]] => {
+  const {
+    isError,
+    data = [],
+    mutateAsync,
+  } = useMutation(() => Requests.get<ICategory[]>(endPoints.categories))
+
+  const [loading, setLoading] = useState(Boolean(fetch))
+
+  useEffect(() => {
+    fetch &&
+      mutateAsync().then(result => {
+        setCategories(result)
+        setLoading(false)
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  return [loading, isError, data]
+}
+
+export const useCategory = (
+  id: string
+): [boolean, boolean, ICategory | undefined] => {
+  const { isLoading, isError, data, mutateAsync } = useMutation(() =>
+    Requests.get<ICategory>(endPoints.categories + '/' + id)
+  )
+
+  useEffect(() => {
+    mutateAsync()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  return [isLoading, isError, data]
 }

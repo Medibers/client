@@ -15,26 +15,31 @@ import { userIsClientUser } from 'utils/role'
 import getPageText from 'text'
 import getMenuActions from 'views/menu-actions'
 
+import CategoriesDataWrapper from 'components/DataWrapper/Categories'
+import { ICategory } from 'types'
+
 import Categories from './Categories'
 import DeliveryLocation from './DeliveryLocation'
+
 import { getHomeToolbarActions } from './toolbar-actions'
 
-interface IHomeProps {
-  showMenu: (event: Event) => void
+interface IHomePage {
+  categories?: ICategory[]
+  categoriesApiCallCompleted?: boolean
 }
 
 const Text = getPageText('home')
 
-const Home: React.FC<IHomeProps> = () => {
-  return (
-    <IonPage>
-      <Header omitsBack actions={getHomeToolbarActions()} />
-      <Menu actions={getMenuActions()} />
-      <IonContent>
-        <IonList className="ion-no-padding">
-          {userIsClientUser() ? (
-            <React.Fragment>
-              <DeliveryLocation />
+const HomePage: React.FC<IHomePage> = ({ categories = [] }) => (
+  <IonPage>
+    <Header omitsBack actions={getHomeToolbarActions()} />
+    <Menu actions={getMenuActions()} />
+    <IonContent>
+      <IonList className="ion-no-padding">
+        {userIsClientUser() ? (
+          <React.Fragment>
+            <DeliveryLocation />
+            {categories.length > 0 && (
               <IonListHeader lines="full">
                 <IonLabel>
                   <h3 style={{ fontSize: '105%' }}>
@@ -42,14 +47,14 @@ const Home: React.FC<IHomeProps> = () => {
                   </h3>
                 </IonLabel>
               </IonListHeader>
-            </React.Fragment>
-          ) : null}
+            )}
+          </React.Fragment>
+        ) : null}
 
-          <Categories />
-        </IonList>
-      </IonContent>
-    </IonPage>
-  )
-}
+        <Categories categories={categories} />
+      </IonList>
+    </IonContent>
+  </IonPage>
+)
 
-export default Home
+export default CategoriesDataWrapper(HomePage)

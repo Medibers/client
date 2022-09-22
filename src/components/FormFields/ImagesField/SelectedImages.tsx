@@ -3,12 +3,13 @@ import { IonButton, IonCol, IonGrid, IonIcon, IonRow } from '@ionic/react'
 import { close } from 'ionicons/icons'
 import { useFormContext } from 'react-hook-form'
 import { imageServerUrl } from 'utils'
-import { urlIsDataURL } from '../../utils'
 
 interface IProps {
   fieldName: string
   images: string[]
 }
+
+const urlIsDataURL = (url: string = '') => url.startsWith('data:')
 
 const SelectedImages: React.FC<IProps> = ({ fieldName, images }) => {
   const { setValue, getValues } = useFormContext()

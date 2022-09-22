@@ -9,7 +9,11 @@ import { MIN_ITEM_PRICE } from '../utils'
 
 const fieldName = 'price'
 
-const Price: React.FC = () => {
+interface IPrice {
+  disabled?: boolean
+}
+
+const Price: React.FC<IPrice> = ({ disabled }) => {
   const { errors } = useFormContext()
 
   return (
@@ -18,7 +22,12 @@ const Price: React.FC = () => {
         <IonLabel position="stacked">
           Price <span className="ion-label-secondary">*</span>
         </IonLabel>
-        <NumberField required name={fieldName} min={MIN_ITEM_PRICE} />
+        <NumberField
+          disabled={disabled}
+          required
+          name={fieldName}
+          min={MIN_ITEM_PRICE}
+        />
       </ListItem>
       <FormFieldError error={errors[fieldName] ? 'Price is required' : ''} />
     </React.Fragment>

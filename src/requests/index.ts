@@ -101,6 +101,7 @@ export const endPoints = {
     supplierItemId
       ? `/suppliers/${supplierId}/items/${supplierItemId}`
       : `/suppliers/${supplierId}/items`,
+  categories: '/items/categories',
 }
 
 export const queryClient = new QueryClient()

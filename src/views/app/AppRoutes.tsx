@@ -72,11 +72,12 @@ const AppRoutes: React.FC = () => {
                 isPublic,
                 isForAdmins = false,
                 redirectWhenSessionAvailable = false,
+                exact = true,
               },
               i
             ) => (
               <Route
-                exact
+                exact={exact}
                 key={i}
                 path={path}
                 render={props =>

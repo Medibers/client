@@ -9,7 +9,7 @@ import Routes from 'routes'
 import { navigateTo } from 'app-history'
 import { setSearchResult } from 'store/utils'
 
-import { itemCategories } from './utils'
+import { allCategoriesOption } from './utils'
 
 import Context from './context'
 
@@ -28,10 +28,11 @@ const SearchResults: React.FC<ISearchResults> = ({ onSelect }) => {
   } = useContext(Context)
 
   const computeResultsShown = (allResults: Array<IItemSearchResult>) => {
-    return selectedCategory !== itemCategories[0].value
+    return selectedCategory !== allCategoriesOption.value
       ? allResults.filter(
-          ({ item: { name, category } }) =>
-            category === selectedCategory && name.toLowerCase().includes(search)
+          ({ item: { name, categoryObject } }) =>
+            categoryObject._id === selectedCategory &&
+            name.toLowerCase().includes(search)
         )
       : allResults.filter(({ item: { name } }) =>
           name.toLowerCase().includes(search)

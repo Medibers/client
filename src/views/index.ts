@@ -15,6 +15,7 @@ import Requests from './Requests'
 import CompletedOrder from './CompletedOrder'
 import About from './About'
 import TCs from './TCs'
+import Admin from './Admin/RootAdminView'
 import AddItem from './Admin/ItemForm/AddItem'
 import UpdateItem from './Admin/ItemForm/UpdateItem'
 import AddSupplierItem from './Admin/SupplierItemForm/AddSupplierItem'
@@ -40,6 +41,7 @@ export {
   CompletedOrder,
   About,
   TCs,
+  Admin,
   AddItem,
   UpdateItem,
   Suppliers,
