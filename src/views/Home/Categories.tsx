@@ -9,7 +9,7 @@ import { navigateTo } from 'app-history'
 import Category from './Category'
 import { ICategory } from 'types'
 
-const categoryImageBaseUrl = '/static/assets/images/item-category'
+const categoryImageBaseUrl = process.env.REACT_APP_FILE_SERVER_URL + '/images' // '/static/assets/images/item-category'
 
 const onSelectCategory = (category: string) => {
   navigateTo(Routes.search.path, { category, items: [] })
