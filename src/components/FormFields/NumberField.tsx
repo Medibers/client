@@ -1,5 +1,6 @@
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import { isNull } from 'lodash'
 import { IonInput } from '@ionic/react'
 
 interface IProps {
@@ -30,7 +31,8 @@ const NumberField: React.FC<IProps> = ({
         />
       )}
       rules={{
-        validate: value => (required ? Number(value) > min : true),
+        validate: value =>
+          required ? Number(isNull(value) ? min : value) > min : true,
       }}
     />
   )

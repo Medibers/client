@@ -5,7 +5,7 @@ import { IonLabel } from '@ionic/react'
 import { ListItem } from 'components'
 import { FormFieldError, NumberField } from 'components/FormFields'
 
-import { MIN_ITEM_PRICE } from '../utils'
+// import { MIN_ITEM_PRICE } from '../utils'
 
 const fieldName = 'price'
 
@@ -26,7 +26,7 @@ const Price: React.FC<IPrice> = ({ disabled }) => {
           disabled={disabled}
           required
           name={fieldName}
-          min={MIN_ITEM_PRICE}
+          // min={MIN_ITEM_PRICE} // Re-enable after support for other currencies is implemented
         />
       </ListItem>
       <FormFieldError error={errors[fieldName] ? 'Price is required' : ''} />
