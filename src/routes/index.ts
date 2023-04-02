@@ -139,7 +139,7 @@ export const getDefaultRoute = (token = getSessionToken()) => {
 
 export const ADMIN_URL = '/admin'
 
-export const SUPPLIERS_URL = ADMIN_URL + '/suppliers'
+export const SUPPLIERS_URL = '/suppliers'
 export const ADD_SUPPLIER_URL = SUPPLIERS_URL + '/add'
 export const SUPPLIER_URL = SUPPLIERS_URL + '/:id'
 export const UPDATE_SUPPLIER_URL = SUPPLIER_URL + '/update'

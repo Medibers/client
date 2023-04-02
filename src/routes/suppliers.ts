@@ -11,9 +11,9 @@ import { TRoutes } from './types'
 
 const routes: TRoutes = {
   suppliers: {
-    path: '/admin/suppliers',
+    path: '/suppliers',
     component: Suppliers,
-    isForAdmins: true,
+    isPublic: true,
   },
   'supplier-add': {
     path: '/admin/suppliers/add',
@@ -21,10 +21,10 @@ const routes: TRoutes = {
     isForAdmins: true,
   },
   supplier: {
-    path: '/admin/suppliers/:id',
-    getPath: (id: string) => `/admin/suppliers/${id}`,
+    path: '/suppliers/:id',
+    getPath: (id: string) => `/suppliers/${id}`,
     component: Supplier,
-    isForAdmins: true,
+    isPublic: true,
   },
   'supplier-update': {
     path: '/admin/suppliers/:id/update',
