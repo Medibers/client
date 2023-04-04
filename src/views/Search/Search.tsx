@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { connect } from 'react-redux'
 import { State as ReducerState } from 'reducers'
@@ -42,6 +42,7 @@ interface ILocationState {
 }
 
 interface IState {
+  fetchData: number
   results?: Array<IItemSearchResult>
   selectedCategory: string
   search?: string
@@ -55,9 +56,10 @@ interface ISearchPage {
 const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
   const locationState = getLocationState() as ILocationState
 
-  const [state, setState] = useState<IState>(() => ({
+  const [state, setState] = useState<IState>({
+    fetchData: 0,
     selectedCategory: locationState.category || allCategoriesOption.value,
-  }))
+  })
 
   const updateState = (newState: Partial<IState>) => {
     setState(oldState => ({ ...oldState, ...newState }))
@@ -65,35 +67,49 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
 
   useEffect(() => {
     fetchItems('*')
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state.fetchData]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const fetchItems = async (search: string) => {
-    if (search === '') return
-    if (search === null) return
+  const fetchItems = function (
+    search: string,
+    results?: IItemSearchResult[]
+  ): Promise<void> {
+    if (['', null].includes(search)) return Promise.resolve()
+
+    let previousResults: IItemSearchResult[] = []
+
+    if (results) {
+      previousResults = results
+    } else {
+      previousResults = state.results ? state.results : []
+    }
+
+    const skip = Array.from(new Set(previousResults.map(({ _id }) => _id)))
 
     const { lat, lon } = getDeliveryLocationForNextOrder()
 
-    showLoading()
-    const response = await Requests.get<Array<IItemSearchResult>>(
-      endPoints['item-search'](),
-      {
-        params: { search, lat, lon },
-      }
-    )
+    if (!state.results) showLoading()
+
+    return Requests.post<Array<IItemSearchResult>>(endPoints['item-search'](), {
+      search,
+      lat,
+      lon,
+      size: 10,
+      skip,
+    })
       .then(results => {
-        updateState({ results })
+        updateState({
+          results: previousResults.concat(results),
+        })
       })
       .catch(err => {
         showToast(err.error || err.toString())
         console.error(err) // eslint-disable-line
       })
-    hideLoading()
-
-    return response
+      .finally(hideLoading)
   }
 
   const onRefresh = (event?: CustomEvent<RefresherEventDetail>) =>
-    fetchItems('*').finally(() => event && event.detail.complete())
+    fetchItems('*', []).finally(() => event && event.detail.complete())
 
   const onSearch = ({ detail: { value } }: CustomEvent) => {
     updateState({ search: value.toLowerCase() })
@@ -124,7 +140,7 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
     [categories] // eslint-disable-line
   )
 
-  const context = { ...state, selectedItems }
+  const context = { ...state, updateState, selectedItems }
 
   return (
     <IonPage className="search">
@@ -145,8 +161,58 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
           <SearchResults onSelect={onSelect} />
           {userIsAdmin() ? <AddItemButton /> : <SubmitButton />}
         </Context.Provider>
+        {/* Scroll Observer */}
+        <Observer updateState={updateState} />
       </IonContent>
     </IonPage>
+  )
+}
+
+interface IObserver {
+  updateState: (newState: Partial<IState>) => void
+}
+
+const Observer: React.FC<IObserver> = ({ updateState }) => {
+  const observerTargetYRef = useRef(0)
+
+  // eslint-disable-next-line no-undef
+  const callback: IntersectionObserverCallback = entities => {
+    // @ts-ignore
+    const { y } = entities[0].boundingClientRect
+
+    if (y === 0) return
+
+    if (y < observerTargetYRef.current || observerTargetYRef.current === 0) {
+      updateState({ fetchData: Date.now() })
+    }
+
+    observerTargetYRef.current = y
+  }
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(callback, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0,
+    })
+
+    const element = document.querySelector('#observer-target') as Element
+
+    observer.observe(element)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div
+      id="observer-target"
+      style={{
+        background: 'transparent',
+        height: 4,
+      }}
+    />
   )
 }
 

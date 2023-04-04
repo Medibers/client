@@ -27,8 +27,8 @@ const SearchResults: React.FC<ISearchResults> = ({ onSelect }) => {
     selectedItems,
   } = useContext(Context)
 
-  const computeResultsShown = (allResults: Array<IItemSearchResult>) => {
-    return selectedCategory !== allCategoriesOption.value
+  const computeResultsShown = (allResults: Array<IItemSearchResult>) =>
+    selectedCategory !== allCategoriesOption.value
       ? allResults.filter(
           ({ item: { name, categoryObject } }) =>
             categoryObject._id === selectedCategory &&
@@ -37,7 +37,6 @@ const SearchResults: React.FC<ISearchResults> = ({ onSelect }) => {
       : allResults.filter(({ item: { name } }) =>
           name.toLowerCase().includes(search)
         )
-  }
 
   const isSelected = (result: IItemSearchResult) =>
     selectedItems.indexOf(result._id) > -1
