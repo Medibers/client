@@ -24,7 +24,6 @@ import {
   ItemRequest as IItemRequest,
   ItemSearchResult as IItemSearchResult,
 } from 'types'
-import { computeOrderCost } from 'utils/charges'
 
 import Requests, { endPoints } from 'requests'
 
@@ -79,7 +78,7 @@ const onSelectDestination = () => {
 
 const Component: React.FC<IOrderProps> = props => {
   const [orderConfirmationShown, setOrderConfirmationShown] = useState(false)
-  const [cost, setCost] = useState(computeOrderCost(props.selectedItems))
+  const [, refresh] = useState(0)
   const [distance, setDistance] = useState<number | null>(null)
   const [deliveryFee, setDeliveryFee] = useState<number | null>(null)
   const [contacts, setContacts] = useState<Array<IOrderDeliveryContact>>([
@@ -155,7 +154,7 @@ const Component: React.FC<IOrderProps> = props => {
     })
 
     setCart(newSelectedItems)
-    setCost(computeOrderCost(newSelectedItems))
+    refresh(Date.now())
 
     history.location.state = { selectedItems: newSelectedItems }
   }
@@ -201,7 +200,6 @@ const Component: React.FC<IOrderProps> = props => {
   }, [mapRef.current, lat, lon])
 
   const context = {
-    cost,
     deliveryFee,
     selectedItems: props.selectedItems,
     locationNotAvailable,

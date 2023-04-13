@@ -16,7 +16,7 @@ const routes: TRoutes = {
     isPublic: true,
   },
   'supplier-add': {
-    path: '/admin/suppliers/add',
+    path: '/suppliers/add',
     component: AddSupplier,
     isForAdmins: true,
   },
@@ -27,20 +27,20 @@ const routes: TRoutes = {
     isPublic: true,
   },
   'supplier-update': {
-    path: '/admin/suppliers/:id/update',
-    getPath: (id: string) => `/admin/suppliers/${id}/update`,
+    path: '/suppliers/:id/update',
+    getPath: (id: string) => `/suppliers/${id}/update`,
     component: UpdateSupplier,
     isForAdmins: true,
   },
   'supplier-item-add': {
-    path: '/admin/suppliers/items/add',
+    path: '/suppliers/items/add',
     component: AddSupplierItem,
     isForAdmins: true,
   },
   'supplier-item-update': {
-    path: '/admin/suppliers/:supplierId/items/:supplierItemId/update',
+    path: '/suppliers/:supplierId/items/:supplierItemId/update',
     getPath: (supplierId: string, supplierItemId?: string) =>
-      `/admin/suppliers/${supplierId}/items/${supplierItemId}/update`,
+      `/suppliers/${supplierId}/items/${supplierItemId}/update`,
     component: UpdateSupplierItem,
     isForAdmins: true,
   },

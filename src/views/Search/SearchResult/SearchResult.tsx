@@ -54,7 +54,7 @@ const SearchResult: React.FC<ISearchResult> = ({
   onSelect,
   onMore,
 }) => {
-  const { item, price, images } = result
+  const { item, currency, price, images } = result
 
   const isClientUser = useMemo(userIsClientUser, [])
   const sessionNotAvailable = !useMemo(sessionAvailable, [])
@@ -96,7 +96,7 @@ const SearchResult: React.FC<ISearchResult> = ({
       >
         <Name name={item.name} />
         <Specification specification={result.item.specification} />
-        <Price price={formatMoney(price)} />
+        <Price price={formatMoney(price, currency.name)} />
         <Available available={result.available} />
         {isClientUser || sessionNotAvailable ? (
           <More onClick={onClick} />

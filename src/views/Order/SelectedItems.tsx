@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 
 import { IonItem, IonLabel, IonList } from '@ionic/react'
 
@@ -6,22 +6,27 @@ import SelectedItem from './SelectedItem'
 
 import Context from './context'
 
+import { stringifyOrderCost } from 'utils/charges'
 import { formatMoney } from 'utils/currency'
 
 const SelectedItems: React.FC = () => {
-  const { cost: itemCost, deliveryFee, selectedItems } = useContext(Context)
+  const { deliveryFee, selectedItems } = useContext(Context)
 
-  const totalCost = itemCost + (deliveryFee || 0)
+  const cost = useMemo(
+    () => stringifyOrderCost(selectedItems, deliveryFee),
+    [selectedItems, deliveryFee]
+  )
 
   return (
     <IonItem>
       <IonLabel>
         <IonList className="ion-no-margin ion-no-padding">
-          {selectedItems.map(({ _id, item, price, quantity }) => (
+          {selectedItems.map(({ _id, item, currency, price, quantity }) => (
             <SelectedItem
               key={_id}
               _id={_id}
               item={item}
+              currency={currency}
               price={price}
               quantity={quantity}
             />
@@ -34,9 +39,11 @@ const SelectedItems: React.FC = () => {
                   : 'Delivery Fee will be determined after your order'}
               </h4>
             </IonLabel>
-            <h4 className="ion-label-primary" slot="end">
-              {deliveryFee && deliveryFee > 0 ? formatMoney(deliveryFee) : null}
-            </h4>
+            {deliveryFee && deliveryFee > 0 ? (
+              <h4 className="ion-label-primary" slot="end">
+                {formatMoney(deliveryFee)}
+              </h4>
+            ) : null}
           </IonItem>
           <IonItem
             lines="none"
@@ -46,9 +53,9 @@ const SelectedItems: React.FC = () => {
             <IonLabel className="ion-no-margin ion-text-uppercase ion-label-primary">
               <h4>Total</h4>
             </IonLabel>
-            <h4 className="ion-label-primary" slot="end">
-              {formatMoney(totalCost)}
-            </h4>
+            <div slot="end">
+              <h4 className="ion-label-primary">{cost}</h4>
+            </div>
           </IonItem>
         </IonList>
       </IonLabel>

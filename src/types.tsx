@@ -35,6 +35,7 @@ export interface ItemSearchResult {
     _id: string
     name: string
   }
+  currency: ICurrency
   price: number
   quantity?: number // Quantity ordered
   images: Array<string>
@@ -53,6 +54,7 @@ export interface IUnit {
 export interface PharmacyItem {
   item: { _id: string; 'common-name': string; 'scientific-name': string }
   pharmacy: { _id: string; name: string }
+  currency: ICurrency
   price: number
   quantity: number
   distanceRaw?: number
@@ -122,4 +124,9 @@ export interface ICategory {
   position: number
   service?: boolean
   alias?: string
+}
+
+export interface ICurrency {
+  _id: string
+  name: string
 }

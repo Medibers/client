@@ -2,6 +2,7 @@ import { ISupplier, ISupplierItem } from '../types'
 
 export interface ISupplierItemFormFields {
   item: string | null
+  currency: string | null
   price: number | null
   images: string[] // File[]
 }

@@ -5,7 +5,7 @@ import { addCircleOutline, close, removeCircleOutline } from 'ionicons/icons'
 import { formatMoney } from 'utils/currency'
 import { costTextStyle, ionButtonStyle } from './styles'
 
-import { IItem } from 'types'
+import { ICurrency, IItem } from 'types'
 import { IonButton, IonIcon, IonItem } from '@ionic/react'
 
 import Context from './context'
@@ -13,6 +13,7 @@ import Context from './context'
 interface ISelectedItem {
   _id: string
   item: IItem
+  currency: ICurrency
   price: number
   quantity?: number
 }
@@ -20,10 +21,12 @@ interface ISelectedItem {
 const SelectedItem: React.FC<ISelectedItem> = ({
   _id,
   item,
+  currency,
   price,
   quantity = 1,
 }) => {
   const { onModifyItemQuantity } = useContext(Context)
+
   return (
     <IonItem lines="none" className="ion-no-padding mini-list-item">
       <h4 className="wrap">{item.name}</h4>
@@ -35,7 +38,7 @@ const SelectedItem: React.FC<ISelectedItem> = ({
         {quantity}&nbsp;
         <IonIcon style={{ fontSize: 12 }} icon={close} />
         &nbsp;
-        {formatMoney(price)}
+        {formatMoney(price, currency.name)}
       </h4>
       <IonButton
         size="large"

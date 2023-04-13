@@ -24,7 +24,7 @@ interface IItem {
 }
 
 const Item: React.FC<IItem> = ({ result, selectedItems }) => {
-  const { item, price, images, available, unit } = result
+  const { item, currency, price, images, available, unit } = result
 
   const showSupplier = item.categoryObject.service
   const showUnit = !item.categoryObject.service
@@ -65,7 +65,7 @@ const Item: React.FC<IItem> = ({ result, selectedItems }) => {
                   </i>
                 </h4>
                 <h2>
-                  {formatMoney(price)}&nbsp;
+                  {formatMoney(price, currency.name)}&nbsp;
                   {showUnit && (
                     <React.Fragment>
                       per {unit.singular || 'unit'}

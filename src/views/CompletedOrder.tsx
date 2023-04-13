@@ -22,7 +22,7 @@ import { Divider, Header, MapContainer } from 'components'
 import { ItemRequest as ItemRequestInterface } from 'types'
 import { platformIsMobile, requestStatesMappedToBadgeBackground } from 'utils'
 import { userIsCourier, userIsNotClientUser } from 'utils/role'
-import { computeOrderCost } from 'utils/charges'
+import { stringifyOrderCost } from 'utils/charges'
 import { formatMoney } from 'utils/currency'
 import { callTelephone } from 'utils/msisdn'
 
@@ -60,10 +60,6 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
       : ''
     callTelephone(phone)
   }
-
-  requestCost = this.locationState.request
-    ? computeOrderCost(this.locationState.request.pharmacyItems)
-    : 0
 
   componentDidMount() {
     if (!this.locationState.request) {
@@ -105,6 +101,8 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
     const userCanViewCallButton =
       platformIsMobile && requestState === 'in transit'
 
+    const cost = stringifyOrderCost(pharmacyItems, deliveryFee)
+
     return (
       <IonPage className="request-detail">
         <Header size="small" title={title} />
@@ -137,7 +135,7 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
               </IonItem>
             </IonList>
             <IonList lines="none" className="ion-padding">
-              {pharmacyItems.map(({ item, price, quantity }, i) => (
+              {pharmacyItems.map(({ item, price, quantity, currency }, i) => (
                 <IonItem
                   key={i}
                   lines="none"
@@ -148,7 +146,7 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
                     {quantity}&nbsp;
                     <IonIcon style={{ fontSize: 12 }} icon={close} />
                     &nbsp;
-                    {formatMoney(price)}
+                    {formatMoney(price, currency.name)}
                   </h4>
                 </IonItem>
               ))}
@@ -169,7 +167,7 @@ class CompletedOrder extends React.Component<ICompletedOrderProps> {
                   slot="end"
                   className="flex ion-align-items-center ion-label-primary"
                 >
-                  <b>{formatMoney(this.requestCost + (deliveryFee || 0))}</b>
+                  <b>{cost}</b>
                 </h4>
               </IonItem>
             </IonList>
