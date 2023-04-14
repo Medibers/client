@@ -9,8 +9,6 @@ import Routes from 'routes'
 import { navigateTo } from 'app-history'
 import { setSearchResult } from 'store/utils'
 
-import { allCategoriesOption } from './utils'
-
 import Context from './context'
 
 const noItemsPlaceholder = 'No items found, please try a different search'
@@ -20,23 +18,7 @@ interface ISearchResults {
 }
 
 const SearchResults: React.FC<ISearchResults> = ({ onSelect }) => {
-  const {
-    results,
-    search = '',
-    selectedCategory,
-    selectedItems,
-  } = useContext(Context)
-
-  const computeResultsShown = (allResults: Array<IItemSearchResult>) =>
-    selectedCategory !== allCategoriesOption.value
-      ? allResults.filter(
-          ({ item: { name, categoryObject } }) =>
-            categoryObject._id === selectedCategory &&
-            name.toLowerCase().includes(search)
-        )
-      : allResults.filter(({ item: { name } }) =>
-          name.toLowerCase().includes(search)
-        )
+  const { results, selectedItems } = useContext(Context)
 
   const isSelected = (result: IItemSearchResult) =>
     selectedItems.indexOf(result._id) > -1
@@ -48,7 +30,7 @@ const SearchResults: React.FC<ISearchResults> = ({ onSelect }) => {
     }
   }
 
-  const resultsShown = computeResultsShown(results || [])
+  const resultsShown = results || []
 
   return (
     <IonList className="ion-no-margin ion-no-padding">

@@ -23,6 +23,7 @@ import {
 } from 'store/utils'
 import { getLocationState } from 'app-history'
 import { userIsAdmin, userIsClientUser } from 'utils/role'
+import { useDebounce } from 'utils/hooks'
 import { sessionAvailable } from 'session'
 
 import { getSearchToolbarActions, getTitle } from './toolbar-actions'
@@ -42,10 +43,10 @@ interface ILocationState {
 }
 
 interface IState {
-  fetchData: number
+  fetchData: string
   results?: Array<IItemSearchResult>
   selectedCategory: string
-  search?: string
+  search: string
 }
 
 interface ISearchPage {
@@ -57,7 +58,8 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
   const locationState = getLocationState() as ILocationState
 
   const [state, setState] = useState<IState>({
-    fetchData: 0,
+    fetchData: 'initial',
+    search: '*',
     selectedCategory: locationState.category || allCategoriesOption.value,
   })
 
@@ -65,16 +67,12 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
     setState(oldState => ({ ...oldState, ...newState }))
   }
 
-  useEffect(() => {
-    fetchItems('*')
-  }, [state.fetchData]) // eslint-disable-line react-hooks/exhaustive-deps
+  const search = useDebounce(state.search, 600)
 
   const fetchItems = function (
-    search: string,
-    results?: IItemSearchResult[]
+    results?: IItemSearchResult[] | null,
+    showLoader?: boolean
   ): Promise<void> {
-    if (['', null].includes(search)) return Promise.resolve()
-
     let previousResults: IItemSearchResult[] = []
 
     if (results) {
@@ -85,12 +83,18 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
 
     const skip = Array.from(new Set(previousResults.map(({ _id }) => _id)))
 
+    const category =
+      state.selectedCategory !== allCategoriesOption.value
+        ? state.selectedCategory
+        : null
+
     const { lat, lon } = getDeliveryLocationForNextOrder()
 
-    if (!state.results) showLoading()
+    if (showLoader) showLoading()
 
     return Requests.post<Array<IItemSearchResult>>(endPoints['item-search'](), {
       search,
+      category,
       lat,
       lon,
       size: 10,
@@ -108,11 +112,30 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
       .finally(hideLoading)
   }
 
-  const onRefresh = (event?: CustomEvent<RefresherEventDetail>) =>
-    fetchItems('*', []).finally(() => event && event.detail.complete())
+  useEffect(() => {
+    const effectInitial = state.fetchData === 'initial',
+      effectDueToCategoryChange = state.fetchData.startsWith('category'),
+      effectDueToSroll = state.fetchData.startsWith('scroll')
+
+    const results = effectDueToSroll ? null : [],
+      showLoader = effectInitial || effectDueToCategoryChange
+
+    fetchItems(results, showLoader)
+  }, [state.fetchData, search]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const onRefresh = (event?: CustomEvent<RefresherEventDetail>) => {
+    fetchItems([], true).finally(() => event && event.detail.complete())
+  }
+
+  const onCategorySelected = (category: string) => {
+    updateState({
+      selectedCategory: category,
+      fetchData: `category-${category}`,
+    })
+  }
 
   const onSearch = ({ detail: { value } }: CustomEvent) => {
-    updateState({ search: value.toLowerCase() })
+    updateState({ search: value ? value.toLowerCase() : '*' })
   }
 
   const onSelect = (result: IItemSearchResult) => {
@@ -123,10 +146,6 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
         removeFromCart(result._id)
       }
     }
-  }
-
-  const onCategorySelected = (category: string) => {
-    updateState({ selectedCategory: category })
   }
 
   const itemCategories = useMemo(
@@ -183,7 +202,7 @@ const Observer: React.FC<IObserver> = ({ updateState }) => {
     if (y === 0) return
 
     if (y < observerTargetYRef.current || observerTargetYRef.current === 0) {
-      updateState({ fetchData: Date.now() })
+      updateState({ fetchData: `scroll-${Date.now()}` })
     }
 
     observerTargetYRef.current = y

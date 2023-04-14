@@ -5,7 +5,7 @@ import { ICurrency } from 'types'
 
 import { IItem } from 'views/Admin/types'
 
-import { useDebounce } from 'views/Admin/utils'
+import { useDebounce } from 'utils/hooks'
 
 export const useGetItems = (searchStr: string | null): [boolean, IItem[]] => {
   const [fetching, setFetching] = useState(true)

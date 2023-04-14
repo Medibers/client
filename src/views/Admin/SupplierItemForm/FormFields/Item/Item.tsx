@@ -5,11 +5,10 @@ import { IonInput, IonLabel } from '@ionic/react'
 import { ListItem } from 'components'
 import { FormFieldError } from 'components/FormFields'
 
-// import { useGetItems } from '../../hooks'
 import ItemResults from './ItemResults'
 
 import { IItem } from 'views/Admin/types'
-import { useDebounce } from 'views/Admin/utils'
+import { useDebounce } from 'utils/hooks'
 
 import Requests, { endPoints } from 'requests'
 
