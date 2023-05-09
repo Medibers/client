@@ -31,19 +31,12 @@ const imageWrapperStyle = {
   alignItems: 'center',
   height: 150,
   width: 150,
-  padding: 10,
-  margin: '0 calc(var(--ion-margin) - 10px)',
+  padding: 'calc(var(--ion-margin)',
 }
 
-const imageWrapperWidthSpan =
-  2 * imageWrapperStyle.padding +
-  2 * 6 + // 6 is calc(var(--ion-margin) - 10px)
-  imageWrapperStyle.width
+const imageWrapperWidthSpan = 150 + 16 * 2 // width + padding
 
 const imageStyle = {
-  borderWidth: 2,
-  borderStyle: 'solid',
-  borderColor: 'rgba(var(--ion-color-primary-rgb), .1)',
   borderRadius: '50%',
 }
 
@@ -90,7 +83,9 @@ const SearchResult: React.FC<ISearchResult> = ({
         imageStyle={imageStyle}
       />
       <IonGrid
+        className="ion-no-padding ion-padding-vertical"
         style={{
+          // Makes overflow: ellipses work
           width: `calc(100% - ${imageWrapperWidthSpan}px)`, // Compute what's left after image fills space
         }}
       >
@@ -102,10 +97,13 @@ const SearchResult: React.FC<ISearchResult> = ({
           <More onClick={onClick} />
         ) : null}
       </IonGrid>
-      <IonIcon
-        className="ion-icon-primary"
-        icon={selected ? '/static/assets/icons/checked.svg' : 'no-icon'}
-      />
+      {selected ? (
+        <IonIcon
+          className="ion-icon-primary"
+          icon="/static/assets/icons/checked.svg"
+          style={{ position: 'absolute', right: 'calc(var(--ion-margin)' }}
+        />
+      ) : null}
     </IonItem>
   )
 }

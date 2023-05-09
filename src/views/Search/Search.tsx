@@ -22,6 +22,7 @@ import {
   showToast,
 } from 'store/utils'
 import { getLocationState } from 'app-history'
+import { placeholderImageUrl } from 'utils'
 import { userIsAdmin, userIsClientUser } from 'utils/role'
 import { useDebounce } from 'utils/hooks'
 import { sessionAvailable } from 'session'
@@ -59,7 +60,7 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
 
   const [state, setState] = useState<IState>({
     fetchData: 'initial',
-    search: '*',
+    search: '',
     selectedCategory: locationState.category || allCategoriesOption.value,
   })
 
@@ -67,7 +68,7 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
     setState(oldState => ({ ...oldState, ...newState }))
   }
 
-  const search = useDebounce(state.search, 600)
+  const search = useDebounce(state.search, 1000)
 
   const fetchItems = function (
     results?: IItemSearchResult[] | null,
@@ -99,6 +100,7 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
       lon,
       size: 10,
       skip,
+      placeholderImageUrl,
     })
       .then(results => {
         updateState({
@@ -134,8 +136,9 @@ const SearchPage: React.FC<ISearchPage> = ({ categories, selectedItems }) => {
     })
   }
 
-  const onSearch = ({ detail: { value } }: CustomEvent) => {
-    updateState({ search: value ? value.toLowerCase() : '*' })
+  const onSearch = ({ detail: { value: rawValue } }: CustomEvent) => {
+    const value = rawValue ? rawValue.toLowerCase() : ''
+    updateState({ search: value, fetchData: `search-${value}` })
   }
 
   const onSelect = (result: IItemSearchResult) => {

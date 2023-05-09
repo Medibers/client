@@ -37,9 +37,9 @@ const SearchResults: React.FC<ISearchResults> = ({ onSelect }) => {
       {resultsShown.length ? (
         resultsShown.map((result, i, a) => (
           <SearchResult
-            key={i}
+            key={result._id}
             result={result}
-            lines={i !== a.length - 1}
+            lines={i < a.length - 1}
             selected={isSelected(result)}
             onSelect={onSelect}
             onMore={onMore}

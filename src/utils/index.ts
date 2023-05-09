@@ -55,3 +55,5 @@ export const indexIsLastInArray = (
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export const isEmail = (str: string) => emailRegex.test(str)
+
+export const placeholderImageUrl = '/placeholder.jpeg' // /static/assets/icons/no-icon.svg

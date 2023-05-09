@@ -1,12 +1,7 @@
 /* eslint-disable no-undef */
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
-import { IonIcon } from '@ionic/react'
+import React, { useEffect, useRef, useState } from 'react'
+
+import { imageServerUrl, placeholderImageUrl } from 'utils'
 
 interface ILazyLoad {
   src: string
@@ -15,8 +10,6 @@ interface ILazyLoad {
   wrapperStyle?: React.CSSProperties
   imageStyle?: React.CSSProperties
 }
-
-const placeholder = '/static/assets/icons/no-icon.svg'
 
 const iconStyle = {
   height: '100%',
@@ -30,51 +23,70 @@ const defaultImageStyle: Object = {
   objectFit: 'cover',
 }
 
-const Component: React.FC<ILazyLoad> = ({
+const LazyLoad: React.FC<ILazyLoad> = ({
   src,
-  onClick,
+  onClick: parentOnClick,
   wrapperStyle,
   imageStyle,
 }) => {
-  const selected = false
-
-  const [imageSrc, setImageSrc]: [
-    string | undefined,
-    Dispatch<SetStateAction<string | undefined>>
-  ] = useState()
+  const [imageSrc, setImageSrc] = useState<string | undefined>()
+  const [loaded, setImageLoaded] = useState(false)
 
   const imageRef = useRef<Element | null>(null)
 
-  const [observerSet, setObserverSet] = useState(false)
-  const [errored, setImageErrored] = useState(false)
-  const [loaded, setImageLoaded] = useState(false)
+  useObserver(imageRef.current as Element, () => setImageSrc(src))
 
   const setRef: React.Ref<Element> = node => {
     imageRef.current = node
   }
 
-  const onError = function () {
-    setObserverSet(true)
-    setImageErrored(true)
+  const onError = () => {
+    setImageSrc(imageServerUrl + placeholderImageUrl)
   }
 
   const onLoad = () => setImageLoaded(true)
 
-  useEffect(() => {
-    let observer: IntersectionObserver
-    let didCancel = false
+  const onClick: React.MouseEventHandler = e => {
+    if (parentOnClick) {
+      e.stopPropagation()
+      parentOnClick()
+    }
+  }
 
-    if (imageRef.current && observerSet === false) {
-      if (IntersectionObserver) {
-        observer = new IntersectionObserver(
+  return (
+    <div style={wrapperStyle}>
+      {imageSrc ? (
+        <img
+          onClick={onClick}
+          ref={setRef}
+          src={imageSrc}
+          onLoad={onLoad}
+          onError={onError}
+          alt=""
+          style={{
+            ...defaultImageStyle,
+            ...imageStyle,
+            objectFit: 'cover',
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.5s',
+          }}
+        />
+      ) : (
+        <div style={iconStyle} ref={setRef} />
+      )}
+    </div>
+  )
+}
+
+const useObserver = (image: Element | null, cb: () => void) => {
+  const observerRef = useRef<IntersectionObserver | null>(
+    IntersectionObserver
+      ? new IntersectionObserver(
           entries => {
             entries.forEach(entry => {
               // When image is visible in the viewport + rootMargin
-              if (
-                !didCancel &&
-                (entry.intersectionRatio > 0 || entry.isIntersecting)
-              ) {
-                setImageSrc(src)
+              if (entry.intersectionRatio > 0 || entry.isIntersecting) {
+                cb()
               }
             })
           },
@@ -83,67 +95,18 @@ const Component: React.FC<ILazyLoad> = ({
             rootMargin: '75%',
           }
         )
-        observer.observe(imageRef.current)
-      }
-    }
+      : null
+  )
 
-    const imageRefValue = imageRef.current as unknown as Element
+  useEffect(() => {
+    const { current: observer } = observerRef
+
+    observer && image && observer.observe(image)
 
     return () => {
-      didCancel = true
-      // Remove the listener on unmount
-      if (imageRef.current && observer && observer.unobserve) {
-        observer.unobserve(imageRefValue)
-      }
+      observer && image && observer.unobserve(image)
     }
-  }, [imageSrc, src, observerSet])
-
-  const onClickLocal: React.MouseEventHandler = e => {
-    if (onClick) {
-      e.stopPropagation()
-      onClick()
-    }
-  }
-
-  return (
-    <div style={wrapperStyle}>
-      {imageSrc ? (
-        selected ? (
-          <IonIcon
-            style={iconStyle}
-            ref={setRef as React.Ref<HTMLIonIconElement>}
-            className="ion-icon-primary"
-            icon="/static/assets/icons/checked.svg"
-          />
-        ) : errored ? (
-          <IonIcon
-            style={iconStyle}
-            ref={setRef as React.Ref<HTMLIonIconElement>}
-            className="ion-icon-primary"
-            icon={placeholder}
-          />
-        ) : (
-          <img
-            onClick={onClickLocal}
-            ref={setRef}
-            src={imageSrc}
-            onLoad={onLoad}
-            onError={onError}
-            alt=""
-            style={{
-              ...defaultImageStyle,
-              ...imageStyle,
-              objectFit: 'cover',
-              opacity: loaded ? 1 : 0,
-              transition: 'opacity 0.5s',
-            }}
-          />
-        )
-      ) : (
-        <div style={iconStyle} ref={setRef} />
-      )}
-    </div>
-  )
+  }, [image]) // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-export default Component
+export default LazyLoad
