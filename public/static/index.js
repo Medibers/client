@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier, no-undef */
+
 /**
  * Run script only on Web, mobile platforms use PushNotifications plugin
  *
@@ -22,6 +24,6 @@ if (platformIsWeb())
         await sendFCMTokenToServer(token)
       })
     } catch (error) {
-      console.error(error)
+      console.error(error) // eslint-disable-line no-console
     }
   })()
