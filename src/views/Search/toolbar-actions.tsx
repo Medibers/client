@@ -38,6 +38,7 @@ interface IToolbarActionsContext {
   onCategorySelected: (value: string) => void
 }
 
+// TODO: Fix search page category selector. Bug with ionic https://github.com/ionic-team/ionic-framework/issues/26643. Needs ionic upgrade
 export const getSearchToolbarActions = function ({
   selectedCategory,
   itemCategories,
