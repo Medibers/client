@@ -14,6 +14,11 @@
   position: relative;
 }
 
+/* TODO: Remove when fixed in future versions on ionic https://github.com/ionic-team/ionic-framework/issues/26643 */
+ion-popover .popover-wrapper .popover-content .popover-viewport {
+  display: contents;
+}
+
 .popover-search-results .popover-content {
   max-width: unset !important;
   /* width: 95vw !important;
