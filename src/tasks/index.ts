@@ -1,4 +1,6 @@
-import { Plugins, PushNotificationToken } from '@capacitor/core'
+import { App } from '@capacitor/app'
+import { Network } from '@capacitor/network'
+import { PushNotifications } from '@capacitor/push-notifications'
 import { BackButtonEvent } from '@ionic/core'
 
 import { platformIsAndroid, platformIsMobile } from 'utils'
@@ -7,8 +9,6 @@ import Routes from 'routes'
 import Requests, { endPoints } from 'requests'
 import eventsInstance, { syncData } from '../events'
 
-const { App, Network, PushNotifications } = Plugins
-
 platformIsMobile &&
   (function () {
     setPushNotificationListener()
@@ -16,37 +16,53 @@ platformIsMobile &&
     setBackButtonListener()
   })()
 
-async function sendPushNotificationTokenToServer(token: string) {
-  return await Requests.put(endPoints['push-notification-token'], {
+// Request permission to use push notifications
+// iOS prompts user and return if they granted permission or not
+// Android grants without prompting
+function setPushNotificationListener() {
+  PushNotifications.checkPermissions()
+    .then(status => {
+      switch (status.receive) {
+        case 'denied':
+        case 'granted':
+          return Promise.resolve(status)
+        default:
+          return PushNotifications.requestPermissions()
+      }
+    })
+    .then(status => {
+      switch (status.receive) {
+        case 'granted':
+          return Promise.resolve(status)
+        default:
+          throw new Error('Push Notification permission denied')
+      }
+    })
+    .then(() =>
+      Promise.all([
+        PushNotifications.addListener('registration', ({ value }) =>
+          sendPushNotificationTokenToServer(value)
+        ),
+        PushNotifications.addListener(
+          'registrationError',
+          () => console.error('Push Notification registration failed') // eslint-disable-line no-console
+        ),
+      ])
+    )
+    .then(() =>
+      // Register with Apple / Google to receive push via APNS/FCM
+      PushNotifications.register()
+    )
+    .catch(
+      error => console.error(error) // eslint-disable-line no-console
+    )
+}
+
+function sendPushNotificationTokenToServer(token: string) {
+  Requests.put(endPoints['push-notification-token'], {
     platform: platformIsAndroid ? 'android' : 'ios',
     token,
   })
-}
-
-function setPushNotificationListener() {
-  // Request permission to use push notifications
-  // iOS prompts user and return if they granted permission or not
-  // Android grants without prompting
-  PushNotifications.requestPermissions &&
-    PushNotifications.requestPermissions()
-      .then(() => {
-        PushNotifications.addListener(
-          'registration',
-          (token: PushNotificationToken) => {
-            sendPushNotificationTokenToServer(token.value)
-          }
-        )
-
-        PushNotifications.addListener('registrationError', error => {
-          throw error
-        })
-
-        // Register with Apple / Google to receive push via APNS/FCM
-        PushNotifications.register()
-      })
-      .catch(error => {
-        throw error
-      })
 }
 
 function setNetworkListener() {

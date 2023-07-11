@@ -23,7 +23,7 @@ const initialState: State = {
   cart: getCart(),
 }
 
-export default (state = initialState, action: Action) =>
+const fn = (state = initialState, action: Action) =>
   produce(state, (draft: State) => {
     switch (action.type) {
       case constants.SHOW_LOADING: {
@@ -108,3 +108,5 @@ export default (state = initialState, action: Action) =>
         break
     }
   })
+
+export default fn

@@ -1,6 +1,8 @@
 import EventEmitter from 'events'
 
-export default new EventEmitter()
+const emitter = new EventEmitter()
+
+export default emitter
 
 export const requestCreate = 'event-1'
 export const requestUpdate = 'event-2'

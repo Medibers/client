@@ -10,8 +10,8 @@ const defaultHeaders = {
 
 const headers = sessionAvailable()
   ? Object.assign(defaultHeaders, {
-    Authorization: `Bearer ${getSessionToken()}`,
-  })
+      Authorization: `Bearer ${getSessionToken()}`,
+    })
   : defaultHeaders
 
 let baseURL =

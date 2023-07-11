@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react'
 
 import { IonIcon, IonItem, IonLabel } from '@ionic/react'
@@ -12,29 +14,30 @@ interface ICompleteItemRequestListToggle {
   onToggleCompleteOrders: () => void
 }
 
-const CompleteItemRequestListToggle: React.FC<ICompleteItemRequestListToggle> =
-  ({ completeRequestsShown, onToggleCompleteOrders }) => {
-    return (
-      <IonItem
-        button
-        onClick={onToggleCompleteOrders}
-        className="ion-item-archive"
-        lines="none"
-      >
-        <IonLabel className="ion-no-margin">
-          <p className="ion-label-secondary">
-            {completeRequestsShown
-              ? Text['hide-toggled-list']
-              : Text['show-toggled-list']}
-          </p>
-        </IonLabel>
-        <IonIcon
-          className="ion-no-margin ion-icon-secondary"
-          icon={completeRequestsShown ? up : down}
-          slot="end"
-        ></IonIcon>
-      </IonItem>
-    )
-  }
+const CompleteItemRequestListToggle: React.FC<
+  ICompleteItemRequestListToggle
+> = ({ completeRequestsShown, onToggleCompleteOrders }) => {
+  return (
+    <IonItem
+      button
+      onClick={onToggleCompleteOrders}
+      className="ion-item-archive"
+      lines="none"
+    >
+      <IonLabel className="ion-no-margin">
+        <p className="ion-label-secondary">
+          {completeRequestsShown
+            ? Text['hide-toggled-list']
+            : Text['show-toggled-list']}
+        </p>
+      </IonLabel>
+      <IonIcon
+        className="ion-no-margin ion-icon-secondary"
+        icon={completeRequestsShown ? up : down}
+        slot="end"
+      ></IonIcon>
+    </IonItem>
+  )
+}
 
 export default CompleteItemRequestListToggle

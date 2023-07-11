@@ -48,4 +48,6 @@ const textTranslated: Record<TPageTextKey, Record<string, string>> = (
 
 export const Text = textTranslated
 
-export default (page: TPageTextKey) => textTranslated[page]
+const fn = (page: TPageTextKey) => textTranslated[page]
+
+export default fn

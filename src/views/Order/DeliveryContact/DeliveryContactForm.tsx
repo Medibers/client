@@ -31,7 +31,8 @@ const DeliveryContactForm: React.FC<IDeliveryContactFormProps> = ({
   const onSubmit = ({ phone }: IDeliveryContactFormFields) => {
     try {
       parentOnSubmit(formatUGMSISDN(phone))
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       setError('phone', { message: error.message })
       // eslint-disable-next-line no-console
       console.error(error)

@@ -59,25 +59,27 @@ export const getDeliveryLocationForNextOrder = () =>
 export const getDeliveryAddressForNextOrder = (placeholder?: string) =>
   getDeliveryLocationForNextOrder().address || placeholder
 
-export const queryAddress: (a1: number, a2: number) => Promise<string | null> =
-  async (lat: number, lng: number) => {
-    if (google === undefined) return null
+export const queryAddress: (
+  a1: number,
+  a2: number
+) => Promise<string | null> = (lat: number, lng: number) => {
+  if (google === undefined) return Promise.reject(null)
 
-    const geocoder: google.maps.Geocoder = new google.maps.Geocoder()
+  const geocoder: google.maps.Geocoder = new google.maps.Geocoder()
 
-    const location = { lat, lng }
+  const location = { lat, lng }
 
-    return await new Promise(resolve => {
-      geocoder.geocode({ location }, (results, status) => {
-        console.debug('Geocoder query status', status, results) // eslint-disable-line no-console
-        if (status !== 'OK') {
-          resolve(null)
-        } else if (results.length) {
-          resolve(results[0].formatted_address)
-        } else resolve(null)
-      })
+  return new Promise(resolve => {
+    geocoder.geocode({ location }, (results, status) => {
+      console.debug('Geocoder query status', status, results) // eslint-disable-line no-console
+      if (status !== 'OK') {
+        resolve(null)
+      } else if (results.length) {
+        resolve(results[0].formatted_address)
+      } else resolve(null)
     })
-  }
+  })
+}
 
 export const queryPlace = async (
   map: google.maps.Map | undefined,

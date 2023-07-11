@@ -18,10 +18,12 @@ const DeliveryContactBadge: React.FC<IDeliveryContactBadgeProps> = ({
   onRemoveContact,
   showCloseButton,
 }) => {
-  const onRemove = (event: React.MouseEvent) => {
+  // eslint-disable-next-line no-undef
+  const onRemove: React.MouseEventHandler<HTMLIonIconElement> = event => {
     event.stopPropagation()
     onRemoveContact(contact.phone)
   }
+
   return (
     <IonBadge
       className={`delivery-contact-badge ${showCloseButton ? '' : 'no-close'}`}

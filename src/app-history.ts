@@ -33,7 +33,12 @@ export const getLocationQueryParameter = (key: string): string | null => {
   return new URLSearchParams(search).get(key)
 }
 
-export const useGetRouteParams = <T>(url: string): T => {
+export const useGetRouteParams = <
+  // eslint-disable-next-line no-unused-vars
+  T extends { [K in keyof T]?: string | undefined }
+>(
+  url: string
+): T => {
   const match = useRouteMatch<T>(url)
   return match ? match.params : ({} as T)
 }

@@ -7,7 +7,9 @@ export interface State {
   App: AppState
 }
 
-export default (state: State | undefined, action: Action) =>
+const fn = (state: State | undefined, action: Action) =>
   combineReducers({
     App,
   })(state, action)
+
+export default fn

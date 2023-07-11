@@ -3,7 +3,7 @@ import Routes from 'routes'
 import { navigateTo } from 'app-history'
 import { userIsAdmin } from 'utils/role'
 
-export default () => {
+const fn = () => {
   const menuActions = [
     {
       text: 'About Us',
@@ -27,3 +27,5 @@ export default () => {
 
   return menuActions
 }
+
+export default fn
