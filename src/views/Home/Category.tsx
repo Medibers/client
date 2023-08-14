@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { CSSProperties, useState } from 'react'
 import { IonLabel, IonRippleEffect } from '@ionic/react'
 
-const categoryImageStyle: Record<string, string> = {
+const categoryImageStyle: CSSProperties = {
   width: '100%',
-  height: '85px', // '250px',
+  height: '30vw', // Can render up to 3 category rows
+  maxHeight: '200px',
   objectFit: 'cover',
 }
 

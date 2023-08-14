@@ -2,6 +2,7 @@ import { isPlatform } from '@ionic/react'
 import { ItemRequest as ItemRequestInterface, TItemRequestState } from 'types'
 
 import { AppVersion } from '@ionic-native/app-version'
+import { userIsCourier } from './role'
 
 export const APP_NAME = 'Medibers'
 
@@ -19,13 +20,16 @@ export const platformIsAndroid = isPlatform('android')
 
 export const platformIsWebBrowser = window.location.host !== 'localhost' // window.location.host == localhost on mobile apps only
 
-export const archivedRequestStates: Array<String> = ['cancelled', 'received']
+export const getArchivedRequestStates: () => Array<String> = () =>
+  userIsCourier()
+    ? ['cancelled', 'received', 'delivered']
+    : ['cancelled', 'received']
 
 export const getActiveRequests = (requests: Array<ItemRequestInterface>) =>
-  requests.filter(({ state }) => archivedRequestStates.indexOf(state) < 0)
+  requests.filter(({ state }) => getArchivedRequestStates().indexOf(state) < 0)
 
 export const getArchivedRequests = (requests: Array<ItemRequestInterface>) =>
-  requests.filter(({ state }) => archivedRequestStates.indexOf(state) > -1)
+  requests.filter(({ state }) => getArchivedRequestStates().indexOf(state) > -1)
 
 export const imageServerUrl =
   (window.location.host === 'localhost' // deployment on mobile

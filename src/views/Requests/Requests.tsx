@@ -89,7 +89,7 @@ class Component extends React.Component<Props> {
           setTimeout(() => {
             showToast(
               `${archivedRequests.length} ${
-                archivedRequests.length > 1 ? 'requests' : 'request'
+                archivedRequests.length > 1 ? 'orders' : 'order'
               } archived`
             )
           }, 400)

@@ -13,23 +13,21 @@ type Props = {
   onSelect: Function
 }
 
-const Component: React.FC<Props> = ({ open, items, onDismiss, onSelect }) => {
-  return (
-    <IonPopover isOpen={open} onDidDismiss={onDismiss}>
-      <IonList className="ion-no-padding">
-        {items.map(({ value, label }, i, a) => (
-          <IonItem
-            key={`${value}`}
-            button
-            onClick={() => onSelect(value, label)}
-            lines={i === a.length - 1 ? 'none' : 'full'}
-          >
-            {label}
-          </IonItem>
-        ))}
-      </IonList>
-    </IonPopover>
-  )
-}
+const Component: React.FC<Props> = ({ open, items, onDismiss, onSelect }) => (
+  <IonPopover isOpen={open} onDidDismiss={onDismiss} showBackdrop={false}>
+    <IonList className="ion-no-padding">
+      {items.map(({ value, label }, i, a) => (
+        <IonItem
+          key={`${value}`}
+          button
+          onClick={() => onSelect(value, label)}
+          lines={i === a.length - 1 ? 'none' : 'full'}
+        >
+          {label}
+        </IonItem>
+      ))}
+    </IonList>
+  </IonPopover>
+)
 
 export default Component

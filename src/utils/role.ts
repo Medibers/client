@@ -1,5 +1,14 @@
+/* eslint-disable no-unused-vars */
+
 import decrypt from 'utils/jwt'
 import { getSessionToken } from 'session'
+
+enum ERoles {
+  User = 1,
+  Courier = 2,
+  Pharmacy_Operator = 3,
+  Station_Administrator = 4,
+}
 
 export function getUserRoles(): number[] {
   try {
@@ -8,6 +17,7 @@ export function getUserRoles(): number[] {
      *
      * */
     const { role, roles } = decrypt(getSessionToken())
+
     return [role || roles].flat() as number[]
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -20,39 +30,33 @@ export function getUserRoles(): number[] {
  * User has solely Client privileges
  *
  */
-export function userIsClientUser() {
-  const roles = getUserRoles()
-  return roles.length === 1 && roles.includes(1)
-}
+export const userIsClientUser = (roles = getUserRoles()) =>
+  roles.length === 1 && roles.includes(ERoles.User)
 
 /**
  * User has privileges other than 'Client'
  *
  */
-export function userIsNotClientUser() {
-  return userIsAdmin() || userIsCourier() || userIsPharmacyOperator()
-}
+export const userIsNotClientUser = (roles = getUserRoles()) =>
+  userIsAdmin(roles) || userIsCourier(roles) || userIsPharmacyOperator(roles)
 
 /**
  * User has Courier privileges
  *
  */
-export function userIsCourier() {
-  return getUserRoles().includes(2)
-}
+export const userIsCourier = (roles = getUserRoles()) =>
+  roles.includes(ERoles.Courier)
 
 /**
  * User has Pharmacy-Operator privileges
  *
  */
-export function userIsPharmacyOperator() {
-  return getUserRoles().includes(3)
-}
+export const userIsPharmacyOperator = (roles = getUserRoles()) =>
+  roles.includes(ERoles.Pharmacy_Operator)
 
 /**
  * User has Station-Administrator privileges
  *
  */
-export function userIsAdmin() {
-  return getUserRoles().includes(4)
-}
+export const userIsAdmin = (roles = getUserRoles()) =>
+  roles.includes(ERoles.Station_Administrator)

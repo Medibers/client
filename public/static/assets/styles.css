@@ -40,18 +40,19 @@ ion-popover .popover-wrapper .popover-content .popover-viewport {
 .item-category {
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 10px 6px rgba(var(--ion-color-primary-rgb), .2) !important;
+  box-shadow: 0 0 3vw 1vw rgba(var(--ion-color-primary-rgb), .2) !important;
   border-radius: 0 !important;
   cursor: pointer;
   text-align: center
 }
 
-.item-category > div {
+.item-category>div {
   padding: 10px 4px;
 }
 
-.item-category-grid, .item-category-wrapper {
-  padding: 8px;
+.item-category-grid,
+.item-category-wrapper {
+  padding: 2vw;
 }
 
 .admin-dashboard-category {
@@ -63,7 +64,8 @@ ion-popover .popover-wrapper .popover-content .popover-viewport {
   /* text-align: center */
 }
 
-.item-category:hover, .admin-dashboard-category:hover {
+.item-category:hover,
+.admin-dashboard-category:hover {
   background-color: rgba(var(--ion-color-primary-rgb), .05) !important
 }
 

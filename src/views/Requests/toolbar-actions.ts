@@ -24,6 +24,7 @@ function getRequestsToolbarActions(this: {
   onCourierPopoverShow: () => void
 }): ToolbarAction[] {
   const { requestsSelected, updateRequestsUI, onCourierPopoverShow } = this
+
   const defaultToolbarActions: Array<ToolbarAction> = [
     {
       icon: person,
