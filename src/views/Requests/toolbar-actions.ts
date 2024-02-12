@@ -48,6 +48,12 @@ function getRequestsToolbarActions(this: {
         text: 'Assign to Courier',
         handler: onCourierPopoverShow,
       },
+      {
+        text: 'Mark as Delivered',
+        handler: () => {
+          updateBackend({ state: 4 }, requestsSelected, updateRequestsUI) // delivered
+        },
+      },
     ]
   }
 

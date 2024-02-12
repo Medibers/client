@@ -21,6 +21,12 @@ function fn(this: {
         text: 'Assign Courier',
         handler: onCourierPopoverShow,
       },
+      {
+        text: 'Mark as Delivered',
+        handler: (requestSelected: string) => {
+          updateBackend({ state: 4 }, [requestSelected], updateRequestsUI) // delivered
+        },
+      },
     ]
   }
 
